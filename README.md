@@ -9,7 +9,7 @@
 | 기획 | 기획 | 기획 | 마케팅 | 디자인 | BE | BE | IOS | 
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 강동현 | 김창현 | 서채은 | 이현주 |  | 김성현 | 임정연 | 신지원 |
-| --- | --- | --- | --- | --- | <img src="https://avatars.githubusercontent.com/u/127824570?v=4" width="100px" height="100px"><br/><a href="https://github.com/sunghyun1356 ">sunghyun1356 </a> | --- | --- | --- |
+| --- | --- | --- | --- | --- | <img src="https://avatars.githubusercontent.com/u/127824570?v=4" width="100px" height="100px"><br/><a href="https://github.com/sunghyun1356 ">sunghyun1356 </a> | <img src="https://avatars.githubusercontent.com/u/127824570?v=4" width="100px" height="100px"><br/><a href="https://github.com/13155a1 ">13155a1 </a> | --- | --- |
 
 ---
 ## 프로젝트 소개
