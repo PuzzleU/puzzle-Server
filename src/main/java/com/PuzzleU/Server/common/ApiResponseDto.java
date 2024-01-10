@@ -2,7 +2,6 @@ package com.PuzzleU.Server.common;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.web.ErrorResponse;
 
 @Getter
 public class ApiResponseDto<T> {
@@ -12,7 +11,7 @@ public class ApiResponseDto<T> {
     private ErrorResponse error;
 
     @Builder
-    ApiResponseDto(boolean success, T response, ErrorResponse error)
+    ApiResponseDto(boolean success, T response, com.PuzzleU.Server.common.ErrorResponse error)
     {
         this.success = success;
         this.response = response;
