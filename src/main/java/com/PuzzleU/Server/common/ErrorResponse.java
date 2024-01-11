@@ -2,9 +2,11 @@ package com.PuzzleU.Server.common;
 
 import com.PuzzleU.Server.entity.enumSet.ErrorType;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 
+@Getter
 public class ErrorResponse {
     private int status;
     private String message;
