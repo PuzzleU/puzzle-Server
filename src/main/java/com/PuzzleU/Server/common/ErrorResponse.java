@@ -46,5 +46,4 @@ public class ErrorResponse {
         return ErrorResponse.of(HttpStatus.BAD_REQUEST, message);
     }
 
-
 }
