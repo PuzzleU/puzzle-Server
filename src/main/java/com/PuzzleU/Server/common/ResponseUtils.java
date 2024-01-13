@@ -1,7 +1,5 @@
 package com.PuzzleU.Server.common;
 
-import org.springframework.web.ErrorResponse;
-
 public class ResponseUtils {
 
     // 요청 성공인 경우

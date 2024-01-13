@@ -2,9 +2,11 @@ package com.PuzzleU.Server.common;
 
 import com.PuzzleU.Server.entity.enumSet.ErrorType;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 
+@Getter
 public class ErrorResponse {
     private int status;
     private String message;
@@ -43,6 +45,5 @@ public class ErrorResponse {
         // HttpStatus.BAD_REQUEST 상태와 오류 메시지로 ErrorResponse 객체를 생성하고 반환
         return ErrorResponse.of(HttpStatus.BAD_REQUEST, message);
     }
-
 
 }
