@@ -3,11 +3,12 @@ package com.PuzzleU.Server.common;
 public class ResponseUtils {
 
     // 요청 성공인 경우
-    public static <T> ApiResponseDto<T> ok(T response)
+    public static <T> ApiResponseDto<T> ok(T response, String jwt)
     {
         return ApiResponseDto.<T>builder()
                 .success(true)
                 .response(response)
+                .jwt(jwt)
                 .build();
     }
     // 에러가 발생한 경우

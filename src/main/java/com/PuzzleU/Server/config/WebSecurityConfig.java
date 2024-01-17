@@ -44,13 +44,14 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .anonymous(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((sessionManagement)->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests((authorizeRequests)->
                         authorizeRequests
-                                .requestMatchers("/api/user/***").permitAll()
+                                .requestMatchers("/api/user/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/posts").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/post/{id}").permitAll()
                                 .anyRequest().authenticated()
@@ -58,7 +59,7 @@ public class WebSecurityConfig {
 
                 )
                 .addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll);
+                .formLogin(AbstractAuthenticationFilterConfigurer::disable);
 
 
         return http.build();

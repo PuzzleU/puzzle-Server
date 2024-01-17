@@ -1,5 +1,30 @@
 package com.PuzzleU.Server.service;
 
+import com.PuzzleU.Server.common.ApiResponseDto;
+import com.PuzzleU.Server.common.ResponseUtils;
+import com.PuzzleU.Server.common.SuccessResponse;
+import com.PuzzleU.Server.dto.LoginRequestsDto;
+import com.PuzzleU.Server.dto.SignupRequestDto;
+import com.PuzzleU.Server.entity.User;
+import com.PuzzleU.Server.entity.enumSet.ErrorType;
+import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
+import com.PuzzleU.Server.exception.RestApiException;
+import com.PuzzleU.Server.jwt.JwtUtil;
+import com.PuzzleU.Server.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.io.PrintWriter;
+import java.util.Optional;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
 public class UserService {
 
     // 1. ApiResponseDto 형식을 가진 method를 구현 (Success / Response / Error ) 존재
@@ -10,7 +35,10 @@ public class UserService {
     // 응답은 ResponseUtils를 이용. 성공했으니까 ok 메소드를 써야겠지?
     // ok는 ApiResonseDto를 돌려준다 여기에는 success, error, 가 담긴다
     // 이때 response에는 status와 message가 담기는데 이것들이 HttpStatus.OK, "회원가입 성공" 다.
-    /*
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
     @Transactional
     public ApiResponseDto<SuccessResponse> signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
@@ -26,7 +54,25 @@ public class UserService {
         UserRoleEnum role = requestDto.getAdmin() ? UserRoleEnum.ADMIN : UserRoleEnum.USER;
         userRepository.save(User.of(username, password, role));
 
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 성공"));
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 성공"), null);
     }
-     */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public ApiResponseDto<SuccessResponse> login(LoginRequestsDto requestDto, HttpServletResponse response) {
+        String username = requestDto.getUsername();
+        String password = requestDto.getPassword();
+
+        // 사용자 확인 & 비밀번호 확인
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty() || !passwordEncoder.matches(password, user.get().getPassword())) {
+            throw new RestApiException(ErrorType.NOT_MATCHING_INFO);
+        }
+
+        // header 에 들어갈 JWT 세팅
+        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.get().getUsername(), user.get().getRole()));
+        String jwtToken = jwtUtil.createToken(user.get().getUsername(), user.get().getRole());
+        jwtToken.substring(7);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "로그인 성공"),jwtToken);
+
+    }
+
 }
