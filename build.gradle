@@ -42,12 +42,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-
-<<<<<<< HEAD
 	implementation 'com.google.code.gson:gson:2.8.7'
-
-=======
->>>>>>> 3a0b48c851af90d2adff22410f08bfe92ab7c27c
 }
 
 tasks.named('test') {
