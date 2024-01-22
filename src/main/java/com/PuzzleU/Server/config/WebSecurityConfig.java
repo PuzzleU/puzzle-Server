@@ -63,8 +63,7 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests((authorizeRequests)->
                         authorizeRequests
-                                .requestMatchers("/api/user/***").permitAll()
-                                .requestMatchers("/api/oauth/***").permitAll()
+                                .requestMatchers("/api/user/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/posts").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/post/{id}").permitAll()
                                 .anyRequest().authenticated()
@@ -72,14 +71,7 @@ public class WebSecurityConfig {
 
                 )
                 .addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .formLogin(AbstractAuthenticationFilterConfigurer::disable)
-//                .oauth2Login(oauth2Login -> // oauth2 설정
-//                        oauth2Login.userInfoEndpoint(userInfoEndpointConfig ->
-//                                userInfoEndpointConfig
-//                                        // .userService(oAuth2UserService)));
-//                                        .userService(oAuthService))) // 커스텀한 oAuthService를 사용자 서비스로 설정
-                ;
-
+                .formLogin(AbstractAuthenticationFilterConfigurer::disable);
         return http.build();
     }
 }
