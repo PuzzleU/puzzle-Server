@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.service;
+package com.PuzzleU.Server.service.SInterface;
 
 import com.PuzzleU.Server.entity.ApplePublicKeyResponse;
 import org.springframework.cloud.openfeign.FeignClient;

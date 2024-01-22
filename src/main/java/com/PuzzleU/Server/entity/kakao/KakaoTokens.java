@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.oauth;
+package com.PuzzleU.Server.entity.kakao;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

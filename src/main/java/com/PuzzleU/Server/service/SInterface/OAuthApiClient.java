@@ -1,6 +1,8 @@
-package com.PuzzleU.Server.oauth;
+package com.PuzzleU.Server.service.SInterface;
 
 import com.PuzzleU.Server.entity.enumSet.OAuthProvider;
+
+// 카카오의 응답값을 리턴해주는 인터페이스
 
 public interface OAuthApiClient {
     // client 타입 반환

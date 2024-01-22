@@ -1,16 +1,15 @@
-package com.PuzzleU.Server.entity;
+package com.PuzzleU.Server.entity.user;
 
 import com.PuzzleU.Server.entity.enumSet.OAuthProvider;
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 // 나중에 추가가능
 @Getter
-@Entity(name="users")
+@Entity(name="user")
 @NoArgsConstructor
 public class User {
     @Id
@@ -33,14 +32,13 @@ public class User {
     private UserRoleEnum role;
 
     @Builder
-    public User (String username, String password, String email, UserRoleEnum role, String nickname, OAuthProvider oAuthProvider) {
+    public User(String username, String password, String email, UserRoleEnum role, String nickname, OAuthProvider oAuthProvider) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.nickname = nickname;
         this.oAuthProvider = oAuthProvider;
-
     }
     public static User of(String username, String password, UserRoleEnum role, String email, String nickname, OAuthProvider oAuthProvider)
     {

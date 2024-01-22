@@ -4,9 +4,9 @@ import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.LoginRequestsDto;
 import com.PuzzleU.Server.dto.SignupRequestDto;
-import com.PuzzleU.Server.oauth.AuthTokens;
+import com.PuzzleU.Server.entity.kakao.AuthTokens;
 import com.PuzzleU.Server.oauth.KakaoLoginParams;
-import com.PuzzleU.Server.oauth.OAuthLoginService;
+import com.PuzzleU.Server.service.OAuthLoginService;
 import com.PuzzleU.Server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,11 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,6 +51,8 @@ public class UserController {
     {
         return ResponseEntity.ok(oAuthLoginService.login(params));
     }
+
+
 /*
     @PostMapping("/signout")
     public ApiResponseDto<SuccessResponse> signout(@RequestBody LoginRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
