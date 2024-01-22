@@ -54,15 +54,15 @@ public class OAuthService {
         String reqURL = "https://kauth.kakao.com/oauth/token"; // access token을 반환해주는 주소 (카카오에서 제공하는 기능)
 
         try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            URL url = new URL(reqURL); // Url 처리
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection(); // 실제 서버와의 연결을 설정 + 반환된 객체를 HttpURLConnection으로 캐스팅
 
             // POST 요청을 위해 기본값이 false인 setDoOutput을 true로 설정
             conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
+            conn.setDoOutput(true); // 객체에서 출력 스트림을 사용할 것인지를 설정하는 메서드 -> 서버로 데이터를 보낼 때 사용
 
             // POST 요청에 필요로 요구하는 파라미터를 스트림을 통해 전송
-            BufferedWriter bw = new BufferedWriter((new OutputStreamWriter(conn.getOutputStream())));
+            BufferedWriter bw = new BufferedWriter((new OutputStreamWriter(conn.getOutputStream()))); // 전송하기 위한 것
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=bdae78483f052375d4334586ceee5544");
@@ -81,9 +81,11 @@ public class OAuthService {
 
             if (responseCode >= 200 && responseCode < 300) {
                 // 성공적인 응답
+                // 서버가 응답한 데이터를 읽어오기
                 InputStream inputStream = conn.getInputStream();
                 // InputStream을 문자열로 변환
                 result = new BufferedReader(new InputStreamReader(inputStream))
+                        // 스트림에서 읽은 각 라인들을 개행문자열로 연결하여 하나의 문자열로 만든다
                         .lines().collect(Collectors.joining("\n"));
 
                 System.out.println("result = " + result);
