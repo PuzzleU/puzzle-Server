@@ -28,8 +28,8 @@ import java.util.Optional;
 public class UserService {
 
     // 1. ApiResponseDto 형식을 가진 method를 구현 (Success / Response / Error ) 존재
-    // 2. Response의 형태가 미정이므로 SuccessResponse로 구현해준다
-    // 3. 만약에 유저가 존재한다면 RestApiException에 추가 ( 여긴 에러 타입을 넣어야한다) - 중간에 에러가 뜬다면
+    //    // 2. Response의 형태가 미정이므로 SuccessResponse로 구현해준다
+    //    // 3. 만약에 유저가 존재한다면 RestApiException에 추가 ( 여긴 에러 타입을 넣어야한다) - 중간에 에러가 뜬다면
     // 4. SignupRequestDto 에 있는 Boolean admin이 True일 경우 role은 UserRoleEnum.ADMIN이 된다
     // 5. return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 성공"));
     // 응답은 ResponseUtils를 이용. 성공했으니까 ok 메소드를 써야겠지?
