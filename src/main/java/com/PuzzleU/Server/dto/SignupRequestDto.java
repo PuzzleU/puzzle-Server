@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.dto;
 
+import com.PuzzleU.Server.entity.enumSet.OAuthProvider;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
@@ -14,5 +15,8 @@ public class SignupRequestDto {
     @Pattern(regexp = "^[a-zA-Z0-9~!@#$%^&*()_+=?,./<>{}\\[\\]\\-]{8,15}$", message = "비밀번호는 8~15자리 영문 대소문자(a~z, A~Z), 숫자(0~9), 특수문자를 사용하세요!")
     private String password;
 
+    private String email;
+    private String nickname;
     private Boolean admin;
+    private OAuthProvider oAuthProvider;
 }

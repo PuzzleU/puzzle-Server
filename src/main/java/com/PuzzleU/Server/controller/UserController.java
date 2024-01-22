@@ -4,10 +4,17 @@ import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.LoginRequestsDto;
 import com.PuzzleU.Server.dto.SignupRequestDto;
+import com.PuzzleU.Server.oauth.AuthTokens;
+import com.PuzzleU.Server.oauth.KakaoLoginParams;
+import com.PuzzleU.Server.oauth.OAuthLoginService;
 import com.PuzzleU.Server.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,9 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
+@Tag(name = "User", description = "유저 정보 api")
+
 public class UserController {
 
-
+    private final OAuthLoginService oAuthLoginService;
     private final UserService userService;
 
     @PostMapping("/signup")
@@ -34,10 +43,17 @@ public class UserController {
         return userService.signup(requestDto, bindingResult);
     }
     */
-
+    @Parameter(name = "userId", description = "유저 아이디", required = true)
+    @Operation(summary = "Login", description = "유저 아이디로 로그인 실행")
     @PostMapping("/login")
     public ApiResponseDto<SuccessResponse> login(@RequestBody LoginRequestsDto requestDto, HttpServletResponse response) {
         return userService.login(requestDto, response);
+    }
+
+    @PostMapping("/kakao")
+    public ResponseEntity<AuthTokens> loginKakao(@RequestBody KakaoLoginParams params)
+    {
+        return ResponseEntity.ok(oAuthLoginService.login(params));
     }
 /*
     @PostMapping("/signout")

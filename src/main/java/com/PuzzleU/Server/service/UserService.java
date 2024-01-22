@@ -7,6 +7,7 @@ import com.PuzzleU.Server.dto.LoginRequestsDto;
 import com.PuzzleU.Server.dto.SignupRequestDto;
 import com.PuzzleU.Server.entity.User;
 import com.PuzzleU.Server.entity.enumSet.ErrorType;
+import com.PuzzleU.Server.entity.enumSet.OAuthProvider;
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.exception.RestApiException;
 import com.PuzzleU.Server.jwt.JwtUtil;
@@ -43,7 +44,9 @@ public class UserService {
     public ApiResponseDto<SuccessResponse> signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
-
+        String email  = requestDto.getEmail();
+        String nickname = requestDto.getNickname();
+        OAuthProvider oAuthProvider= requestDto.getOAuthProvider();
         // 회원 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
@@ -52,7 +55,7 @@ public class UserService {
 
         // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
         UserRoleEnum role = requestDto.getAdmin() ? UserRoleEnum.ADMIN : UserRoleEnum.USER;
-        userRepository.save(User.of(username, password, role));
+        userRepository.save(User.of(username, password, role, email, nickname, oAuthProvider));
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 성공"), null);
     }
