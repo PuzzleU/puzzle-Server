@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.entity;
+package com.PuzzleU.Server.entity.user;
 
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
 import jakarta.persistence.*;

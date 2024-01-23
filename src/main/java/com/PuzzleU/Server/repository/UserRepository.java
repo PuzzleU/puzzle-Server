@@ -1,6 +1,6 @@
 package com.PuzzleU.Server.repository;
 
-import com.PuzzleU.Server.entity.User;
+import com.PuzzleU.Server.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

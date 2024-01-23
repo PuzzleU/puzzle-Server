@@ -2,10 +2,8 @@ package com.PuzzleU.Server.controller;
 
 import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.SuccessResponse;
-import com.PuzzleU.Server.dto.KakaoUserInfoDto;
-import com.PuzzleU.Server.service.OAuthService;
+import com.PuzzleU.Server.service.Impl.OAuthService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

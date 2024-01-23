@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.service;
+package com.PuzzleU.Server.service.Impl;
 
 import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.ResponseUtils;
