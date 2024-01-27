@@ -17,7 +17,7 @@ public class CompetitionTest {
     @Test
     public void createAndSaveCompetition() {
         Competition competition = new Competition();
-        competition.setCompetitonName("새로운 대회");
+        competition.setCompetitionName("새로운 대회");
         competition.setCompetitionUrl("http://example.com");
         competition.setCompetitionHost("주최자");
         competition.setCompetitionPoster("http://example.com/poster.jpg");
