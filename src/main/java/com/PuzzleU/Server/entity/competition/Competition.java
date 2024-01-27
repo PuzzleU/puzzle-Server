@@ -12,38 +12,38 @@ public class Competition extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long CompetitionId;
 
-    @Column(name = "CompetitionName", nullable = true)
-    public String CompetitonName;
+    @Column(name = "CompetitionName", nullable = true, length = 100)
+    private String CompetitonName;
 
-    @Column(name =  "CompetitionUrl",nullable = true)
-    public String CompetitionUrl;
+    @Column(name =  "CompetitionUrl",nullable = true, length = 200)
+    private String CompetitionUrl;
 
-    @Column(name = "CompetitionHost", nullable = true)
-    public String CompetitionHost;
+    @Column(name = "CompetitionHost", nullable = true, length = 50)
+    private String CompetitionHost;
 
-    @Column(name = "CompetitionPoster", nullable = true)
-    public String CompetitionPoster;
+    @Column(name = "CompetitionPoster", nullable = true, length = 200)
+    private String CompetitionPoster;
 
-    @Column(name = "CompetitionAwards", nullable = true)
-    public String CompetitionAwards;
+    @Column(name = "CompetitionAwards", nullable = true, length = 50)
+    private String CompetitionAwards;
 
     @Column(name = "CompetitionStart", nullable = true)
-    public Date CompetitionStart;
+    private Date CompetitionStart;
 
     @Column(name = "CompetitionEnd", nullable = true)
-    public Date CompetitionEnd;
+    private Date CompetitionEnd;
 
-    @Column(name = "CompetitionContent", nullable = true)
-    public String CompetitionContent;
+    @Column(name = "CompetitionContent", nullable = true, length = 2000)
+    private String CompetitionContent;
 
     @Column(name = "CompetitionVisit", nullable = true)
-    public Integer CompetitionVisit;
+    private Integer CompetitionVisit;
 
     @Column(name = "CompetitionLike", nullable = true)
-    public Integer CompetitionLike;
+    private Integer CompetitionLike;
 
     @Column(name = "CompetitionMatching", nullable = true)
-    public Integer CompetitionMatching;
+    private Integer CompetitionMatching;
 
 
 
