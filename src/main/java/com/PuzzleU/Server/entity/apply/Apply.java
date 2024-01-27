@@ -15,9 +15,9 @@ import lombok.Setter;
 public class Apply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long applyId;
+    private Long ApplyId;
 
-    private String applyTitle; // 지원서 제목
-    private String applyContent; // 지원서 내용
-    private ApplyStatus applyStatus; // 지원 상태 (대기/완료/취소)
+    private String ApplyTitle; // 지원서 제목
+    private String ApplyContent; // 지원서 내용
+    private ApplyStatus ApplyStatus; // 지원 상태 (대기/완료/취소)
 }
