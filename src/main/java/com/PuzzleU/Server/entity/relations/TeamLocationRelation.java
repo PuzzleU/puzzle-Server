@@ -13,11 +13,11 @@ public class TeamLocationRelation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long TeamLocationRelationId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TeamId")
     private Team team;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LocationId")
     private Location location;
 }

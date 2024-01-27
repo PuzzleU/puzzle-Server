@@ -2,11 +2,13 @@ package com.PuzzleU.Server.entity.competition;
 
 import com.PuzzleU.Server.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 // Competition Entity 생성
 @Entity
+@Setter
 @Table(name = "competition")
 public class Competition extends BaseEntity {
     @Id

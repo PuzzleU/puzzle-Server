@@ -12,11 +12,11 @@ public class FriendShip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long FriendShipId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users1")
     private User user1;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users2")
     private User user2;
 

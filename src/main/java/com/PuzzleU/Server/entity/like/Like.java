@@ -5,14 +5,14 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
-@Table(name = "'like'")
+@Table(name = "like")
 @Getter
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String LikeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User UserId;
 

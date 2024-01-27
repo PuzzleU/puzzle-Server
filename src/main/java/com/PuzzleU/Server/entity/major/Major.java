@@ -22,7 +22,7 @@ public class Major {
     private String MajorName; // 전공 이름
 
     // 의존 관계 매핑 (University)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UniversityId")
     private University University;
 }
