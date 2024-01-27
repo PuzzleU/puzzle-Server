@@ -1,11 +1,15 @@
 package com.PuzzleU.Server.entity.university;
 
 import com.PuzzleU.Server.entity.enumSet.UniversityType;
+import com.PuzzleU.Server.entity.major.Major;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "university")
@@ -20,4 +24,7 @@ public class University {
 
     private UniversityType UniversityType;
     private String UniversityName;
+
+    @OneToMany(mappedBy = "university")
+    private List<Major> major = new ArrayList<>();
 }
