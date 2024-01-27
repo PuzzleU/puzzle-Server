@@ -4,9 +4,11 @@ import com.PuzzleU.Server.entity.location.Location;
 import com.PuzzleU.Server.entity.team.Team;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name = "teamLocationRelation")
 @Getter
+@Setter
 public class TeamLocationRelation {
 
     @Id

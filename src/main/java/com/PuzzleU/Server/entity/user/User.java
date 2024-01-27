@@ -4,14 +4,12 @@ import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.entity.major.Major;
 import com.PuzzleU.Server.entity.university.University;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 // 나중에 추가가능
 @Getter
 @Entity(name="users")
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
@@ -38,12 +36,17 @@ public class User {
 
     //3
 
+
     @Builder
-    public User(String username, String password, UserRoleEnum role) {
+    public User(Long id, String username, String password, UserRoleEnum role, University university, Major major) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.university = university;
+        this.major = major;
     }
+
     public static User of(String username, String password, UserRoleEnum role)
     {
         return User.builder()
