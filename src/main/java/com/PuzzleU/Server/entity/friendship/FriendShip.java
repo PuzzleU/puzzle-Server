@@ -12,6 +12,7 @@ public class FriendShip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long FriendShipId;
 
+
     @ManyToOne
     @JoinColumn(name = "Users1")
     private User user1;

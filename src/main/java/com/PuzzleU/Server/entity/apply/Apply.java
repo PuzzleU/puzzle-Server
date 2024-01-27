@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.entity.apply;
 
+import com.PuzzleU.Server.entity.BaseEntity;
 import com.PuzzleU.Server.entity.enumSet.ApplyStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Apply {
+public class Apply extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ApplyId;

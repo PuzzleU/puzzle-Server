@@ -1,6 +1,8 @@
 package com.PuzzleU.Server.entity.user;
 
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
+import com.PuzzleU.Server.entity.major.Major;
+import com.PuzzleU.Server.entity.university.University;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,6 +27,14 @@ public class User {
     @Column(nullable = false, length =30)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
+
+    @ManyToOne
+    @JoinColumn(name ="university_id")
+    private University university;
+
+    @ManyToOne
+    @JoinColumn(name ="majorId")
+    private Major major;
 
     //3
 
