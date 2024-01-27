@@ -17,4 +17,5 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long PositionId;
 
+    private String PositionName; // 포지션 이름
 }
