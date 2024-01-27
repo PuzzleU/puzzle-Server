@@ -19,6 +19,7 @@ public class PositionApplyRelation {
     private Long PositionApplyRelationId;
 
     // 의존 관계 매핑 (Position)
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "positionId")
     private Position Position;

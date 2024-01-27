@@ -16,7 +16,7 @@ public class Competition extends BaseEntity {
     private Long CompetitionId;
 
     @Column(name = "CompetitionName", nullable = true, length = 100)
-    private String CompetitonName;
+    private String CompetitionName;
 
     @Column(name =  "CompetitionUrl",nullable = true, length = 200)
     private String CompetitionUrl;

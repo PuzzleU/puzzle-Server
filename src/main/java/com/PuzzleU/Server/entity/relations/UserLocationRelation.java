@@ -1,7 +1,7 @@
 package com.PuzzleU.Server.entity.relations;
 
-import com.PuzzleU.Server.entity.apply.Apply;
-import com.PuzzleU.Server.entity.position.Position;
+import com.PuzzleU.Server.entity.interest.Interest;
+import com.PuzzleU.Server.entity.location.Location;
 import com.PuzzleU.Server.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,23 +10,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "userPositionRelation")
+@Table(name = "userLocationRelation")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserPositionRelation {
+public class UserLocationRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long UserPositionRelationId;
+    private Long UserLocationRelationId;
 
     // 의존 관계 매핑 (User)
     @ManyToOne
     @JoinColumn(name = "UserId")
-    private User User;
+    private com.PuzzleU.Server.entity.user.User User;
 
-    // 의존관계 매핑 (Position)
+    // 의존관계 매핑 (Location)
     @ManyToOne
-    @JoinColumn(name = "PositionId")
-    private Position Position;
+    @JoinColumn(name = "LocationId")
+    private Location Location;
 }

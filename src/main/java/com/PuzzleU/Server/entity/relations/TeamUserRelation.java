@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
-@Entity(name = "teamuserrelation")
+@Entity(name = "teamUserRelation")
 public class TeamUserRelation {
 
     @Id

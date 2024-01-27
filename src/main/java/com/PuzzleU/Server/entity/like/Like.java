@@ -12,8 +12,9 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String LikeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+
+    @ManyToOne
+    @JoinColumn(name = "UserId")
     private User UserId;
 
 
