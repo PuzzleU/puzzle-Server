@@ -22,11 +22,11 @@ public class UserPositionRelation {
 
     // 의존 관계 매핑 (User)
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "UserId")
     private User User;
 
     // 의존관계 매핑 (Position)
     @ManyToOne
-    @JoinColumn(name = "positionId")
+    @JoinColumn(name = "PositionId")
     private Position Position;
 }
