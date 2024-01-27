@@ -13,11 +13,11 @@ public class TeamUserRelation {
     @GeneratedValue
     private Long TeamUserRelationId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TeamId")
     private Team team;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserId")
     private User user;
 

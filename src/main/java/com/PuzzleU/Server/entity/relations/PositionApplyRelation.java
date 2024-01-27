@@ -19,12 +19,13 @@ public class PositionApplyRelation {
     private Long PositionApplyRelationId;
 
     // 의존 관계 매핑 (Position)
-    @ManyToOne
-    @JoinColumn(name = "PositionId")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "positionId")
     private Position Position;
 
     // 의존관계 매핑 (Apply)
-    @ManyToOne
-    @JoinColumn(name = "ApplyId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "applyId")
     private Apply Apply;
 }
