@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.entity.positionApplyRelation;
+package com.PuzzleU.Server.entity.relations;
 
 import com.PuzzleU.Server.entity.position.Position;
 import jakarta.persistence.*;
