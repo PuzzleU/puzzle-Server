@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
-@Entity(name = "teamuserrelations")
+@Entity(name = "teamuserrelation")
 public class TeamUserRelation {
 
     @Id
@@ -14,11 +14,11 @@ public class TeamUserRelation {
     private Long TeamUserRelationId;
 
     @ManyToOne
-    @JoinColumn(name = "teams")
+    @JoinColumn(name = "TeamId")
     private Team team;
 
     @ManyToOne
-    @JoinColumn(name = "users")
+    @JoinColumn(name = "UserId")
     private User user;
 
 }
