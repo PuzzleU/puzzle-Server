@@ -1,7 +1,7 @@
 package com.PuzzleU.Server.security;
 
 
-import com.PuzzleU.Server.entity.User;
+import com.PuzzleU.Server.entity.user.User;
 import com.PuzzleU.Server.entity.enumSet.ErrorType;
 import com.PuzzleU.Server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

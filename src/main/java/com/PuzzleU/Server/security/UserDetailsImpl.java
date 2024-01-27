@@ -1,8 +1,7 @@
 package com.PuzzleU.Server.security;
 
-import com.PuzzleU.Server.entity.User;
+import com.PuzzleU.Server.entity.user.User;
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

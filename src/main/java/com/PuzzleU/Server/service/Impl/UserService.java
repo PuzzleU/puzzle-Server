@@ -1,11 +1,11 @@
-package com.PuzzleU.Server.service;
+package com.PuzzleU.Server.service.Impl;
 
 import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.LoginRequestsDto;
 import com.PuzzleU.Server.dto.SignupRequestDto;
-import com.PuzzleU.Server.entity.User;
+import com.PuzzleU.Server.entity.user.User;
 import com.PuzzleU.Server.entity.enumSet.ErrorType;
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.exception.RestApiException;
@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.PrintWriter;
 import java.util.Optional;
 
 @Slf4j
