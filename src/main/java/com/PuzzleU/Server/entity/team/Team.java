@@ -8,7 +8,8 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DialectOverride;
 
-@Entity(name = "teams")
+@Entity
+@Table(name = "team")
 @Getter
 @Setter
 public class Team extends BaseEntity {

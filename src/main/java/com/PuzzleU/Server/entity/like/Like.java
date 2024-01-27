@@ -4,7 +4,8 @@ import com.PuzzleU.Server.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-@Entity(name = "likes")
+@Entity
+@Table(name = "'like'")
 @Getter
 public class Like {
     @Id
@@ -12,7 +13,7 @@ public class Like {
     private String LikeId;
 
     @ManyToOne
-    @JoinColumn(name = "users")
+    @JoinColumn(name = "user_id")
     private User UserId;
 
 
