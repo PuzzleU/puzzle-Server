@@ -2,16 +2,15 @@ package com.PuzzleU.Server.entity.team;
 
 import com.PuzzleU.Server.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DialectOverride;
 
 @Entity
 @Table(name = "team")
-@Getter
-@Setter
+@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Team extends BaseEntity {
 
     @Id
