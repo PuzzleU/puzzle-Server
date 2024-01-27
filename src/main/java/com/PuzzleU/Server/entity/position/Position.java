@@ -15,5 +15,6 @@ import lombok.Setter;
 public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long positionId;
+    private Long PositionId;
+
 }
