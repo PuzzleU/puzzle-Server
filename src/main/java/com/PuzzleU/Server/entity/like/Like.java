@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
-@Table(name = "'like'")
+@Table(name = "like")
 @Getter
 public class Like {
     @Id
@@ -13,7 +13,7 @@ public class Like {
     private String LikeId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "UserId")
     private User UserId;
 
 

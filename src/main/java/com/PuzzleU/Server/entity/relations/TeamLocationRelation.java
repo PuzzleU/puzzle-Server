@@ -5,7 +5,7 @@ import com.PuzzleU.Server.entity.team.Team;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-@Entity(name = "teamlocationrelation")
+@Entity(name = "teamLocationRelation")
 @Getter
 public class TeamLocationRelation {
 
