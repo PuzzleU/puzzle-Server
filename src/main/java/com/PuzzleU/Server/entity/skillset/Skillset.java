@@ -25,4 +25,6 @@ public class Skillset {
 
     @OneToMany(mappedBy = "skillset")
     private List<UserSkillsetRelation> userSkillsetRelation = new ArrayList<>();
+    //e
+    //wqfqwfqw
 }
