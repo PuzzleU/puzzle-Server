@@ -2,6 +2,7 @@ package com.PuzzleU.Server.entity.interest;
 
 import com.PuzzleU.Server.entity.enumSet.InterestTypes;
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
