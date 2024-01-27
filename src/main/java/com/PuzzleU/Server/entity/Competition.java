@@ -2,14 +2,20 @@ package com.PuzzleU.Server.entity;
 
 import com.PuzzleU.Server.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 // Competition Entity 생성
 @Entity
-@Setter
 @Table(name = "competition")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Competition extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

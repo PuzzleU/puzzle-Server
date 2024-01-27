@@ -2,13 +2,18 @@ package com.PuzzleU.Server.entity.friendship;
 
 import com.PuzzleU.Server.entity.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = "friendship")
 @Getter
 @Setter
-@Table(name = "friendship")
+@AllArgsConstructor
+@NoArgsConstructor
 public class FriendShip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
