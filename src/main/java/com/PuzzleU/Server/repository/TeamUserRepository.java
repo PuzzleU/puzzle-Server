@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TeamUserRelationRepository extends JpaRepository<TeamUserRelation, Long> {
+public interface TeamUserRepository extends JpaRepository<TeamUserRelation, Long> {
 }
