@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-
+// Competition Entity 생성
 @Entity
 public class Competition extends BaseEntity {
     @Id
