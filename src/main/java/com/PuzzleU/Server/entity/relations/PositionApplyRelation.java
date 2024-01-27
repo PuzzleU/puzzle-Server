@@ -20,11 +20,11 @@ public class PositionApplyRelation {
 
     // 의존 관계 매핑 (Position)
     @ManyToOne
-    @JoinColumn(name = "positionId")
+    @JoinColumn(name = "PositionId")
     private Position Position;
 
     // 의존관계 매핑 (Apply)
     @ManyToOne
-    @JoinColumn(name = "applyId")
+    @JoinColumn(name = "ApplyId")
     private Apply Apply;
 }
