@@ -13,11 +13,11 @@ public class FriendShip {
     private Long FriendShipId;
 
     @ManyToOne
-    @JoinColumn(name = "users1")
+    @JoinColumn(name = "Users1")
     private User user1;
 
     @ManyToOne
-    @JoinColumn(name = "users2")
+    @JoinColumn(name = "Users2")
     private User user2;
 
     @Column(name = "UserStatus")
