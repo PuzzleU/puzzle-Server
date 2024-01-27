@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 // Competition Entity 생성
-@Entity
+@Entity(name = "competitons")
 public class Competition extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

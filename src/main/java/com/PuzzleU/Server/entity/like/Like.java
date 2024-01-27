@@ -4,7 +4,7 @@ import com.PuzzleU.Server.entity.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-@Entity
+@Entity(name = "likes")
 @Getter
 public class Like {
     @Id
