@@ -20,5 +20,7 @@ public class Apply extends BaseEntity {
 
     private String ApplyTitle; // 지원서 제목
     private String ApplyContent; // 지원서 내용
+
+    @Enumerated(value = EnumType.STRING)
     private ApplyStatus ApplyStatus; // 지원 상태 (대기/완료/취소)
 }
