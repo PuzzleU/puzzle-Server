@@ -22,6 +22,7 @@ public class University {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long UniversityId;
 
+    @Enumerated(value = EnumType.STRING)
     private UniversityType UniversityType;
 
     private String UniversityName;

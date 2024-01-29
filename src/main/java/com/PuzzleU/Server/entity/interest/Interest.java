@@ -25,6 +25,7 @@ public class Interest {
     private String InterestName;
 
     @Column(name = "interest_type")
+    @Enumerated(value = EnumType.STRING)
     private InterestTypes InterestType;
 
     @OneToMany(mappedBy = "Interest", cascade = CascadeType.ALL)
