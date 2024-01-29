@@ -3,7 +3,7 @@ package com.PuzzleU.Server.entity.user;
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.entity.experience.Experience;
 import com.PuzzleU.Server.entity.friendship.FriendShip;
-import com.PuzzleU.Server.entity.heart.Like;
+import com.PuzzleU.Server.entity.heart.Heart;
 import com.PuzzleU.Server.entity.major.Major;
 import com.PuzzleU.Server.entity.relations.UserInterestRelation;
 import com.PuzzleU.Server.entity.relations.UserLocationRelation;
@@ -66,7 +66,7 @@ public class User {
     private List<FriendShip> friendShip2 = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Like> like = new ArrayList<>();
+    private List<Heart> like = new ArrayList<>();
 
     @Builder
     public User(Long id, String username, String password, UserRoleEnum role, University university, Major major) {
