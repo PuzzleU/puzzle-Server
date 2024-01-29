@@ -1,12 +1,13 @@
 package com.PuzzleU.Server.entity.interest;
 
 import com.PuzzleU.Server.entity.enumSet.InterestTypes;
+import com.PuzzleU.Server.entity.relations.UserInterestRelation;
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "interest")
@@ -14,14 +15,20 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Interest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long InterestId;
 
-    @Column(name = "InterestName")
+    @Column(name = "interest_name")
     private String InterestName;
 
-    @Column(name = "InterestType")
+    @Column(name = "interest_type")
     private InterestTypes InterestType;
+
+    @OneToMany(mappedBy = "Interest", cascade = CascadeType.ALL)
+    private List<UserInterestRelation> userInterestRelation = new ArrayList<>();
+
+
 }

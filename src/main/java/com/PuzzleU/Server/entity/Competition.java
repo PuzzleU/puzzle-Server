@@ -21,37 +21,37 @@ public class Competition extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long CompetitionId;
 
-    @Column(name = "CompetitionName", nullable = true, length = 100)
+    @Column(name = "Competition_name", nullable = true, length = 100)
     private String CompetitionName;
 
-    @Column(name =  "CompetitionUrl",nullable = true, length = 200)
+    @Column(name =  "Competition_url",nullable = true, length = 200)
     private String CompetitionUrl;
 
-    @Column(name = "CompetitionHost", nullable = true, length = 50)
+    @Column(name = "Competition_host", nullable = true, length = 50)
     private String CompetitionHost;
 
-    @Column(name = "CompetitionPoster", nullable = true, length = 200)
+    @Column(name = "Competition_poster", nullable = true, length = 200)
     private String CompetitionPoster;
 
-    @Column(name = "CompetitionAwards", nullable = true, length = 50)
+    @Column(name = "Competition_awards", nullable = true, length = 50)
     private String CompetitionAwards;
 
-    @Column(name = "CompetitionStart", nullable = true)
+    @Column(name = "Competition_start", nullable = true)
     private Date CompetitionStart;
 
-    @Column(name = "CompetitionEnd", nullable = true)
+    @Column(name = "Competition_end", nullable = true)
     private Date CompetitionEnd;
 
-    @Column(name = "CompetitionContent", nullable = true, length = 2000)
+    @Column(name = "Competition_content", nullable = true, length = 2000)
     private String CompetitionContent;
 
-    @Column(name = "CompetitionVisit", nullable = true)
+    @Column(name = "Competition_visit", nullable = true)
     private Integer CompetitionVisit;
 
-    @Column(name = "CompetitionLike", nullable = true)
+    @Column(name = "Competition_like", nullable = true)
     private Integer CompetitionLike;
 
-    @Column(name = "CompetitionMatching", nullable = true)
+    @Column(name = "Competition_matching", nullable = true)
     private Integer CompetitionMatching;
 
 

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "userSkillsetRelation")
+@Table(name = "user_skillset_relation")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,16 +20,16 @@ public class UserSkillsetRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long UserSkillsetRelationId;
-
+//a
     private Level Level;
 
     // 의존 관계 매핑 (User)
-    @ManyToOne
-    @JoinColumn(name = "UserId")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id")
     private User User;
 
     // 의존관계 매핑 (Skillset)
-    @ManyToOne
-    @JoinColumn(name = "SkillsetId")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "skillset_id")
     private Skillset Skillset;
 }

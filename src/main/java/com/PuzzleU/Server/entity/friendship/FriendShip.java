@@ -21,14 +21,14 @@ public class FriendShip {
 
 
     @ManyToOne
-    @JoinColumn(name = "Users1")
+    @JoinColumn(name = "users1")
     private User user1;
 
     @ManyToOne
-    @JoinColumn(name = "Users2")
+    @JoinColumn(name = "users2")
     private User user2;
 
-    @Column(name = "UserStatus")
+    @Column(name = "user_status")
     private Boolean UserStatus;
 
 
