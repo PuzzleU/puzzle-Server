@@ -23,6 +23,6 @@ public class Major {
 
     // 의존 관계 매핑 (University)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UniversityId")
+    @JoinColumn(name = "university_id")
     private University University;
 }

@@ -23,6 +23,6 @@ public class Position {
 
     private String PositionName; // 포지션 이름
 
-    @OneToMany(mappedBy = "position")
+    @OneToMany(mappedBy = "Position")
     private List<UserPositionRelation> userPositionRelation = new ArrayList<>();
 }

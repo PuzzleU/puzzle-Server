@@ -21,10 +21,10 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long LocationId;
 
-    @Column(name = "LocationName")
+    @Column(name = "location_name")
     private String LocationName;
 
-    @OneToMany(mappedBy = "location")
+    @OneToMany(mappedBy = "Location")
     private List<UserLocationRelation> userLocationRelation = new ArrayList<>();
 
 }

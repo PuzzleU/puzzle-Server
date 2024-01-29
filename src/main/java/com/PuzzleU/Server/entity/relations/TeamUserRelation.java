@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "teamUserRelation")
+@Table(name = "team_user_relation")
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,12 +21,12 @@ public class TeamUserRelation {
     @GeneratedValue
     private Long TeamUserRelationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TeamId")
+    @ManyToOne
+    @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserId")
+    @ManyToOne
+    @JoinColumn(name = "id")
     private User user;
 
 }

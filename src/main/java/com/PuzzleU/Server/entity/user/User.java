@@ -38,32 +38,32 @@ public class User {
     private UserRoleEnum role;
 
     @ManyToOne
-    @JoinColumn(name ="University_id")
+    @JoinColumn(name ="university_id")
     private University university;
 
     @ManyToOne
-    @JoinColumn(name ="Major_id")
+    @JoinColumn(name ="major_id")
     private Major major;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "User", cascade = CascadeType.ALL)
     private List<UserInterestRelation> userInterestRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "User")
     private List<UserLocationRelation> userLocationRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "User")
     private List<UserPositionRelation> userPositionRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "User")
     private List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "User")
     private List<Experience> experience = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user1")
     private List<FriendShip> friendShip1 = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user2")
     private List<FriendShip> friendShip2 = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")

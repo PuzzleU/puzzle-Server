@@ -21,11 +21,11 @@ public class PositionApplyRelation {
     // 의존 관계 매핑 (Position)
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "positionId")
+    @JoinColumn(name = "position_id")
     private Position Position;
 
     // 의존관계 매핑 (Apply)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applyId")
+    @JoinColumn(name = "apply_id")
     private Apply Apply;
 }

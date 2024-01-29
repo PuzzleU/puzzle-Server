@@ -21,8 +21,8 @@ public class Like {
 
 
     @ManyToOne
-    @JoinColumn(name = "UserId")
-    private User UserId;
+    @JoinColumn(name = "id")
+    private User user;
 
 
 }

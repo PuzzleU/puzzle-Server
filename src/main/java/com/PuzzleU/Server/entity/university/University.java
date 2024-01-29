@@ -23,8 +23,9 @@ public class University {
     private Long UniversityId;
 
     private UniversityType UniversityType;
+
     private String UniversityName;
 
-    @OneToMany(mappedBy = "university")
+    @OneToMany(mappedBy = "University")
     private List<Major> major = new ArrayList<>();
 }
