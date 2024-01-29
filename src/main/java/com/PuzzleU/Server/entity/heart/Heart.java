@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.entity.like;
+package com.PuzzleU.Server.entity.heart;
 
 import com.PuzzleU.Server.entity.user.User;
 import jakarta.persistence.*;
@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "'like'")
+@Table(name = "heart")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Like {
+public class Heart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String LikeId;
+    private String HeartId;
 
 
     @ManyToOne

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "positionApplyRelation")
+@Table(name = "position_apply_relation")
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,12 +20,12 @@ public class PositionApplyRelation {
 
     // 의존 관계 매핑 (Position)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "position_id")
     private Position Position;
 
     // 의존관계 매핑 (Apply)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "apply_id")
     private Apply Apply;
 }

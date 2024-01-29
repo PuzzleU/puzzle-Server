@@ -24,7 +24,7 @@ public class Location {
     @Column(name = "location_name")
     private String LocationName;
 
-    @OneToMany(mappedBy = "Location")
+    @OneToMany(mappedBy = "Location",cascade = CascadeType.ALL)
     private List<UserLocationRelation> userLocationRelation = new ArrayList<>();
 
 }

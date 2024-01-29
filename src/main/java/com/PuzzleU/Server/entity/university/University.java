@@ -26,6 +26,6 @@ public class University {
 
     private String UniversityName;
 
-    @OneToMany(mappedBy = "University")
+    @OneToMany(mappedBy = "University",cascade = CascadeType.ALL)
     private List<Major> major = new ArrayList<>();
 }

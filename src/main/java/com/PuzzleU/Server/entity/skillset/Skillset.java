@@ -23,7 +23,7 @@ public class Skillset {
 
     private String SkillsetLogo;
 
-    @OneToMany(mappedBy = "Skillset")
+    @OneToMany(mappedBy = "Skillset",cascade = CascadeType.ALL)
     private List<UserSkillsetRelation> userSkillsetRelation = new ArrayList<>();
     //
     //wqfqwfqw

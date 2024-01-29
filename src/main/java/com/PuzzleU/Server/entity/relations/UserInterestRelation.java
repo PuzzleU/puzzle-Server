@@ -17,7 +17,7 @@ import lombok.Setter;
 public class UserInterestRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "User_interest_relation_id")
+    @Column(name = "user_interest_relation_id")
     private Long UserInterestRelationId;
 
     // 의존 관계 매핑 (User)

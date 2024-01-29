@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "teamLocationRelation")
+@Table(name = "team_location_relation")
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor

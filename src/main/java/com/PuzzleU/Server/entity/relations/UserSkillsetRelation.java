@@ -24,12 +24,12 @@ public class UserSkillsetRelation {
     private Level Level;
 
     // 의존 관계 매핑 (User)
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
     private User User;
 
     // 의존관계 매핑 (Skillset)
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "skillset_id")
     private Skillset Skillset;
 }

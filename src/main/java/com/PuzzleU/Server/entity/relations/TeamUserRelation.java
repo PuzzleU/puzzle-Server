@@ -18,7 +18,7 @@ import lombok.Setter;
 public class TeamUserRelation {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long TeamUserRelationId;
 
     @ManyToOne

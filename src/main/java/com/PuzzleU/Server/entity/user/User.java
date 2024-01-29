@@ -1,10 +1,9 @@
 package com.PuzzleU.Server.entity.user;
 
-import com.PuzzleU.Server.entity.enumSet.ExperienceType;
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.entity.experience.Experience;
 import com.PuzzleU.Server.entity.friendship.FriendShip;
-import com.PuzzleU.Server.entity.like.Like;
+import com.PuzzleU.Server.entity.heart.Like;
 import com.PuzzleU.Server.entity.major.Major;
 import com.PuzzleU.Server.entity.relations.UserInterestRelation;
 import com.PuzzleU.Server.entity.relations.UserLocationRelation;
@@ -48,25 +47,25 @@ public class User {
     @OneToMany(mappedBy = "User", cascade = CascadeType.ALL)
     private List<UserInterestRelation> userInterestRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "User")
+    @OneToMany(mappedBy = "User",cascade = CascadeType.ALL)
     private List<UserLocationRelation> userLocationRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "User")
+    @OneToMany(mappedBy = "User",cascade = CascadeType.ALL)
     private List<UserPositionRelation> userPositionRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "User")
+    @OneToMany(mappedBy = "User",cascade = CascadeType.ALL)
     private List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "User")
+    @OneToMany(mappedBy = "User",cascade = CascadeType.ALL)
     private List<Experience> experience = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user1")
+    @OneToMany(mappedBy = "user1",cascade = CascadeType.ALL)
     private List<FriendShip> friendShip1 = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user2")
+    @OneToMany(mappedBy = "user2",cascade = CascadeType.ALL)
     private List<FriendShip> friendShip2 = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Like> like = new ArrayList<>();
 
     @Builder
