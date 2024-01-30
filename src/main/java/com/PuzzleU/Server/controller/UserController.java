@@ -2,22 +2,23 @@ package com.PuzzleU.Server.controller;
 
 import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.SuccessResponse;
-import com.PuzzleU.Server.dto.LoginRequestsDto;
-import com.PuzzleU.Server.dto.SignupRequestDto;
-import com.PuzzleU.Server.service.Impl.UserService;
+import com.PuzzleU.Server.dto.user.LoginRequestsDto;
+import com.PuzzleU.Server.dto.user.SignupRequestDto;
+import com.PuzzleU.Server.dto.user.UserRegisterOptionalDto;
+import com.PuzzleU.Server.service.User.UserRegisterOptionalService;
+import com.PuzzleU.Server.service.User.UserService;
+import feign.Param;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
+    private final UserRegisterOptionalService userRegisterOptionalService;
 
     @PostMapping("/signup")
     public ApiResponseDto<SuccessResponse> signup(@Valid @RequestBody SignupRequestDto requestDto) {
@@ -36,12 +37,13 @@ public class UserController {
     public ApiResponseDto<SuccessResponse> login(@RequestBody LoginRequestsDto requestDto, HttpServletResponse response) {
         return userService.login(requestDto, response);
     }
-/*
-    @PostMapping("/signout")
-    public ApiResponseDto<SuccessResponse> signout(@RequestBody LoginRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.signout(requestDto, userDetails.getUser());
-    }
 
- */
+    @PatchMapping("/register/{userId}")
+    public ApiResponseDto<SuccessResponse> registerOptional(
+            @RequestBody UserRegisterOptionalDto userRegisterOptionalDto,
+            @PathVariable Long userId)
+    {
+        return userRegisterOptionalService.createRegisterOptionalUser(userId,userRegisterOptionalDto);
+    }
 }
 

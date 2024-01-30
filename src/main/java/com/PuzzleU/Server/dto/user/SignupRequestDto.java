@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.dto;
+package com.PuzzleU.Server.dto.user;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;

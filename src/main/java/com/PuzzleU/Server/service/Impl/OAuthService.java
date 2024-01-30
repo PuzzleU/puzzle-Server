@@ -3,7 +3,7 @@ package com.PuzzleU.Server.service.Impl;
 import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.common.SuccessResponse;
-import com.PuzzleU.Server.dto.KakaoUserInfoDto;
+import com.PuzzleU.Server.dto.user.KakaoUserInfoDto;
 import com.PuzzleU.Server.entity.user.User;
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.jwt.JwtUtil;
