@@ -20,7 +20,9 @@ public class UserSkillsetRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long UserSkillsetRelationId;
-//a
+
+
+    @Enumerated(EnumType.STRING)
     private Level Level;
 
     // 의존 관계 매핑 (User)

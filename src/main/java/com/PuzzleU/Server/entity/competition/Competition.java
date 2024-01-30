@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.entity;
+package com.PuzzleU.Server.entity.competition;
 
 import com.PuzzleU.Server.entity.BaseEntity;
 import jakarta.persistence.*;

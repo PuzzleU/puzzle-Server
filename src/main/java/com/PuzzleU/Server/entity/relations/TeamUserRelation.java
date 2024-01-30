@@ -8,6 +8,8 @@ import lombok.Getter;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Table(name = "team_user_relation")
@@ -28,5 +30,9 @@ public class TeamUserRelation {
     @ManyToOne
     @JoinColumn(name = "id")
     private User user;
+
+    @ColumnDefault("false")
+    @Column(nullable = false)
+    private Boolean IsWriter;
 
 }

@@ -21,6 +21,7 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long PositionId;
 
+    @Column(name = "position_name", length = 10)
     private String PositionName; // 포지션 이름
 
     @OneToMany(mappedBy = "Position",cascade = CascadeType.ALL)

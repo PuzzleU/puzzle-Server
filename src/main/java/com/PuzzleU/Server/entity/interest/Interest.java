@@ -21,7 +21,7 @@ public class Interest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long InterestId;
 
-    @Column(name = "interest_name")
+    @Column(name = "interest_name", length = 10)
     private String InterestName;
 
     @Column(name = "interest_type")
