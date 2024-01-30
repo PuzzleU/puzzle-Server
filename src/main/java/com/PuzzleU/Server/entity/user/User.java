@@ -45,7 +45,7 @@ public class User {
     private String userKoreaName;
 
     @OneToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private Profile userProfile;
 
     @Column(nullable = true)
