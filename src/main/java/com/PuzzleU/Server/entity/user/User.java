@@ -38,16 +38,18 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @Column(nullable = false, length = 20)
+    // 필수 정보
+    @Column(nullable = true, length = 20)
     private String userPuzzleId;
 
-    @Column(nullable = false, length = 6)
+    @Column(nullable = true, length = 6)
     private String userKoreaName;
 
     @OneToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = true)
     private Profile userProfile;
 
+    // 선택 정보
     @Column(nullable = true)
     @Enumerated(value = EnumType.STRING)
     private UniversityStatus universityStatus;
