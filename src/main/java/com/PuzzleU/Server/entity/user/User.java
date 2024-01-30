@@ -39,17 +39,22 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+
+    // 필수 정보
+
     @Column(nullable = true, length = 20)
     private String userPuzzleId;
 
     @Column(nullable = true, length = 6)
     private String userKoreaName;
 
-    // 추후 변경 예정
+
     @ManyToOne
     @JoinColumn(name = "user_profile",nullable = true)
+
     private Profile userProfile;
 
+    // 선택 정보
     @Column(nullable = true)
     @Enumerated(value = EnumType.STRING)
     private UniversityStatus universityStatus;
