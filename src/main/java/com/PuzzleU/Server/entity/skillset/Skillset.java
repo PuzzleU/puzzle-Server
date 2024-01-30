@@ -21,6 +21,10 @@ public class Skillset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long SkillsetId;
 
+    @Column(length = 30)
+    private String SkillsetName;
+
+    @Column(length = 200)
     private String SkillsetLogo;
 
     @OneToMany(mappedBy = "Skillset",cascade = CascadeType.ALL)

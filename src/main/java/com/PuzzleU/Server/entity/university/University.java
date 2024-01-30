@@ -25,6 +25,7 @@ public class University {
     @Enumerated(value = EnumType.STRING)
     private UniversityType UniversityType;
 
+    @Column(length = 15)
     private String UniversityName;
 
     @OneToMany(mappedBy = "University",cascade = CascadeType.ALL)

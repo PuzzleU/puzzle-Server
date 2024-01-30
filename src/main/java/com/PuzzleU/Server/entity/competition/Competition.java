@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.entity;
+package com.PuzzleU.Server.entity.competition;
 
 import com.PuzzleU.Server.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -37,9 +37,11 @@ public class Competition extends BaseEntity {
     private String CompetitionAwards;
 
     @Column(name = "Competition_start", nullable = true)
+    @Temporal(value = TemporalType.TIMESTAMP)
     private Date CompetitionStart;
 
     @Column(name = "Competition_end", nullable = true)
+    @Temporal(value = TemporalType.TIMESTAMP)
     private Date CompetitionEnd;
 
     @Column(name = "Competition_content", nullable = true, length = 2000)

@@ -1,10 +1,12 @@
 package com.PuzzleU.Server.entity.user;
 
+import com.PuzzleU.Server.entity.enumSet.UniversityStatus;
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.entity.experience.Experience;
 import com.PuzzleU.Server.entity.friendship.FriendShip;
 import com.PuzzleU.Server.entity.heart.Heart;
 import com.PuzzleU.Server.entity.major.Major;
+import com.PuzzleU.Server.entity.profile.Profile;
 import com.PuzzleU.Server.entity.relations.UserInterestRelation;
 import com.PuzzleU.Server.entity.relations.UserLocationRelation;
 import com.PuzzleU.Server.entity.relations.UserPositionRelation;
@@ -32,9 +34,31 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length =30)
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
+
+    @Column(nullable = false, length = 20)
+    private String userPuzzleId;
+
+    @Column(nullable = false, length = 6)
+    private String userKoreaName;
+
+    @OneToOne
+    @Column(nullable = false)
+    private Profile userProfile;
+
+    @Column(nullable = true)
+    @Enumerated(value = EnumType.STRING)
+    private UniversityStatus universityStatus;
+
+    @Column(nullable = true)
+    private Integer UniversityStart;
+
+    @Column(nullable = true)
+    private Integer UniversityEnd;
+
+
 
     @ManyToOne
     @JoinColumn(name ="university_id")
