@@ -19,6 +19,7 @@ import java.util.List;
 @Builder
 public class Interest {
     @Id
+    //E
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long InterestId;
 
