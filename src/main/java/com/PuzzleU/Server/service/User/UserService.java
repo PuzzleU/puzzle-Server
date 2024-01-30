@@ -1,10 +1,10 @@
-package com.PuzzleU.Server.service.Impl;
+package com.PuzzleU.Server.service.User;
 
 import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.common.SuccessResponse;
-import com.PuzzleU.Server.dto.LoginRequestsDto;
-import com.PuzzleU.Server.dto.SignupRequestDto;
+import com.PuzzleU.Server.dto.user.LoginRequestsDto;
+import com.PuzzleU.Server.dto.user.SignupRequestDto;
 import com.PuzzleU.Server.entity.user.User;
 import com.PuzzleU.Server.entity.enumSet.ErrorType;
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;

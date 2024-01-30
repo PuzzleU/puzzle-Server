@@ -2,6 +2,7 @@ package com.PuzzleU.Server.entity.user;
 
 import com.PuzzleU.Server.entity.enumSet.UniversityStatus;
 import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
+import com.PuzzleU.Server.entity.enumSet.WorkType;
 import com.PuzzleU.Server.entity.experience.Experience;
 import com.PuzzleU.Server.entity.friendship.FriendShip;
 import com.PuzzleU.Server.entity.heart.Heart;
@@ -22,7 +23,7 @@ import java.util.List;
 @Getter
 @Entity(name="users")
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,14 +39,15 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = true, length = 20)
     private String userPuzzleId;
 
-    @Column(nullable = false, length = 6)
+    @Column(nullable = true, length = 6)
     private String userKoreaName;
 
-    @OneToOne
-    @Column(nullable = false)
+    // 추후 변경 예정
+    @ManyToOne
+    @JoinColumn(name = "user_profile",nullable = true)
     private Profile userProfile;
 
     @Column(nullable = true)
@@ -57,6 +59,13 @@ public class User {
 
     @Column(nullable = true)
     private Integer UniversityEnd;
+
+    @Column(nullable = true)
+    @Enumerated(value = EnumType.STRING)
+    private WorkType workType;
+
+    @Column(nullable = true, length = 300)
+    private String UserNudge;
 
 
 
@@ -93,11 +102,22 @@ public class User {
     private List<Heart> like = new ArrayList<>();
 
     @Builder
-    public User(Long id, String username, String password, UserRoleEnum role, University university, Major major) {
+    public User(
+            Long id,
+            String username,
+            String password,
+            UserRoleEnum role,
+            String userPuzzleId,
+            String userKoreaName,
+            Profile userProfile
+    ) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.userPuzzleId = userPuzzleId;
+        this.userKoreaName = userKoreaName;
+        this.userProfile = userProfile;
     }
 
     public static User of(String username, String password, UserRoleEnum role)
