@@ -2,12 +2,10 @@ package com.PuzzleU.Server.dto.experience;
 
 import com.PuzzleU.Server.entity.enumSet.ExperienceType;
 import com.PuzzleU.Server.entity.experience.Experience;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
