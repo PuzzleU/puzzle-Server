@@ -42,6 +42,6 @@ public class Experience {
 
     // 의존 관계 매핑 (User)
     @ManyToOne
-    @JoinColumn(name = "id")
-    private User user;
+    @JoinColumn(name = "user_id")
+    private User User;
 }
