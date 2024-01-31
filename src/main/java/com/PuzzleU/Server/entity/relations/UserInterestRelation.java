@@ -18,15 +18,15 @@ public class UserInterestRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_interest_relation_id")
-    private Long UserInterestRelationId;
+    private Long userInterestRelationId;
 
     // 의존 관계 매핑 (User)
     @ManyToOne
     @JoinColumn(name = "id")
-    private User User;
+    private User user;
 
     // 의존관계 매핑 (Interest)
     @ManyToOne
     @JoinColumn(name = "interest_id")
-    private Interest Interest;
+    private Interest interest;
 }

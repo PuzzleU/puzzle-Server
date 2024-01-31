@@ -17,15 +17,15 @@ import org.hibernate.annotations.ColumnDefault;
 public class Apply extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ApplyId;
+    private Long applyId;
 
     @Column(length = 30)
-    private String ApplyTitle; // 지원서 제목
+    private String applyTitle; // 지원서 제목
 
     @Column(length = 500)
-    private String ApplyContent; // 지원서 내용
+    private String applyContent; // 지원서 내용
 
     @ColumnDefault("WAITING")
     @Enumerated(value = EnumType.STRING)
-    private ApplyStatus ApplyStatus; // 지원 상태 (대기/완료/취소)
+    private ApplyStatus applyStatus; // 지원 상태 (대기/완료/취소)
 }

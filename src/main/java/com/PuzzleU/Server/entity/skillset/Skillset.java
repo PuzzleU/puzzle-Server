@@ -19,15 +19,15 @@ import java.util.List;
 public class Skillset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long SkillsetId;
+    private Long skillsetId;
 
     @Column(length = 30)
-    private String SkillsetName;
+    private String skillsetName;
 
     @Column(length = 200)
-    private String SkillsetLogo;
+    private String skillsetLogo;
 
-    @OneToMany(mappedBy = "Skillset",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "skillset",cascade = CascadeType.ALL)
     private List<UserSkillsetRelation> userSkillsetRelation = new ArrayList<>();
     //
     //wqfqwfqw

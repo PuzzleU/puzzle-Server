@@ -60,17 +60,17 @@ public class User {
     private UniversityStatus universityStatus;
 
     @Column(nullable = true)
-    private Integer UniversityStart;
+    private Integer universityStart;
 
     @Column(nullable = true)
-    private Integer UniversityEnd;
+    private Integer universityEnd;
 
     @Column(nullable = true)
     @Enumerated(value = EnumType.STRING)
     private WorkType workType;
 
     @Column(nullable = true, length = 300)
-    private String UserNudge;
+    private String userNudge;
 
 
 
@@ -82,16 +82,16 @@ public class User {
     @JoinColumn(name ="major_id")
     private Major major;
 
-    @OneToMany(mappedBy = "User", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserInterestRelation> userInterestRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "User",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<UserLocationRelation> userLocationRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "User",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<UserPositionRelation> userPositionRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "User",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
@@ -104,7 +104,7 @@ public class User {
     private List<FriendShip> friendShip2 = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private List<Heart> like = new ArrayList<>();
+    private List<Heart> hearts = new ArrayList<>();
 
     @Builder
     public User(

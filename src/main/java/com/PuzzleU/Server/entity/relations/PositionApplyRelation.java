@@ -16,16 +16,16 @@ import lombok.Setter;
 public class PositionApplyRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long PositionApplyRelationId;
+    private Long positionApplyRelationId;
 
     // 의존 관계 매핑 (Position)
 
     @ManyToOne
     @JoinColumn(name = "position_id")
-    private Position Position;
+    private Position position;
 
     // 의존관계 매핑 (Apply)
     @ManyToOne
     @JoinColumn(name = "apply_id")
-    private Apply Apply;
+    private Apply apply;
 }

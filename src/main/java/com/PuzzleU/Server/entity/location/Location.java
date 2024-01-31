@@ -19,12 +19,12 @@ import java.util.List;
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long LocationId;
+    private Long locationId;
 
     @Column(name = "location_name")
-    private String LocationName;
+    private String locationName;
 
-    @OneToMany(mappedBy = "Location",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "location",cascade = CascadeType.ALL)
     private List<UserLocationRelation> userLocationRelation = new ArrayList<>();
 
 }

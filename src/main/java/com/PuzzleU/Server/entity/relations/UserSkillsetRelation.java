@@ -19,19 +19,19 @@ import lombok.Setter;
 public class UserSkillsetRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long UserSkillsetRelationId;
+    private Long userSkillsetRelationId;
 
 
     @Enumerated(EnumType.STRING)
-    private Level Level;
+    private Level level;
 
     // 의존 관계 매핑 (User)
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
-    private User User;
+    private User user;
 
     // 의존관계 매핑 (Skillset)
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "skillset_id")
-    private Skillset Skillset;
+    private Skillset skillset;
 }

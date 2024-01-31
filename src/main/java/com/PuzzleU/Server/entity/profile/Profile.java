@@ -20,10 +20,10 @@ public class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ProfileId;
+    private Long profileId;
 
     @Column(name = "profile_url")
-    private String ProfielUrl;
+    private String profielUrl;
 
     @OneToMany(mappedBy = "userProfile")
     private List<User> user = new ArrayList<>();

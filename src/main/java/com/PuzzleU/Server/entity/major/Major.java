@@ -17,13 +17,13 @@ import lombok.Setter;
 public class Major {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long MajorId;
+    private Long majorId;
 
     @Column(length = 30)
-    private String MajorName; // 전공 이름
+    private String majorName; // 전공 이름
 
     // 의존 관계 매핑 (University)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "university_id")
-    private University University;
+    private University university;
 }

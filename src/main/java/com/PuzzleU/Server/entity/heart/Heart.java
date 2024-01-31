@@ -17,7 +17,7 @@ import lombok.Setter;
 public class Heart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long HeartId;
+    private Long heartId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

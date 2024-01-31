@@ -17,7 +17,7 @@ import lombok.Setter;
 public class FriendShip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long FriendShipId;
+    private Long friendShipId;
 
 
     @ManyToOne
@@ -29,7 +29,7 @@ public class FriendShip {
     private User user2;
 
     @Column(name = "user_status")
-    private Boolean UserStatus;
+    private Boolean userStatus;
 
 
 }
