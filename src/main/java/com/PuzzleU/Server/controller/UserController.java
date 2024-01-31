@@ -6,7 +6,6 @@ import com.PuzzleU.Server.dto.experience.ExperienceDto;
 import com.PuzzleU.Server.dto.user.LoginRequestsDto;
 import com.PuzzleU.Server.dto.user.SignupRequestDto;
 import com.PuzzleU.Server.dto.user.UserRegisterOptionalDto;
-import com.PuzzleU.Server.service.User.UserRegisterOptionalService;
 import com.PuzzleU.Server.service.User.UserService;
 import com.PuzzleU.Server.service.experience.ExperienceService;
 import feign.Param;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
-    private final UserRegisterOptionalService userRegisterOptionalService;
     private final ExperienceService experienceService;
 
     @PostMapping("/signup")
@@ -46,7 +44,7 @@ public class UserController {
             @RequestBody UserRegisterOptionalDto userRegisterOptionalDto,
             @PathVariable Long userId)
     {
-        return userRegisterOptionalService.createRegisterOptionalUser(userId,userRegisterOptionalDto);
+        return userService.createRegisterOptionalUser(userId,userRegisterOptionalDto);
     }
     @PostMapping("/experience/{userId}")
     public ApiResponseDto<SuccessResponse> postExperience(
