@@ -14,6 +14,7 @@ public enum ErrorType {
     NOT_FOUND_WRITING(400, "게시글/댓글이 존재하지 않습니다."),
     NOT_FOUND_SKILLSET(400, "스킬셋이 존재하지 않습니다"),
     NOT_FOUND_MAJOR(400, "전공이 존재하지 않습니다"),
+    NOT_FOUND_EXPERIENCE(400, "경험이 존재하지 않습니다"),
     NOT_FOUND_UNIVERSITY(400, "대학이 존재하지 않습니다");
 
     private int code;

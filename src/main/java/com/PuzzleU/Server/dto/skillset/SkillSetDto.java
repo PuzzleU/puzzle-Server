@@ -1,12 +1,10 @@
 package com.PuzzleU.Server.dto.skillset;
 
 import com.PuzzleU.Server.entity.enumSet.Level;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

@@ -44,19 +44,42 @@ public class UserRegisterOptionalService
     // 각각에 대한 id 값과 여러개 받아와서
     // relation에 하나씩 저장해주기
 
-    @Transactional
+
     public ApiResponseDto<SuccessResponse> createRegisterOptionalUser(
             Long userId,
             UserRegisterOptionalDto userRegisterOptionalDto
     ) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        System.out.println(optionalUser);
-        Optional<Major> optionalMajor = majorRepository.findById(userRegisterOptionalDto.getMajorId());
-        Optional<University> optionalUniversity = universityRepository.findById(userRegisterOptionalDto.getUniversityId());
+        System.out.println("userId:" + userId);
 
-        User user = optionalUser.orElseThrow(() -> new RestApiException(ErrorType.NOT_MATCHING_INFO));
-        Major major = optionalMajor.orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_MAJOR));
-        University university = optionalUniversity.orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_UNIVERSITY));
+        if (userId == null) {
+            throw new RestApiException(ErrorType.NOT_FOUND_USER);
+        }
+        System.out.println(userRegisterOptionalDto);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(userRegisterOptionalDto.getUniversityStart() == null)
+        {
+            System.out.println("null");
+        }
+        Optional<Major> optionalMajor = majorRepository.findById(userRegisterOptionalDto.getMajorId());
+
+        System.out.println(userRegisterOptionalDto.getMajorId());
+        Optional<University> optionalUniversity = universityRepository.findById(userRegisterOptionalDto.getUniversityId());
+        System.out.println(optionalUniversity);
+
+        User user = optionalUser.orElseThrow(() -> {
+            System.out.println("User not found");
+            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
+        });
+
+        Major major = optionalMajor.orElseThrow(() -> {
+            System.out.println("Major not found");
+            return new RestApiException(ErrorType.NOT_FOUND_MAJOR);
+        });
+
+        University university = optionalUniversity.orElseThrow(() -> {
+            System.out.println("University not found");
+            return new RestApiException(ErrorType.NOT_FOUND_UNIVERSITY);
+        });
 
         user.setUniversityStart(userRegisterOptionalDto.getUniversityStart());
         user.setUniversityEnd(userRegisterOptionalDto.getUniversityEnd());

@@ -49,7 +49,7 @@ public class User {
     private String userKoreaName;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_profile",nullable = true)
 
     private Profile userProfile;
@@ -74,11 +74,11 @@ public class User {
 
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="university_id")
     private University university;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="major_id")
     private Major major;
 
