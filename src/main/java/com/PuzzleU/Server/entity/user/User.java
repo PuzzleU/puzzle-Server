@@ -94,7 +94,7 @@ public class User {
     @OneToMany(mappedBy = "User",cascade = CascadeType.ALL)
     private List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "User",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Experience> experience = new ArrayList<>();
 
     @OneToMany(mappedBy = "user1",cascade = CascadeType.ALL)

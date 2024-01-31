@@ -58,13 +58,13 @@ public class UserController {
     @PatchMapping("/experience/{userId}/{experienceId}")
     public ApiResponseDto<SuccessResponse> updateExperience(
             @RequestBody ExperienceDto experienceDto,
-            @PathVariable Long userId, Long experienceId)
+            @PathVariable Long userId, @PathVariable Long experienceId)
     {
         return experienceService.updateExperience(userId, experienceId,experienceDto);
     }
     @DeleteMapping("/experience/{userId}/{experienceId}")
     public ApiResponseDto<SuccessResponse> deleteExperience(
-            @PathVariable Long userId, Long experienceId)
+            @PathVariable Long userId, @PathVariable Long experienceId)
     {
         return experienceService.deleteExperience(userId, experienceId);
     }

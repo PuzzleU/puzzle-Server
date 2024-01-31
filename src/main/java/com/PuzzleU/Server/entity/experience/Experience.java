@@ -19,7 +19,7 @@ import org.hibernate.annotations.ColumnDefault;
 public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ExperienceId;
+    private Long experienceId;
 
     @Column(length = 100)
     private String ExperienceName; // 경험 이름
@@ -43,5 +43,5 @@ public class Experience {
     // 의존 관계 매핑 (User)
     @ManyToOne
     @JoinColumn(name = "id")
-    private User User;
+    private User user;
 }

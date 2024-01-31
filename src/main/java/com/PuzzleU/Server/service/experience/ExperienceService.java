@@ -55,7 +55,12 @@ public class ExperienceService {
             ExperienceDto experienceDto
     )
     {
-        Optional<Experience> optionalExperience = experienceRepository.findExperienceIdAndUserId(experienceId,userId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = optionalUser.orElseThrow(() -> {
+            System.out.println("User not found");
+            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
+        });
+        Optional<Experience> optionalExperience = experienceRepository.findByExperienceIdAndUser(experienceId,user);
         Experience experience = optionalExperience.orElseThrow(() -> {
             System.out.println("User not found");
             return new RestApiException(ErrorType.NOT_FOUND_EXPERIENCE);
@@ -101,7 +106,12 @@ public class ExperienceService {
             Long userId,Long experienceId
     )
     {
-        Optional<Experience> optionalExperience = experienceRepository.findExperienceIdAndUserId(experienceId,userId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = optionalUser.orElseThrow(() -> {
+            System.out.println("User not found");
+            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
+        });
+        Optional<Experience> optionalExperience = experienceRepository.findByExperienceIdAndUser(experienceId,user);
         Experience experience = optionalExperience.orElseThrow(() -> {
             System.out.println("User not found");
             return new RestApiException(ErrorType.NOT_FOUND_EXPERIENCE);
