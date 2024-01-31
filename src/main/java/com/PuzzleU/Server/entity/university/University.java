@@ -20,14 +20,14 @@ import java.util.List;
 public class University {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long UniversityId;
+    private Long universityId;
 
     @Enumerated(value = EnumType.STRING)
-    private UniversityType UniversityType;
+    private UniversityType universityType;
 
     @Column(length = 15)
-    private String UniversityName;
+    private String universityName;
 
-    @OneToMany(mappedBy = "University",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "university",cascade = CascadeType.ALL)
     private List<Major> major = new ArrayList<>();
 }

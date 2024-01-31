@@ -19,11 +19,11 @@ import java.util.List;
 public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long PositionId;
+    private Long positionId;
 
     @Column(name = "position_name", length = 10)
-    private String PositionName; // 포지션 이름
+    private String positionName; // 포지션 이름
 
-    @OneToMany(mappedBy = "Position",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "position",cascade = CascadeType.ALL)
     private List<UserPositionRelation> userPositionRelation = new ArrayList<>();
 }

@@ -25,42 +25,42 @@ import java.util.List;
 public class Competition extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long CompetitionId;
+    private Long competitionId;
 
-    @Column(name = "Competition_name", nullable = true, length = 100)
-    private String CompetitionName;
+    @Column(name = "competition_name", nullable = true, length = 100)
+    private String competitionName;
 
-    @Column(name =  "Competition_url",nullable = true, length = 200)
-    private String CompetitionUrl;
+    @Column(name =  "competition_url",nullable = true, length = 200)
+    private String competitionUrl;
 
-    @Column(name = "Competition_host", nullable = true, length = 50)
-    private String CompetitionHost;
+    @Column(name = "competition_host", nullable = true, length = 50)
+    private String competitionHost;
 
-    @Column(name = "Competition_poster", nullable = true, length = 200)
-    private String CompetitionPoster;
+    @Column(name = "competition_poster", nullable = true, length = 200)
+    private String competitionPoster;
 
-    @Column(name = "Competition_awards", nullable = true, length = 50)
-    private String CompetitionAwards;
+    @Column(name = "competition_awards", nullable = true, length = 50)
+    private String competitionAwards;
 
-    @Column(name = "Competition_start", nullable = true)
+    @Column(name = "competition_start", nullable = true)
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date CompetitionStart;
+    private Date competitionStart;
 
-    @Column(name = "Competition_end", nullable = true)
+    @Column(name = "competition_end", nullable = true)
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date CompetitionEnd;
+    private Date competitionEnd;
 
-    @Column(name = "Competition_content", nullable = true, length = 2000)
-    private String CompetitionContent;
+    @Column(name = "competition_content", nullable = true, length = 2000)
+    private String competitionContent;
 
-    @Column(name = "Competition_visit", nullable = true)
-    private Integer CompetitionVisit;
+    @Column(name = "competition_visit", nullable = true)
+    private Integer competitionVisit;
 
-    @Column(name = "Competition_like", nullable = true)
-    private Integer CompetitionLike;
+    @Column(name = "competition_like", nullable = true)
+    private Integer competitionLike;
 
-    @Column(name = "Competition_matching", nullable = true)
-    private Integer CompetitionMatching;
+    @Column(name = "competition_matching", nullable = true)
+    private Integer competitionMatching;
 
 
     @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)

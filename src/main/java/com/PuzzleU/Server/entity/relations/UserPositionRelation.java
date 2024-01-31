@@ -17,15 +17,15 @@ import lombok.Setter;
 public class UserPositionRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long UserPositionRelationId;
+    private Long userPositionRelationId;
 
     // 의존 관계 매핑 (User)
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User User;
+    private User user;
 
     // 의존관계 매핑 (Position)
     @ManyToOne
     @JoinColumn(name = "position_id")
-    private Position Position;
+    private Position position;
 }

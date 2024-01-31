@@ -21,7 +21,7 @@ public class TeamUserRelation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long TeamUserRelationId;
+    private Long teamUserRelationId;
 
     @ManyToOne
     @JoinColumn(name = "team_id")
@@ -33,6 +33,6 @@ public class TeamUserRelation {
 
     @ColumnDefault("false")
     @Column(nullable = false)
-    private Boolean IsWriter;
+    private Boolean isWriter;
 
 }

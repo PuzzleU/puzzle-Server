@@ -18,15 +18,15 @@ import lombok.Setter;
 public class UserLocationRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long UserLocationRelationId;
+    private Long userLocationRelationId;
 
     // 의존 관계 매핑 (User)
     @ManyToOne
     @JoinColumn(name = "id")
-    private com.PuzzleU.Server.entity.user.User User;
+    private com.PuzzleU.Server.entity.user.User user;
 
     // 의존관계 매핑 (Location)
     @ManyToOne
     @JoinColumn(name = "location_id")
-    private Location Location;
+    private Location location;
 }

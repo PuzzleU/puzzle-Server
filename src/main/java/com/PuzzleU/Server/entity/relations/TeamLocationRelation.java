@@ -19,7 +19,7 @@ public class TeamLocationRelation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long TeamLocationRelationId;
+    private Long teamLocationRelationId;
 
     @ManyToOne
     @JoinColumn(name = "team_id")

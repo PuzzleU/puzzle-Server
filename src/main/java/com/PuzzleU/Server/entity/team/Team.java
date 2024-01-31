@@ -16,35 +16,35 @@ public class Team extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long TeamId;
+    private Long teamId;
 
     @Column(name="team_title", nullable = true, length = 30)
-    private String TeamTitle;
+    private String teamTitle;
 
     @Column(name = "team_member_now", nullable = true)
-    private Integer TeamMemberNow;
+    private Integer teamMemberNow;
 
     @Column(name = "team_member_need", nullable = true)
-    private Integer TeamMemberNeed;
+    private Integer teamMemberNeed;
 
     @ColumnDefault("true")
     @Column(name = "team_untact", nullable = true)
-    private boolean TeamUntact;
+    private boolean teamUntact;
 
     @Column(name = "team_url", nullable = true, length=200)
-    private String TeamUrl;
+    private String teamUrl;
 
     @Column(name = "team_introduce", nullable = true, length = 300)
-    private String TeamIntroduce;
+    private String teamIntroduce;
 
     @Column(name = "team_content", nullable = true, length = 500)
-    private String TeamContent;
+    private String teamContent;
 
     @ColumnDefault("true")
     @Column(name = "team_status",nullable = true)
-    private Boolean TeamStatus;
+    private Boolean teamStatus;
 
-    @ManyToOne
+    @ManyToOne//a
     @JoinColumn(name = "competition_id")
     private Competition competition;
 

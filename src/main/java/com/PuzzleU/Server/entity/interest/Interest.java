@@ -21,16 +21,16 @@ public class Interest {
     @Id
     //E
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long InterestId;
+    private Long interestId;
 
     @Column(name = "interest_name", length = 10)
-    private String InterestName;
+    private String interestName;
 
     @Column(name = "interest_type")
     @Enumerated(value = EnumType.STRING)
-    private InterestTypes InterestType;
+    private InterestTypes interestType;
 
-    @OneToMany(mappedBy = "Interest", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "interest", cascade = CascadeType.ALL)
     private List<UserInterestRelation> userInterestRelation = new ArrayList<>();
 
     @ManyToOne
