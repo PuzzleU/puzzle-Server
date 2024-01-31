@@ -44,7 +44,7 @@ public class Team extends BaseEntity {
     @Column(name = "team_status",nullable = true)
     private Boolean teamStatus;
 
-    @ManyToOne
+    @ManyToOne//a
     @JoinColumn(name = "competition_id")
     private Competition competition;
 
