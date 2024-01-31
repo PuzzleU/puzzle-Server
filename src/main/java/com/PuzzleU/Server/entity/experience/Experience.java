@@ -40,7 +40,7 @@ public class Experience {
 
     private String experienceRole; // 담당 업무
 
-    //d
+    //de
     // 의존 관계 매핑 (User)
     @ManyToOne
     @JoinColumn(name = "user_id")
