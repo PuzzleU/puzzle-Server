@@ -1,6 +1,9 @@
 package com.PuzzleU.Server.entity.competition;
 
 import com.PuzzleU.Server.entity.BaseEntity;
+import com.PuzzleU.Server.entity.heart.Heart;
+import com.PuzzleU.Server.entity.interest.Interest;
+import com.PuzzleU.Server.entity.team.Team;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +11,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 // Competition Entity 생성
 @Entity
 @Table(name = "competition")
@@ -57,6 +63,13 @@ public class Competition extends BaseEntity {
     private Integer CompetitionMatching;
 
 
+    @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
+    private List<Team> team = new ArrayList<>();
 
+    @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
+    private List<Heart> heart = new ArrayList<>();
+
+    @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
+    private List<Interest> interest = new ArrayList<>();
 
 }

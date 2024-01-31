@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.entity.heart;
 
+import com.PuzzleU.Server.entity.competition.Competition;
 import com.PuzzleU.Server.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,20 +10,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "heart")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Heart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String HeartId;
-
+    private Long HeartId;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "competition_id")
+    private Competition competition;
 
 
 }

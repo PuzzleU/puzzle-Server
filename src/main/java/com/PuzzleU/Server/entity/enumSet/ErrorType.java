@@ -11,7 +11,10 @@ public enum ErrorType {
     NOT_MATCHING_INFO(400, "회원을 찾을 수 없습니다."),
     NOT_MATCHING_PASSWORD(400, "비밀번호가 일치하지 않습니다."),
     NOT_FOUND_USER(400, "사용자가 존재하지 않습니다."),
-    NOT_FOUND_WRITING(400, "게시글/댓글이 존재하지 않습니다.");
+    NOT_FOUND_WRITING(400, "게시글/댓글이 존재하지 않습니다."),
+    NOT_FOUND_SKILLSET(400, "스킬셋이 존재하지 않습니다"),
+    NOT_FOUND_MAJOR(400, "전공이 존재하지 않습니다"),
+    NOT_FOUND_UNIVERSITY(400, "대학이 존재하지 않습니다");
 
     private int code;
     private String message;

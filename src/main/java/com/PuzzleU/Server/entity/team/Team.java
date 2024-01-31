@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.entity.team;
 
 import com.PuzzleU.Server.entity.BaseEntity;
+import com.PuzzleU.Server.entity.competition.Competition;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -43,5 +44,8 @@ public class Team extends BaseEntity {
     @Column(name = "team_status",nullable = true)
     private Boolean TeamStatus;
 
+    @ManyToOne
+    @JoinColumn(name = "competition_id")
+    private Competition competition;
 
 }

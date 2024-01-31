@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "userPositionRelation")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,7 +21,7 @@ public class UserPositionRelation {
 
     // 의존 관계 매핑 (User)
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User User;
 
     // 의존관계 매핑 (Position)
