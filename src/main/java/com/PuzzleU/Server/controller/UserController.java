@@ -14,6 +14,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -65,6 +67,20 @@ public class UserController {
             @PathVariable Long userId, @PathVariable Long experienceId)
     {
         return experienceService.deleteExperience(userId, experienceId);
+    }
+    @GetMapping("/experience/{userId}")
+    public ApiResponseDto<List<ExperienceDto>> getExperience(
+            @PathVariable Long userId
+    )
+    {
+        return experienceService.getExperienceList(userId);
+    }
+    @GetMapping("/experience/{userId}/{experienceId}")
+    public ApiResponseDto<ExperienceDto> getExperience(
+            @PathVariable Long userId, @PathVariable Long experienceId
+    )
+    {
+        return experienceService.getExperience(userId,experienceId);
     }
 }
 

@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -119,5 +121,51 @@ public class ExperienceService {
         experienceRepository.delete(experience);
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 삭제완료"), null);
     }
+    public ApiResponseDto<List<ExperienceDto>> getExperienceList(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = optionalUser.orElseThrow(() -> new RestApiException(ErrorType.NOT_MATCHING_INFO));
 
+        List<ExperienceDto> experienceList = new ArrayList<>();
+        List<Experience> userExperiences = experienceRepository.findByUser(user);
+        System.out.println(userExperiences);
+        for (Experience experience : userExperiences) {
+            ExperienceDto experienceDto = new ExperienceDto();
+            experienceDto.setExperienceName(experience.getExperienceName());
+            experienceDto.setExperienceStartYear(experience.getExperienceStartYear());
+            experienceDto.setExperienceStartMonth(experience.getExperienceStartMonth());
+            experienceDto.setExperienceEndYear(experience.getExperienceEndYear());
+            experienceDto.setExperienceEndMonth(experience.getExperienceEndMonth());
+            experienceDto.setExperienceType(experience.getExperienceType());
+            experienceDto.setExperienceStatus(experience.getExperienceStatus());
+            experienceDto.setExperienceRole(experience.getExperienceRole());
+            experienceList.add(experienceDto);
+        }
+        return ResponseUtils.ok(experienceList, null);
+
+    }
+    public ApiResponseDto<ExperienceDto> getExperience(Long userId, Long experienceId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = optionalUser.orElseThrow(() -> {
+            System.out.println("User not found");
+            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
+        });
+        Optional<Experience> optionalExperience = experienceRepository.findByExperienceIdAndUser(experienceId,user);
+        Experience experience = optionalExperience.orElseThrow(() -> {
+            System.out.println("User not found");
+            return new RestApiException(ErrorType.NOT_FOUND_EXPERIENCE);
+        });
+        ExperienceDto experienceDto = new ExperienceDto();
+        experienceDto.setExperienceName(experience.getExperienceName());
+        experienceDto.setExperienceStartYear(experience.getExperienceStartYear());
+        experienceDto.setExperienceStartMonth(experience.getExperienceStartMonth());
+        experienceDto.setExperienceEndYear(experience.getExperienceEndYear());
+        experienceDto.setExperienceEndMonth(experience.getExperienceEndMonth());
+        experienceDto.setExperienceType(experience.getExperienceType());
+        experienceDto.setExperienceStatus(experience.getExperienceStatus());
+        experienceDto.setExperienceRole(experience.getExperienceRole());
+
+
+        return ResponseUtils.ok(experienceDto, null);
+
+    }
 }

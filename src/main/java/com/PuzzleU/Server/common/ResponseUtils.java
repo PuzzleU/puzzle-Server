@@ -1,7 +1,7 @@
 package com.PuzzleU.Server.common;
 
 public class ResponseUtils {
-
+    //d
     // 요청 성공인 경우
     public static <T> ApiResponseDto<T> ok(T response, String jwt)
     {
