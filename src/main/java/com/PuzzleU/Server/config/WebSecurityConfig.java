@@ -55,7 +55,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/oauth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/posts").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/post/{id}").permitAll()
-                                .requestMatchers(HttpMethod.GET, "api/position/list").permitAll()
+                                .requestMatchers(HttpMethod.GET, "api/splash").permitAll()
                                 .anyRequest().authenticated()
 
 
