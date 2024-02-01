@@ -3,13 +3,15 @@ package com.PuzzleU.Server.dto.interest;
 import com.PuzzleU.Server.entity.enumSet.InterestTypes;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Data
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class InterestDto {
-    private Long InterestId;
-    private String InterestName;
+public class InterestTypeDto {
+    private InterestTypes InterestType;
+    private List<InterestDto> InterestList;
 }
