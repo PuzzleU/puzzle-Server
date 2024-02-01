@@ -21,12 +21,12 @@ public class UserLocationRelation {
     private Long userLocationRelationId;
 
     // 의존 관계 매핑 (User)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private com.PuzzleU.Server.entity.user.User user;
 
     // 의존관계 매핑 (Location)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private Location location;
 }
