@@ -20,12 +20,12 @@ public class UserPositionRelation {
     private Long userPositionRelationId;
 
     // 의존 관계 매핑 (User)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     // 의존관계 매핑 (Position)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private Position position;
 }

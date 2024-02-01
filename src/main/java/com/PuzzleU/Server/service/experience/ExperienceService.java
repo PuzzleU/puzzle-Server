@@ -130,6 +130,7 @@ public class ExperienceService {
         System.out.println(userExperiences);
         for (Experience experience : userExperiences) {
             ExperienceDto experienceDto = new ExperienceDto();
+            experienceDto.setExperienceId(experience.getExperienceId());
             experienceDto.setExperienceName(experience.getExperienceName());
             experienceDto.setExperienceStartYear(experience.getExperienceStartYear());
             experienceDto.setExperienceStartMonth(experience.getExperienceStartMonth());
@@ -155,6 +156,7 @@ public class ExperienceService {
             return new RestApiException(ErrorType.NOT_FOUND_EXPERIENCE);
         });
         ExperienceDto experienceDto = new ExperienceDto();
+        experienceDto.setExperienceId(experience.getExperienceId());
         experienceDto.setExperienceName(experience.getExperienceName());
         experienceDto.setExperienceStartYear(experience.getExperienceStartYear());
         experienceDto.setExperienceStartMonth(experience.getExperienceStartMonth());

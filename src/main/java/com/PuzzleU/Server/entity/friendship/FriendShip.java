@@ -20,11 +20,11 @@ public class FriendShip {
     private Long friendShipId;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users1")
     private User user1;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users2")
     private User user2;
 

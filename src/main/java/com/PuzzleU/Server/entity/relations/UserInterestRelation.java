@@ -21,12 +21,12 @@ public class UserInterestRelation {
     private Long userInterestRelationId;
 
     // 의존 관계 매핑 (User)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private User user;
 
     // 의존관계 매핑 (Interest)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interest_id")
     private Interest interest;
 }

@@ -12,6 +12,8 @@ import lombok.*;
 @Builder
 public class ExperienceDto {
 
+    private Long ExperienceId;
+
     private String ExperienceName;
 
     private ExperienceType ExperienceType;

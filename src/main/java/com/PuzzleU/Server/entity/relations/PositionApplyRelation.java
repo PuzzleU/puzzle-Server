@@ -20,12 +20,12 @@ public class PositionApplyRelation {
 
     // 의존 관계 매핑 (Position)
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private Position position;
 
     // 의존관계 매핑 (Apply)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apply_id")
     private Apply apply;
 }
