@@ -33,7 +33,7 @@ public class Interest {
     @OneToMany(mappedBy = "interest", cascade = CascadeType.ALL)
     private List<UserInterestRelation> userInterestRelation = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competition_id")
     private Competition competition;
 }

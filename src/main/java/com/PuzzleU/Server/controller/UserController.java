@@ -3,11 +3,16 @@ package com.PuzzleU.Server.controller;
 import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.experience.ExperienceDto;
+import com.PuzzleU.Server.dto.relation.UserSkillsetRelationDto;
+import com.PuzzleU.Server.dto.skillset.SkillSetDto;
+import com.PuzzleU.Server.dto.skillset.SkillSetListDto;
 import com.PuzzleU.Server.dto.user.LoginRequestsDto;
 import com.PuzzleU.Server.dto.user.SignupRequestDto;
 import com.PuzzleU.Server.dto.user.UserRegisterOptionalDto;
+import com.PuzzleU.Server.entity.relations.UserSkillsetRelation;
 import com.PuzzleU.Server.service.User.UserService;
 import com.PuzzleU.Server.service.experience.ExperienceService;
+import com.PuzzleU.Server.service.skillset.SkillsetService;
 import feign.Param;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -22,6 +27,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final ExperienceService experienceService;
+    private final SkillsetService skillsetService;
 
     @PostMapping("/signup")
     public ApiResponseDto<SuccessResponse> signup(@Valid @RequestBody SignupRequestDto requestDto) {
@@ -69,7 +75,7 @@ public class UserController {
         return experienceService.deleteExperience(userId, experienceId);
     }
     @GetMapping("/experience/{userId}")
-    public ApiResponseDto<List<ExperienceDto>> getExperience(
+    public ApiResponseDto<List<ExperienceDto>> getExperienceList(
             @PathVariable Long userId
     )
     {
@@ -81,6 +87,29 @@ public class UserController {
     )
     {
         return experienceService.getExperience(userId,experienceId);
+    }
+    @PostMapping("/skillset/{userId}")
+    public ApiResponseDto<SuccessResponse> createSkillset(
+            @PathVariable Long userId,
+            @RequestBody SkillSetListDto skillsetList
+    )
+    {
+        return skillsetService.createSkillset(userId, skillsetList);
+    }
+    @DeleteMapping("/skillset/{userId}/{skillsetId}")
+    public ApiResponseDto<SuccessResponse> deleteSkillset(
+            @PathVariable Long userId,
+            @PathVariable Long skillsetId
+    )
+    {
+        return skillsetService.deleteSkillset(userId, skillsetId);
+    }
+    @GetMapping("/skillset/{userId}")
+    public ApiResponseDto<List<UserSkillsetRelationDto>> getUserSkillsetList(
+            @PathVariable Long userId
+    )
+    {
+        return skillsetService.getSkillsetList(userId);
     }
 }
 

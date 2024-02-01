@@ -51,7 +51,6 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_profile",nullable = true)
-
     private Profile userProfile;
 
     // 선택 정보
