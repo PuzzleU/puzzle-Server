@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.service.Position;
+package com.PuzzleU.Server.service.position;
 
 import com.PuzzleU.Server.dto.position.PositionDto;
 import com.PuzzleU.Server.entity.position.Position;
