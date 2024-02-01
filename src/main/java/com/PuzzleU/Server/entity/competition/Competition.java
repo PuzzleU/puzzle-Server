@@ -63,6 +63,9 @@ public class Competition extends BaseEntity {
     @Column(name = "competition_matching", nullable = true)
     private Integer competitionMatching;
 
+    @Column(name = "competition_d_day", nullable = true)
+    private Integer competitionDDay;
+
 
     @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
     private List<Team> team = new ArrayList<>();
