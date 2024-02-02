@@ -127,7 +127,8 @@ public class UserService {
         user.setUniversityStart(userRegisterOptionalDto.getUniversityStart());
         user.setUniversityEnd(userRegisterOptionalDto.getUniversityEnd());
         user.setUniversityStatus(userRegisterOptionalDto.getUniversityStatus());
-        user.setUserNudge(userRegisterOptionalDto.getUserNudge());
+        user.setUserRepresentativeExperience(userRegisterOptionalDto.getUserRepresentativeExperience());
+        user.setUserRepresentativeProfileSentence(userRegisterOptionalDto.getUserRepresentativeProfileSentence());
         user.setWorkType(userRegisterOptionalDto.getUserWorkType());
         user.setMajor(major);
         user.setUniversity(university);
