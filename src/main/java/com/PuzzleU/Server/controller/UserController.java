@@ -13,6 +13,7 @@ import com.PuzzleU.Server.entity.relations.UserSkillsetRelation;
 import com.PuzzleU.Server.service.User.UserService;
 import com.PuzzleU.Server.service.experience.ExperienceService;
 import com.PuzzleU.Server.service.skillset.SkillsetService;
+import com.PuzzleU.Server.service.university.UniversityService;
 import feign.Param;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -28,7 +29,7 @@ public class UserController {
     private final UserService userService;
     private final ExperienceService experienceService;
     private final SkillsetService skillsetService;
-
+    private final UniversityService universityService;
     @PostMapping("/signup")
     public ApiResponseDto<SuccessResponse> signup(@Valid @RequestBody SignupRequestDto requestDto) {
         return userService.signup(requestDto);
@@ -110,6 +111,13 @@ public class UserController {
     )
     {
         return skillsetService.getSkillsetList(userId);
+    }
+    @PostMapping("/university/{userId}")
+    public ApiResponseDto<SuccessResponse> createUniversity(
+            @PathVariable Long userId
+    )
+    {
+        return universityService.createUniversity(userId);
     }
 }
 

@@ -72,4 +72,6 @@ public class Competition extends BaseEntity {
     @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
     private List<Interest> interest = new ArrayList<>();
 
+    private Integer competitionDday;
+
 }
