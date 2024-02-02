@@ -1,11 +1,16 @@
 package com.PuzzleU.Server.entity.team;
 
 import com.PuzzleU.Server.entity.BaseEntity;
+import com.PuzzleU.Server.entity.apply.Apply;
 import com.PuzzleU.Server.entity.competition.Competition;
+import com.PuzzleU.Server.entity.relations.UserPositionRelation;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DialectOverride;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "team")
@@ -47,5 +52,8 @@ public class Team extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competition_id")
     private Competition competition;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private List<Apply> applyList = new ArrayList<>();
 
 }
