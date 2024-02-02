@@ -24,6 +24,6 @@ public class Position {
     @Column(name = "position_name", length = 10)
     private String positionName; // 포지션 이름
 
-    @OneToMany(mappedBy = "position",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "position",cascade = CascadeType.REMOVE)
     private List<UserPositionRelation> userPositionRelation = new ArrayList<>();
 }
