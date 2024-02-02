@@ -1,7 +1,7 @@
 package com.PuzzleU.Server.entity.interest;
 
-import com.PuzzleU.Server.entity.competition.Competition;
 import com.PuzzleU.Server.entity.enumSet.InterestTypes;
+import com.PuzzleU.Server.entity.relations.CompetitionInterestRelation;
 import com.PuzzleU.Server.entity.relations.UserInterestRelation;
 import jakarta.persistence.*;
 
@@ -33,7 +33,6 @@ public class Interest {
     @OneToMany(mappedBy = "interest", cascade = CascadeType.ALL)
     private List<UserInterestRelation> userInterestRelation = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "competition_id")
-    private Competition competition;
+    @OneToMany(mappedBy = "interest", cascade = CascadeType.ALL)
+    private List<CompetitionInterestRelation> competitionInterestRelations = new ArrayList<>();
 }

@@ -3,6 +3,7 @@ package com.PuzzleU.Server.entity.competition;
 import com.PuzzleU.Server.entity.BaseEntity;
 import com.PuzzleU.Server.entity.heart.Heart;
 import com.PuzzleU.Server.entity.interest.Interest;
+import com.PuzzleU.Server.entity.relations.CompetitionInterestRelation;
 import com.PuzzleU.Server.entity.team.Team;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -62,6 +63,9 @@ public class Competition extends BaseEntity {
     @Column(name = "competition_matching", nullable = true)
     private Integer competitionMatching;
 
+    @Column(name = "competition_d_day", nullable = true)
+    private Integer competitionDDay;
+
 
     @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
     private List<Team> team = new ArrayList<>();
@@ -69,8 +73,8 @@ public class Competition extends BaseEntity {
     @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
     private List<Heart> heart = new ArrayList<>();
 
-    @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
-    private List<Interest> interest = new ArrayList<>();
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
+    private List<CompetitionInterestRelation> competitionInterestRelations = new ArrayList<>();
 
     private Integer competitionDday;
 
