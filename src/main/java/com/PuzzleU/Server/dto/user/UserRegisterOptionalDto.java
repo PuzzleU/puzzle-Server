@@ -27,7 +27,9 @@ public class UserRegisterOptionalDto {
 
     private Long MajorId;
 
-    private String UserNudge;
+    private String UserRepresentativeExperience;
+
+    private String UserRepresentativeProfileSentence;
 
     private WorkType UserWorkType;
 

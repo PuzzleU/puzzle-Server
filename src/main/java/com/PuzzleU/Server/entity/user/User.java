@@ -68,8 +68,12 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private WorkType workType;
 
-    @Column(nullable = true, length = 300)
-    private String userNudge;
+    @Column(nullable = true, length = 100)
+    private String userRepresentativeExperience;
+
+    @Column(nullable = true, length = 100)
+    private String userRepresentativeProfileSentence;
+
 
 
 

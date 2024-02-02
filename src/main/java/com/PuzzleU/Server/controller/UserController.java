@@ -6,17 +6,21 @@ import com.PuzzleU.Server.dto.experience.ExperienceDto;
 import com.PuzzleU.Server.dto.relation.UserSkillsetRelationDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetListDto;
+import com.PuzzleU.Server.dto.university.UniversityDto;
 import com.PuzzleU.Server.dto.user.LoginRequestsDto;
 import com.PuzzleU.Server.dto.user.SignupRequestDto;
 import com.PuzzleU.Server.dto.user.UserRegisterOptionalDto;
+import com.PuzzleU.Server.dto.user.UserUniversityDto;
 import com.PuzzleU.Server.entity.relations.UserSkillsetRelation;
 import com.PuzzleU.Server.service.User.UserService;
 import com.PuzzleU.Server.service.experience.ExperienceService;
 import com.PuzzleU.Server.service.skillset.SkillsetService;
+import com.PuzzleU.Server.service.university.UniversityService;
 import feign.Param;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +32,7 @@ public class UserController {
     private final UserService userService;
     private final ExperienceService experienceService;
     private final SkillsetService skillsetService;
-
+    private final UniversityService universityService;
     @PostMapping("/signup")
     public ApiResponseDto<SuccessResponse> signup(@Valid @RequestBody SignupRequestDto requestDto) {
         return userService.signup(requestDto);
@@ -110,6 +114,14 @@ public class UserController {
     )
     {
         return skillsetService.getSkillsetList(userId);
+    }
+    @PatchMapping("/university/{userId}")
+    public ApiResponseDto<SuccessResponse> createUniversity(
+            @PathVariable Long userId,
+            @RequestBody UserUniversityDto userUniversityDto
+            )
+    {
+        return universityService.createUniversity(userId,userUniversityDto);
     }
 }
 
