@@ -29,6 +29,6 @@ public class CustomExceptionHandler {
     {
         ErrorResponse response = ErrorResponse.of(e.getErrorType());
         log.error(response.getMessage());
-        return ResponseEntity.badRequest().body(ResponseUtils.error(response));
+        return ResponseEntity.status(response.getStatus()).body(ResponseUtils.error(response));
     }
 }

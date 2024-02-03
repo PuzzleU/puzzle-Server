@@ -85,25 +85,25 @@ public class User {
     @JoinColumn(name ="major_id")
     private Major major;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserInterestRelation> userInterestRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<UserLocationRelation> userLocationRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<UserPositionRelation> userPositionRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Experience> experience = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user1",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user1",cascade = CascadeType.REMOVE)
     private List<FriendShip> friendShip1 = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user2",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user2",cascade = CascadeType.REMOVE)
     private List<FriendShip> friendShip2 = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)

@@ -30,9 +30,9 @@ public class Interest {
     @Enumerated(value = EnumType.STRING)
     private InterestTypes interestType;
 
-    @OneToMany(mappedBy = "interest", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "interest", cascade = CascadeType.REMOVE)
     private List<UserInterestRelation> userInterestRelation = new ArrayList<>();
 
-    @OneToMany(mappedBy = "interest", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "interest", cascade = CascadeType.REMOVE)
     private List<CompetitionInterestRelation> competitionInterestRelations = new ArrayList<>();
 }
