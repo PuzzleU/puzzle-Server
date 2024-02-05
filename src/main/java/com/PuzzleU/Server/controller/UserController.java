@@ -128,10 +128,12 @@ public class UserController {
         return universityService.createUniversity(userId,userUniversityDto);
     }
 
-    // 로그인한 유저 정보 받아오기 테스트
-    @GetMapping("/usernametest")
-    public ApiResponseDto<SuccessResponse> findUserName(@AuthenticationPrincipal UserDetails user) {
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, user.getUsername()), null);
-    }
+//    // 로그인한 유저 정보 받아오기 테스트
+//    @GetMapping("/usernametest")
+//    public ApiResponseDto<SuccessResponse> findUserName(@AuthenticationPrincipal UserDetails user) {
+//        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, user.getUsername()), null);
+//    }
+
+
 }
 
