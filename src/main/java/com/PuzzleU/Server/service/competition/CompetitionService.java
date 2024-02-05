@@ -2,10 +2,7 @@ package com.PuzzleU.Server.service.competition;
 
 import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.ResponseUtils;
-import com.PuzzleU.Server.dto.competition.CompetitionDto;
-import com.PuzzleU.Server.dto.competition.CompetitionHomePageDto;
-import com.PuzzleU.Server.dto.competition.CompetitionHomeTotalDto;
-import com.PuzzleU.Server.dto.competition.CompetitionSpecificDto;
+import com.PuzzleU.Server.dto.competition.*;
 import com.PuzzleU.Server.entity.competition.Competition;
 import com.PuzzleU.Server.entity.enumSet.CompetitionType;
 import com.PuzzleU.Server.entity.enumSet.ErrorType;
@@ -118,5 +115,7 @@ public class CompetitionService {
         return ResponseUtils.ok(competitionSpecificDto, null);
     }
     // 최신순, 마감빠른순, 마감느린순, 인기순, 조회순, 팀빌딩순
+
+
 
 }
