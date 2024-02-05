@@ -27,7 +27,7 @@ public class Skillset {
     @Column(length = 200)
     private String skillsetLogo;
 
-    @OneToMany(mappedBy = "skillset",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "skillset",cascade = CascadeType.REMOVE)
     private List<UserSkillsetRelation> userSkillsetRelation = new ArrayList<>();
     //
     //wqfqwfqw

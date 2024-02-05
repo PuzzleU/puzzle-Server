@@ -83,7 +83,7 @@ public class Competition extends BaseEntity {
     @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
     private List<Heart> heart = new ArrayList<>();
 
-    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE)
     private List<CompetitionInterestRelation> competitionInterestRelations = new ArrayList<>();
 
 
