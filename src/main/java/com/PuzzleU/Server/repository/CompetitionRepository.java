@@ -39,5 +39,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
     @Query("update Competition c set c.competitionVisit = c.competitionVisit +1 where c.competitionId = :id")
     int updateVisit(@Param("id")Long id);
 
+    @Query("SELECT c FROM Competition c WHERE c.competitionName LIKE %:keyword%")
+    List<Competition> findByCompetitionName(@Param("keyword") String keyword);
 }
 

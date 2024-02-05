@@ -4,6 +4,7 @@ import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.competition.CompetitionDto;
 import com.PuzzleU.Server.dto.competition.CompetitionHomeTotalDto;
+import com.PuzzleU.Server.dto.competition.CompetitionSearchDto;
 import com.PuzzleU.Server.dto.competition.CompetitionSpecificDto;
 import com.PuzzleU.Server.dto.user.SignupRequestDto;
 import com.PuzzleU.Server.entity.enumSet.CompetitionType;
@@ -38,5 +39,6 @@ public class CompetitionController {
     {
         return competitionService.getSpecific(competition_id);
     }
+
 
 }
