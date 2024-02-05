@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.modelmapper:modelmapper:2.4.4'
 	implementation platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.5")
 	implementation'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'

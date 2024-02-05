@@ -2,6 +2,7 @@ package com.PuzzleU.Server.dto.experience;
 
 import com.PuzzleU.Server.entity.enumSet.ExperienceType;
 import com.PuzzleU.Server.entity.experience.Experience;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
@@ -14,6 +15,7 @@ public class ExperienceDto {
 
     private Long ExperienceId;
 
+    @Size(max = 100)
     private String ExperienceName;
 
     private ExperienceType ExperienceType;
