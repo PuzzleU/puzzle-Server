@@ -8,10 +8,7 @@ import com.PuzzleU.Server.dto.relation.UserSkillsetRelationDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetListDto;
 import com.PuzzleU.Server.dto.university.UniversityDto;
-import com.PuzzleU.Server.dto.user.LoginRequestsDto;
-import com.PuzzleU.Server.dto.user.SignupRequestDto;
-import com.PuzzleU.Server.dto.user.UserRegisterOptionalDto;
-import com.PuzzleU.Server.dto.user.UserUniversityDto;
+import com.PuzzleU.Server.dto.user.*;
 import com.PuzzleU.Server.entity.relations.UserSkillsetRelation;
 import com.PuzzleU.Server.service.User.UserService;
 import com.PuzzleU.Server.service.experience.ExperienceService;
@@ -133,6 +130,14 @@ public class UserController {
 //    public ApiResponseDto<SuccessResponse> findUserName(@AuthenticationPrincipal UserDetails user) {
 //        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, user.getUsername()), null);
 //    }
+
+    @PatchMapping("/essential")
+    public ApiResponseDto<SuccessResponse> registerEssential(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @RequestBody UserRegisterEssentialDto userRegisterEssentialDto
+    ) {
+        return userService.registerEssential(loginUser, userRegisterEssentialDto);
+    }
 
 
 }

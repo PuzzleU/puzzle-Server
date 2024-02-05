@@ -4,10 +4,7 @@ import com.PuzzleU.Server.entity.interest.Interest;
 import com.PuzzleU.Server.entity.location.Location;
 import com.PuzzleU.Server.entity.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "user_location_relation")
@@ -15,6 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserLocationRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

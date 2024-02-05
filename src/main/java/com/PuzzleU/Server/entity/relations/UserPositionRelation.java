@@ -1,23 +1,25 @@
 package com.PuzzleU.Server.entity.relations;
 
 import com.PuzzleU.Server.entity.apply.Apply;
+import com.PuzzleU.Server.entity.enumSet.Priority;
 import com.PuzzleU.Server.entity.position.Position;
 import com.PuzzleU.Server.entity.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserPositionRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userPositionRelationId;
+
+    @Enumerated(EnumType.STRING)
+    private Priority positionPriority;
 
     // 의존 관계 매핑 (User)
     @ManyToOne(fetch = FetchType.LAZY)
