@@ -52,6 +52,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((authorizeRequests)->
                         authorizeRequests
                                 .requestMatchers("/api/user/**").permitAll()
+                                .requestMatchers("/api/competition/**").permitAll()
                                 .requestMatchers("/api/oauth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/posts").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/post/{id}").permitAll()

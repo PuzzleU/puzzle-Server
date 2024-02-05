@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.entity.competition;
 
 import com.PuzzleU.Server.entity.BaseEntity;
+import com.PuzzleU.Server.entity.enumSet.CompetitionType;
 import com.PuzzleU.Server.entity.heart.Heart;
 import com.PuzzleU.Server.entity.interest.Interest;
 import com.PuzzleU.Server.entity.relations.CompetitionInterestRelation;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
@@ -66,6 +68,12 @@ public class Competition extends BaseEntity {
     @Column(name = "competition_d_day", nullable = true)
     private Integer competitionDDay;
 
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "competition_types", joinColumns = @JoinColumn(name = "competition_id"))
+    @Column(name = "competition_type")
+    private List<CompetitionType> competitionTypes;
+
 
     @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
     private List<Team> team = new ArrayList<>();
@@ -76,6 +84,5 @@ public class Competition extends BaseEntity {
     @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE)
     private List<CompetitionInterestRelation> competitionInterestRelations = new ArrayList<>();
 
-    private Integer competitionDday;
 
 }

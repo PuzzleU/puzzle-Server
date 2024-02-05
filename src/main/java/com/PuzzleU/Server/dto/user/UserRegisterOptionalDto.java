@@ -4,6 +4,7 @@ import com.PuzzleU.Server.dto.experience.ExperienceDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetDto;
 import com.PuzzleU.Server.entity.enumSet.UniversityStatus;
 import com.PuzzleU.Server.entity.enumSet.WorkType;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
@@ -26,9 +27,9 @@ public class UserRegisterOptionalDto {
     private Long UniversityId;
 
     private Long MajorId;
-
+    @Size(max=100)
     private String UserRepresentativeExperience;
-
+    @Size(max=100)
     private String UserRepresentativeProfileSentence;
 
     private WorkType UserWorkType;
