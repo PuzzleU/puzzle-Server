@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.controller;
 
 import com.PuzzleU.Server.common.ApiResponseDto;
+import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.experience.ExperienceDto;
 import com.PuzzleU.Server.dto.relation.UserSkillsetRelationDto;
@@ -21,6 +22,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bouncycastle.cert.ocsp.Req;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -122,6 +126,12 @@ public class UserController {
             )
     {
         return universityService.createUniversity(userId,userUniversityDto);
+    }
+
+    // 로그인한 유저 정보 받아오기 테스트
+    @GetMapping("/usernametest")
+    public ApiResponseDto<SuccessResponse> findUserName(@AuthenticationPrincipal UserDetails user) {
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, user.getUsername()), null);
     }
 }
 
