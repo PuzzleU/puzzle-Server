@@ -8,6 +8,7 @@ import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,10 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
 
     @Query("SELECT c FROM Competition c LEFT JOIN FETCH c.competitionTypes WHERE c.competitionName LIKE %:keyword%")
     List<Competition> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    @Modifying
+    @Query("update Competition c set c.competitionVisit = c.competitionVisit +1 where c.competitionId = :id")
+    int updateVisit(@Param("id")Long id);
 
 }
 

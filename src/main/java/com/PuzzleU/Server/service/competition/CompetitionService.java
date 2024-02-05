@@ -5,8 +5,11 @@ import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.dto.competition.CompetitionDto;
 import com.PuzzleU.Server.dto.competition.CompetitionHomePageDto;
 import com.PuzzleU.Server.dto.competition.CompetitionHomeTotalDto;
+import com.PuzzleU.Server.dto.competition.CompetitionSpecificDto;
 import com.PuzzleU.Server.entity.competition.Competition;
 import com.PuzzleU.Server.entity.enumSet.CompetitionType;
+import com.PuzzleU.Server.entity.enumSet.ErrorType;
+import com.PuzzleU.Server.exception.RestApiException;
 import com.PuzzleU.Server.repository.CompetitionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +20,10 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -83,7 +88,35 @@ public class CompetitionService {
 
         return ResponseUtils.ok(competitionHomeTotalDto, null);
     }
+    @Transactional
+    public ApiResponseDto<CompetitionSpecificDto> getSpecific (Long competitionId)
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        CompetitionSpecificDto competitionSpecificDto = competitionRepository.findById(competitionId)
+                .map(competition -> CompetitionSpecificDto.builder()
+                        .competitionId(competition.getCompetitionId())
+                        .competitionName(competition.getCompetitionName())
+                        .competitionUrl(competition.getCompetitionUrl())
+                        .competitionHost(competition.getCompetitionHost())
+                        .competitionPoster(competition.getCompetitionPoster())
+                        .competitionAwards(competition.getCompetitionAwards())
+                        .competitionStart(competition.getCompetitionStart().format(formatter))
+                        .competitionEnd(competition.getCompetitionEnd().format(formatter))
+                        .competitionContent(competition.getCompetitionContent())
+                        .competitionVisit(competition.getCompetitionVisit()+1)
+                        .competitionLike(competition.getCompetitionLike())
+                        .competitionMatching(competition.getCompetitionMatching())
+                        .competitionDDay(competition.getCompetitionDDay())
+                        .competitionTypes(competition.getCompetitionTypes())
+                        .build())
+                .orElseThrow(() -> {
+                    System.out.println("Competition not found");
+                    return new RestApiException(ErrorType.NOT_FOUND_COMPETITION);
+                });
+        competitionRepository.updateVisit(competitionId);
 
-
+        return ResponseUtils.ok(competitionSpecificDto, null);
+    }
+    // 최신순, 마감빠른순, 마감느린순, 인기순, 조회순, 팀빌딩순
 
 }
