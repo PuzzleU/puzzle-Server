@@ -4,6 +4,7 @@ import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.competition.CompetitionDto;
 import com.PuzzleU.Server.dto.competition.CompetitionHomeTotalDto;
+import com.PuzzleU.Server.dto.competition.CompetitionSpecificDto;
 import com.PuzzleU.Server.dto.user.SignupRequestDto;
 import com.PuzzleU.Server.entity.enumSet.CompetitionType;
 import com.PuzzleU.Server.service.competition.CompetitionService;
@@ -31,4 +32,11 @@ public class CompetitionController {
     ) {
         return competitionService.getHomepage(pageNo, pageSize, sortBy, search, competitionType);
     }
+    @GetMapping("/homepage/{competition_id}")
+    public ApiResponseDto<CompetitionSpecificDto> specific(@Valid
+            @PathVariable Long competition_id)
+    {
+        return competitionService.getSpecific(competition_id);
+    }
+
 }

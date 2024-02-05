@@ -14,6 +14,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,11 +49,11 @@ public class Competition extends BaseEntity {
 
     @Column(name = "competition_start", nullable = true)
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date competitionStart;
+    private LocalDateTime competitionStart;
 
     @Column(name = "competition_end", nullable = true)
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date competitionEnd;
+    private LocalDateTime competitionEnd;
 
     @Column(name = "competition_content", nullable = true, length = 2000)
     private String competitionContent;
