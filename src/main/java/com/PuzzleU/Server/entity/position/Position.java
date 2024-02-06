@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.entity.position;
 
-import com.PuzzleU.Server.entity.relations.UserPositionRelation;
+import com.PuzzleU.Server.entity.friendship.FriendShip;
+import com.PuzzleU.Server.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,9 @@ public class Position {
     @Column(name = "position_name", length = 10)
     private String positionName; // 포지션 이름
 
-    @OneToMany(mappedBy = "position",cascade = CascadeType.REMOVE)
-    private List<UserPositionRelation> userPositionRelation = new ArrayList<>();
+    @OneToMany(mappedBy = "userPosition1")
+    private List<User> userList1 = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userPosition2")
+    private List<User> userList2 = new ArrayList<>();
 }

@@ -18,7 +18,6 @@ import com.PuzzleU.Server.entity.position.Position;
 import com.PuzzleU.Server.entity.profile.Profile;
 import com.PuzzleU.Server.entity.relations.UserInterestRelation;
 import com.PuzzleU.Server.entity.relations.UserLocationRelation;
-import com.PuzzleU.Server.entity.relations.UserPositionRelation;
 import com.PuzzleU.Server.entity.relations.UserSkillsetRelation;
 import com.PuzzleU.Server.entity.skillset.Skillset;
 import com.PuzzleU.Server.entity.university.University;
@@ -67,7 +66,6 @@ public class UserService {
     private final PositionRepository positionRepository;
     private final InterestRepository interestRepository;
     private final LocationRepository locationRepository;
-    private final UserPositionRelationRepository userPositionRelationRepository;
     private final UserInterestRelationRepository userInterestRelationRepository;
     private final UserLocationRelationRepository userLocationRelationRepository;
 
@@ -197,47 +195,48 @@ public class UserService {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
 
-        user.setUserKoreaName(userRegisterEssentialDto.getUserKoreaName()); // 이름 설정
-        user.setUserPuzzleId(userRegisterEssentialDto.getUserPuzzleId()); // 퍼즐 아이디 설정
+        // 이름 설정
+        String userKoreaName = userRegisterEssentialDto.getUserKoreaName();
+        if (userKoreaName == null) {
+            throw new RestApiException(ErrorType.NAME_NOT_PROVIDED);
+        }
+        user.setUserKoreaName(userKoreaName);
+
+        // 퍼즐 아이디 설정
+        String userPuzzleId = userRegisterEssentialDto.getUserPuzzleId();
+        if (userPuzzleId == null) {
+            throw new RestApiException(ErrorType.PUZZLE_ID_NOT_PROVIDED);
+        }
+        user.setUserPuzzleId(userPuzzleId);
 
         // 프로필 설정
-        Profile profile = profileRepository.findByProfileId(userRegisterEssentialDto.getUserProfileId())
+        Long profileId = userRegisterEssentialDto.getUserProfileId();
+        if (profileId == null) {
+            throw new RestApiException(ErrorType.PROFILE_NOT_PROVIDED);
+        }
+        Profile profile = profileRepository.findByProfileId(profileId)
                         .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_PROFILE));
         user.setUserProfile(profile);
 
         // 포지션 설정
-        Position position1 = positionRepository.findByPositionId(userRegisterEssentialDto.getUserPositionId1())
+        Long positionId1 = userRegisterEssentialDto.getUserPositionId1();
+        Long positionId2 = userRegisterEssentialDto.getUserPositionId2();
+
+        if (positionId1 == null) {
+            throw new RestApiException(ErrorType.TOO_FEW_POSITIONS);
+        }
+        Position position1 = positionRepository.findByPositionId(positionId1)
                         .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
-        Position position2 = positionRepository.findByPositionId(userRegisterEssentialDto.getUserPositionId2())
-                        .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
+        user.setUserPosition1(position1);
 
-        Boolean positionPass1 = Boolean.FALSE;
-        Boolean positionPass2 = Boolean.FALSE;
-        for (UserPositionRelation userPositionRelation : user.getUserPositionRelations()) {
-            if (userPositionRelation.getPosition() == position1) {
-                positionPass1 = Boolean.TRUE; // 이미 있는 연관 관계면 저장하지 않음
-            }
-
-            if (userPositionRelation.getPosition() == position2) {
-                positionPass2 = Boolean.TRUE; // 이미 있는 연관 관계면 저장하지 않음
-            }
+        if (positionId2 != null) { // 2순위까지 골랐을 때
+            Position position2 = positionRepository.findByPositionId(positionId2)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
+            user.setUserPosition2(position2);
         }
 
-        if (positionPass1 == Boolean.FALSE) {
-            UserPositionRelation userPositionRelation1 = UserPositionRelation.builder()
-                    .user(user)
-                    .position(position1)
-                    .positionPriority(Priority.FIRST).build();
-            userPositionRelationRepository.save(userPositionRelation1);
-        }
+        userRepository.save(user);
 
-        if (positionPass2 == Boolean.FALSE) {
-            UserPositionRelation userPositionRelation2 = UserPositionRelation.builder()
-                    .user(user)
-                    .position(position2)
-                    .positionPriority(Priority.SECOND).build();
-            userPositionRelationRepository.save(userPositionRelation2);
-        }
 
         // 관심 분야 설정
         for (Long interestId: userRegisterEssentialDto.getUserInterestIdList()) {
