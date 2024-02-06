@@ -133,6 +133,6 @@ public class UserController {
         return userService.registerEssential(loginUser, userRegisterEssentialDto);
     }
 
-
+//2
 }
 
