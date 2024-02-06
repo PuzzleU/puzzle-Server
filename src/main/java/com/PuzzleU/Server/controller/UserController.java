@@ -1,16 +1,14 @@
 package com.PuzzleU.Server.controller;
 
 import com.PuzzleU.Server.common.ApiResponseDto;
+import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.experience.ExperienceDto;
 import com.PuzzleU.Server.dto.relation.UserSkillsetRelationDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetListDto;
 import com.PuzzleU.Server.dto.university.UniversityDto;
-import com.PuzzleU.Server.dto.user.LoginRequestsDto;
-import com.PuzzleU.Server.dto.user.SignupRequestDto;
-import com.PuzzleU.Server.dto.user.UserRegisterOptionalDto;
-import com.PuzzleU.Server.dto.user.UserUniversityDto;
+import com.PuzzleU.Server.dto.user.*;
 import com.PuzzleU.Server.entity.relations.UserSkillsetRelation;
 import com.PuzzleU.Server.service.User.UserService;
 import com.PuzzleU.Server.service.experience.ExperienceService;
@@ -21,6 +19,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.bouncycastle.cert.ocsp.Req;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -123,5 +124,15 @@ public class UserController {
     {
         return universityService.createUniversity(userId,userUniversityDto);
     }
+
+    @PatchMapping("/essential")
+    public ApiResponseDto<SuccessResponse> registerEssential(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @RequestBody UserRegisterEssentialDto userRegisterEssentialDto
+    ) {
+        return userService.registerEssential(loginUser, userRegisterEssentialDto);
+    }
+
+
 }
 

@@ -56,10 +56,12 @@ public class JwtUtil {
         // Authorization 헤더의 값을 가져온다 - 클라이언트가 서버에게 토큰을 전달하기 위해 사용되는 문자열이 포함
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         // bearerToken이 null이 아니고 비어있는지 확인, 헤더에 Authorization키가 있고 그값이 비어 있지 않은지를 체크
+
+//        System.out.println("resolveToken token: " + bearerToken);
         if (StringUtils.hasText(bearerToken)&& bearerToken.startsWith(BEARER_PREFIX))
         {
             // Bearer의 길이가 7이므로 7번째 문자부터 끝까지를 반환
-            return bearerToken.substring(7);
+            return bearerToken.substring(BEARER_PREFIX.length());
         }
         // 형식이 맞지 않으면 null을 반환
         return null;
@@ -84,9 +86,10 @@ public class JwtUtil {
 
     public boolean validateToken(String token)
     {
+//        System.out.println("validate token: " + token);
         try{
             // jwt파싱을 위한 객체 생성 / 토큰의 서명 검증을 위해 사용할 키 설정 / 파서 생성 / 토큰을 파싱하고 클레임을 가져옴
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         }catch (SecurityException | MalformedJwtException e)
         {
@@ -106,8 +109,12 @@ public class JwtUtil {
     // 토큰에서 사용자 정보 가져오기 (클레임에 존재)
     public Claims getUserInfoFromToken(String token)
     {
-        // jwt 파싱하기 위한 빌더 객체 생성 / 토큰의 서명 검증을 위해 사용할 키 설정 / 파싱 생성 / 토큰을 파싱하고 클레임을 가져옴 / 토큰의 본문을 반환
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJwt(token).getBody();
+        String cleanToken = token.replace(BEARER_PREFIX, "");
+//        System.out.println("getUserInfoFromToken token: " + cleanToken);
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(cleanToken).getBody();
+        
+//        // jwt 파싱하기 위한 빌더 객체 생성 / 토큰의 서명 검증을 위해 사용할 키 설정 / 파싱 생성 / 토큰을 파싱하고 클레임을 가져옴 / 토큰의 본문을 반환
+//        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
     // 사용자의 인증 정보를 가져온다

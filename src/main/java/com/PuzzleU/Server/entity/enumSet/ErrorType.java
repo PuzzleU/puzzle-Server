@@ -17,11 +17,16 @@ public enum ErrorType {
     NOT_FOUND_EXPERIENCE(400, "경험이 존재하지 않습니다"),
     NOT_FOUND_UNIVERSITY(400, "대학이 존재하지 않습니다"),
     NOT_FOUND_USERSKILLSETRELATION(400, "유저와 스킬셋의 관계가 존재하지 않습니다"),
+    NOT_FOUND_POSITION(400, "포지션이 존재하지 않습니다."),
+    NOT_FOUND_INTEREST(400, "관심 분야가 존재하지 않습니다."),
+    NOT_FOUND_LOCATION(400, "지역이 존재하지 않습니다."),
+    NOT_FOUND_PROFILE(400, "프로필이 존재하지 않습니다."),
     NOT_FOUND_COMPETITION(400, "공모전이 존재하지 않습니다"),
     NOT_FOUND_POSITION_LIST(404, "포지션 리스트가 존재하지 않습니다."),
     NOT_FOUND_INTEREST_LIST(404, "관심 분야 리스트가 존재하지 않습니다."),
     NOT_FOUND_LOCATION_LIST(404, "지역 리스트가 존재하지 않습니다."),
-    NOT_FOUND_PROFILE_LIST(404, "프로필 리스트가 존재하지 않습니다.");
+    NOT_FOUND_PROFILE_LIST(404, "프로필 리스트가 존재하지 않습니다."),
+    TOO_MUCH_LOCATIONS(400, "너무 많은 지역이 입력되었습니다. 지역은 최대 2개까지 선택 가능합니다.");
 
     private int code;
     private String message;

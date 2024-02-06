@@ -7,9 +7,18 @@ import com.PuzzleU.Server.dto.experience.ExperienceDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetDto;
 import com.PuzzleU.Server.dto.user.LoginRequestsDto;
 import com.PuzzleU.Server.dto.user.SignupRequestDto;
+import com.PuzzleU.Server.dto.user.UserRegisterEssentialDto;
 import com.PuzzleU.Server.dto.user.UserRegisterOptionalDto;
+import com.PuzzleU.Server.entity.enumSet.Priority;
 import com.PuzzleU.Server.entity.experience.Experience;
+import com.PuzzleU.Server.entity.interest.Interest;
+import com.PuzzleU.Server.entity.location.Location;
 import com.PuzzleU.Server.entity.major.Major;
+import com.PuzzleU.Server.entity.position.Position;
+import com.PuzzleU.Server.entity.profile.Profile;
+import com.PuzzleU.Server.entity.relations.UserInterestRelation;
+import com.PuzzleU.Server.entity.relations.UserLocationRelation;
+import com.PuzzleU.Server.entity.relations.UserPositionRelation;
 import com.PuzzleU.Server.entity.relations.UserSkillsetRelation;
 import com.PuzzleU.Server.entity.skillset.Skillset;
 import com.PuzzleU.Server.entity.university.University;
@@ -24,6 +33,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +63,14 @@ public class UserService {
     private final UserSkillsetRelationRepository userSkillsetRelationRepository;
     private final MajorRepository majorRepository;
     private final UniversityRepository universityRepository;
+    private final ProfileRepository profileRepository;
+    private final PositionRepository positionRepository;
+    private final InterestRepository interestRepository;
+    private final LocationRepository locationRepository;
+    private final UserPositionRelationRepository userPositionRelationRepository;
+    private final UserInterestRelationRepository userInterestRelationRepository;
+    private final UserLocationRelationRepository userLocationRelationRepository;
+
     @Transactional
     public ApiResponseDto<SuccessResponse> signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
@@ -175,6 +193,97 @@ public class UserService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "선택사항 저장완료"), null);
     }
 
+    public ApiResponseDto<SuccessResponse> registerEssential(UserDetails loginUser, UserRegisterEssentialDto userRegisterEssentialDto) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        user.setUserKoreaName(userRegisterEssentialDto.getUserKoreaName()); // 이름 설정
+        user.setUserPuzzleId(userRegisterEssentialDto.getUserPuzzleId()); // 퍼즐 아이디 설정
+
+        // 프로필 설정
+        Profile profile = profileRepository.findByProfileId(userRegisterEssentialDto.getUserProfileId())
+                        .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_PROFILE));
+        user.setUserProfile(profile);
+
+        // 포지션 설정
+        Position position1 = positionRepository.findByPositionId(userRegisterEssentialDto.getUserPositionId1())
+                        .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
+        Position position2 = positionRepository.findByPositionId(userRegisterEssentialDto.getUserPositionId2())
+                        .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
+
+        Boolean positionPass1 = Boolean.FALSE;
+        Boolean positionPass2 = Boolean.FALSE;
+        for (UserPositionRelation userPositionRelation : user.getUserPositionRelations()) {
+            if (userPositionRelation.getPosition() == position1) {
+                positionPass1 = Boolean.TRUE; // 이미 있는 연관 관계면 저장하지 않음
+            }
+
+            if (userPositionRelation.getPosition() == position2) {
+                positionPass2 = Boolean.TRUE; // 이미 있는 연관 관계면 저장하지 않음
+            }
+        }
+
+        if (positionPass1 == Boolean.FALSE) {
+            UserPositionRelation userPositionRelation1 = UserPositionRelation.builder()
+                    .user(user)
+                    .position(position1)
+                    .positionPriority(Priority.FIRST).build();
+            userPositionRelationRepository.save(userPositionRelation1);
+        }
+
+        if (positionPass2 == Boolean.FALSE) {
+            UserPositionRelation userPositionRelation2 = UserPositionRelation.builder()
+                    .user(user)
+                    .position(position2)
+                    .positionPriority(Priority.SECOND).build();
+            userPositionRelationRepository.save(userPositionRelation2);
+        }
+
+        // 관심 분야 설정
+        for (Long interestId: userRegisterEssentialDto.getUserInterestIdList()) {
+            Interest interest = interestRepository.findByInterestId(interestId)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_INTEREST));
+            Boolean interestPass = Boolean.FALSE;
+            for (UserInterestRelation userInterestRelation: user.getUserInterestRelations()) {
+                if (userInterestRelation.getInterest() == interest) {
+                    interestPass = Boolean.TRUE; // 이미 있는 관계면 저장하지 않음
+                }
+            }
+
+            if (interestPass == Boolean.FALSE) {
+                UserInterestRelation userInterestRelation = UserInterestRelation.builder()
+                        .user(user)
+                        .interest(interest).build();
+                userInterestRelationRepository.save(userInterestRelation);
+            }
+        }
+
+        // 지역 설정
+        if (userRegisterEssentialDto.getUserLocationIdList().size() > 2) { // 예외 처리: 2개 이상의 지역이 선택되었을 때
+            throw new RestApiException(ErrorType.TOO_MUCH_LOCATIONS);
+        }
+
+        for (Long locationId: userRegisterEssentialDto.getUserLocationIdList()) {
+            Location location = locationRepository.findByLocationId(locationId)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_LOCATION));
+
+            Boolean locationPass = Boolean.FALSE;
+            for (UserLocationRelation userLocationRelation: user.getUserLocationRelations()) {
+                if (userLocationRelation.getLocation() == location) {
+                    locationPass = Boolean.TRUE; // 이미 있는 연관 관계면 저장하지 않음
+                }
+            }
+
+            if (locationPass == Boolean.FALSE) {
+                UserLocationRelation userLocationRelation = UserLocationRelation.builder()
+                        .user(user)
+                        .location(location).build();
+                userLocationRelationRepository.save(userLocationRelation);
+            }
+        }
+
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), null);
+    }
 
 
 }
