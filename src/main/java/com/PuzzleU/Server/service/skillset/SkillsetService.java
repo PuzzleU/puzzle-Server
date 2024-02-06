@@ -19,6 +19,7 @@ import com.PuzzleU.Server.repository.UserSkillsetRelationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,15 +35,12 @@ public class SkillsetService {
     private final SkillsetRepository skillsetRepository;
     private final UserSkillsetRelationRepository userSkillsetRelationRepository;
     public ApiResponseDto<SuccessResponse> createSkillset(
-            Long userId, SkillSetListDto skillsetList
+            UserDetails loginUser, SkillSetListDto skillsetList
     )
     {
         // skillset id 로 skillset을 찾고 userid로 user를 찾고 넣어주면 된다. 중복가능
-        Optional<User> userOptional = userRepository.findById(userId);
-        User user = userOptional.orElseThrow(() -> {
-            System.out.println("User not found");
-            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
-        });
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         // 리스트형식인 skillsetlistdto 에서 for문 돌려서 하나씩 dto오를 참여해서 각각 s, u , l 을 설정한 것을 하나씩 repository에 저장한다
         List<UserSkillsetRelation> userSkillsetRelationList = new ArrayList<>();
         for(SkillSetDto skillsetDto : skillsetList.getSkillSetDtoList())
@@ -63,14 +61,11 @@ public class SkillsetService {
 
     }
     public ApiResponseDto<SuccessResponse> deleteSkillset(
-            Long userId, Long skillsetId
+            UserDetails loginUser, Long skillsetId
     )
     {
-        Optional<User> userOptional = userRepository.findById(userId);
-        User user = userOptional.orElseThrow(() -> {
-            System.out.println("User not found");
-            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
-        });
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         Optional<Skillset> userSkillset = skillsetRepository.findById(skillsetId);
         Skillset skillset = userSkillset.orElseThrow(() -> {
             System.out.println("Skillset not found");
@@ -85,9 +80,9 @@ public class SkillsetService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저스킬셋 삭제완료"), null);
 
     }
-    public ApiResponseDto<List<UserSkillsetRelationDto>> getSkillsetList(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new RestApiException(ErrorType.NOT_MATCHING_INFO));
+    public ApiResponseDto<List<UserSkillsetRelationDto>> getSkillsetList(UserDetails loginUser) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
 
 
         List<UserSkillsetRelation> userSkillsetRelation = userSkillsetRelationRepository.findByUser(user);

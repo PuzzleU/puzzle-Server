@@ -52,77 +52,77 @@ public class UserController {
         return userService.login(requestDto, response);
     }
 
-    @PatchMapping("/optional/{userId}")
+    @PatchMapping("/optional")
     public ApiResponseDto<SuccessResponse> registerOptional(@Valid
             @RequestBody UserRegisterOptionalDto userRegisterOptionalDto,
-            @PathVariable Long userId)
+            @AuthenticationPrincipal UserDetails loginUser)
     {
-        return userService.createRegisterOptionalUser(userId,userRegisterOptionalDto);
+        return userService.createRegisterOptionalUser(loginUser,userRegisterOptionalDto);
     }
-    @PostMapping("/experience/{userId}")
+    @PostMapping("/experience")
     public ApiResponseDto<SuccessResponse> postExperience(@Valid
-            @RequestBody ExperienceDto experienceDto,
-            @PathVariable Long userId)
+            @RequestBody ExperienceDto experienceDto, @AuthenticationPrincipal UserDetails loginUser)
     {
-        return experienceService.createExperience(userId,experienceDto);
+        return experienceService.createExperience(loginUser,experienceDto);
     }
-    @PatchMapping("/experience/{userId}/{experienceId}")
+    @PatchMapping("/experience/{experienceId}")
     public ApiResponseDto<SuccessResponse> updateExperience(@Valid
-            @RequestBody ExperienceDto experienceDto,
-            @PathVariable Long userId, @PathVariable Long experienceId)
+            @RequestBody ExperienceDto experienceDto, @AuthenticationPrincipal UserDetails loginUser, @PathVariable Long experienceId)
     {
-        return experienceService.updateExperience(userId, experienceId,experienceDto);
+        return experienceService.updateExperience(loginUser, experienceId,experienceDto);
     }
-    @DeleteMapping("/experience/{userId}/{experienceId}")
+    @DeleteMapping("/experience/{experienceId}")
     public ApiResponseDto<SuccessResponse> deleteExperience(@Valid
-            @PathVariable Long userId, @PathVariable Long experienceId)
+            @AuthenticationPrincipal UserDetails loginUser
+            , @PathVariable Long experienceId)
     {
-        return experienceService.deleteExperience(userId, experienceId);
+        return experienceService.deleteExperience(loginUser, experienceId);
     }
-    @GetMapping("/experience/{userId}")
+    @GetMapping("/experience")
     public ApiResponseDto<List<ExperienceDto>> getExperienceList(@Valid
-            @PathVariable Long userId
+           @AuthenticationPrincipal UserDetails loginUser
     )
     {
-        return experienceService.getExperienceList(userId);
+        return experienceService.getExperienceList(loginUser);
     }
-    @GetMapping("/experience/{userId}/{experienceId}")
+    @GetMapping("/experience/{experienceId}")
     public ApiResponseDto<ExperienceDto> getExperience(@Valid
-            @PathVariable Long userId, @PathVariable Long experienceId
+          @AuthenticationPrincipal UserDetails loginUser, @PathVariable Long experienceId
     )
     {
-        return experienceService.getExperience(userId,experienceId);
+        return experienceService.getExperience(loginUser,experienceId);
     }
-    @PostMapping("/skillset/{userId}")
+    @PostMapping("/skillset")
     public ApiResponseDto<SuccessResponse> createSkillset(@Valid
-            @PathVariable Long userId,
+            @AuthenticationPrincipal UserDetails loginUser,
             @RequestBody SkillSetListDto skillsetList
     )
     {
-        return skillsetService.createSkillset(userId, skillsetList);
+        return skillsetService.createSkillset(loginUser, skillsetList);
     }
-    @DeleteMapping("/skillset/{userId}/{skillsetId}")
+    @DeleteMapping("/skillset/{skillsetId}")
     public ApiResponseDto<SuccessResponse> deleteSkillset(@Valid
-            @PathVariable Long userId,
+            @AuthenticationPrincipal UserDetails loginUser,
             @PathVariable Long skillsetId
     )
     {
-        return skillsetService.deleteSkillset(userId, skillsetId);
+        return skillsetService.deleteSkillset(loginUser, skillsetId);
     }
-    @GetMapping("/skillset/{userId}")
+    @GetMapping("/skillset")
     public ApiResponseDto<List<UserSkillsetRelationDto>> getUserSkillsetList(@Valid
-            @PathVariable Long userId
+            @AuthenticationPrincipal UserDetails loginUser
+
     )
     {
-        return skillsetService.getSkillsetList(userId);
+        return skillsetService.getSkillsetList(loginUser);
     }
-    @PatchMapping("/university/{userId}")
+    @PatchMapping("/university")
     public ApiResponseDto<SuccessResponse> createUniversity(@Valid
-            @PathVariable Long userId,
+            @AuthenticationPrincipal UserDetails loginUser,
             @RequestBody UserUniversityDto userUniversityDto
             )
     {
-        return universityService.createUniversity(userId,userUniversityDto);
+        return universityService.createUniversity(loginUser, userUniversityDto);
     }
 
     @PatchMapping("/essential")
@@ -133,6 +133,6 @@ public class UserController {
         return userService.registerEssential(loginUser, userRegisterEssentialDto);
     }
 
-
+//2
 }
 

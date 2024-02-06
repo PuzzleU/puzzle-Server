@@ -54,6 +54,8 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/user/**").permitAll()
                                 .requestMatchers("/api/competition/**").permitAll()
                                 .requestMatchers("/api/oauth/**").permitAll()
+                                .requestMatchers("/api/team/**").permitAll()
+
                                 .requestMatchers(HttpMethod.GET,"/api/posts").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/post/{id}").permitAll()
                                 .requestMatchers(HttpMethod.GET, "api/splash").permitAll()
