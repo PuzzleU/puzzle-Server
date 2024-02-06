@@ -26,7 +26,11 @@ public enum ErrorType {
     NOT_FOUND_INTEREST_LIST(404, "관심 분야 리스트가 존재하지 않습니다."),
     NOT_FOUND_LOCATION_LIST(404, "지역 리스트가 존재하지 않습니다."),
     NOT_FOUND_PROFILE_LIST(404, "프로필 리스트가 존재하지 않습니다."),
-    TOO_MUCH_LOCATIONS(400, "너무 많은 지역이 입력되었습니다. 지역은 최대 2개까지 선택 가능합니다.");
+    TOO_MUCH_LOCATIONS(400, "너무 많은 지역이 입력되었습니다. 지역은 최대 2개까지 선택 가능합니다."),
+    TOO_FEW_POSITIONS(400, "너무 적은 포지션이 입력되었습니다. 하나 이상의 포지션을 선택해야 합니다."),
+    NAME_NOT_PROVIDED(400, "이름이 입력되지 않았습니다."),
+    PUZZLE_ID_NOT_PROVIDED(400, "퍼즐 아이디가 입력되지 않았습니다."),
+    PROFILE_NOT_PROVIDED(400, "프로필이 입력되지 않았습니다.");
 
     private int code;
     private String message;

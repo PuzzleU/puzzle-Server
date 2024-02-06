@@ -3,7 +3,6 @@ package com.PuzzleU.Server.entity.team;
 import com.PuzzleU.Server.entity.BaseEntity;
 import com.PuzzleU.Server.entity.apply.Apply;
 import com.PuzzleU.Server.entity.competition.Competition;
-import com.PuzzleU.Server.entity.relations.UserPositionRelation;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;

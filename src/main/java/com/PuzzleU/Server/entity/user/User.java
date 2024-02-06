@@ -7,10 +7,10 @@ import com.PuzzleU.Server.entity.experience.Experience;
 import com.PuzzleU.Server.entity.friendship.FriendShip;
 import com.PuzzleU.Server.entity.heart.Heart;
 import com.PuzzleU.Server.entity.major.Major;
+import com.PuzzleU.Server.entity.position.Position;
 import com.PuzzleU.Server.entity.profile.Profile;
 import com.PuzzleU.Server.entity.relations.UserInterestRelation;
 import com.PuzzleU.Server.entity.relations.UserLocationRelation;
-import com.PuzzleU.Server.entity.relations.UserPositionRelation;
 import com.PuzzleU.Server.entity.relations.UserSkillsetRelation;
 import com.PuzzleU.Server.entity.university.University;
 import jakarta.persistence.*;
@@ -48,10 +48,18 @@ public class User {
     @Column(nullable = true, length = 6)
     private String userKoreaName;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_profile_id",nullable = true)
+    private Profile userProfile;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_profile",nullable = true)
-    private Profile userProfile;
+    @JoinColumn(name="user_position_id1")
+    private Position userPosition1;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_position_id2")
+    private Position userPosition2;
+
 
     // 선택 정보
     @Column(nullable = true)
@@ -75,8 +83,6 @@ public class User {
     private String userRepresentativeProfileSentence;
 
 
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="university_id")
     private University university;
@@ -85,14 +91,12 @@ public class User {
     @JoinColumn(name ="major_id")
     private Major major;
 
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserInterestRelation> userInterestRelations = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<UserLocationRelation> userLocationRelations = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
-    private List<UserPositionRelation> userPositionRelations = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();

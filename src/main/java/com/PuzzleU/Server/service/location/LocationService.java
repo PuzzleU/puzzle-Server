@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.service;
+package com.PuzzleU.Server.service.location;
 
 import com.PuzzleU.Server.dto.location.LocationDto;
 import com.PuzzleU.Server.entity.location.Location;
