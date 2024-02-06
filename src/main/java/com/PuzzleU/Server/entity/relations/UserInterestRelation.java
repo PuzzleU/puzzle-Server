@@ -3,10 +3,7 @@ package com.PuzzleU.Server.entity.relations;
 import com.PuzzleU.Server.entity.interest.Interest;
 import com.PuzzleU.Server.entity.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "User_interest_relation")
@@ -14,6 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserInterestRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
