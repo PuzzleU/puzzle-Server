@@ -31,6 +31,7 @@ public class UniversityService {
     private final UniversityRepository universityRepository;
     private final MajorRepository majorRepository;
 
+    // 유저가 본인의 대학을 등록할 수 있는 API
     @Transactional
     public ApiResponseDto<SuccessResponse> createUniversity(
             UserDetails loginUser, UserUniversityDto userUniversityDto

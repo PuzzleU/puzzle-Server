@@ -28,6 +28,8 @@ public class ExperienceService {
     private final UserRepository userRepository;
 
 
+
+    // 유저의 경험을 생성하는 API
     public ApiResponseDto<SuccessResponse> createExperience(
             UserDetails loginUser,
             ExperienceDto experienceDto
@@ -49,6 +51,7 @@ public class ExperienceService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 저장완료"), null);
 
     }
+    // 유저의 경험을 수정하는 API
     public ApiResponseDto<SuccessResponse> updateExperience(
             UserDetails loginUser,
             Long experienceId,
@@ -99,6 +102,7 @@ public class ExperienceService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 수정완료"), null);
 
     }
+    // 유저의 경험을 삭제하는 API
     public ApiResponseDto<SuccessResponse> deleteExperience(
             UserDetails loginUser,Long experienceId
     )
@@ -113,6 +117,8 @@ public class ExperienceService {
         experienceRepository.delete(experience);
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 삭제완료"), null);
     }
+
+    // 유저가 자신의 페이지에서 자신의 경험리스트들을 확인가능한 API
     public ApiResponseDto<List<ExperienceDto>> getExperienceList(UserDetails loginUser) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -136,6 +142,7 @@ public class ExperienceService {
         return ResponseUtils.ok(experienceList, null);
 
     }
+    // 유저가 경험 리스트들중 하나를 클릭하면 자신의 세부적인 경험을 확인할 수 있는 API
     public ApiResponseDto<ExperienceDto> getExperience(UserDetails loginUser, Long experienceId) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));

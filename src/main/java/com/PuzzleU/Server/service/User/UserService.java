@@ -73,6 +73,7 @@ public class UserService {
     private final UserInterestRelationRepository userInterestRelationRepository;
     private final UserLocationRelationRepository userLocationRelationRepository;
 
+    // 회원가입 API
     @Transactional
     public ApiResponseDto<SuccessResponse> signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
@@ -108,6 +109,7 @@ public class UserService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "로그인 성공"),jwtToken);
 
     }
+    // 유저가 회원가입 후 옵션으로 선택해서 등록가능한 API
     public ApiResponseDto<SuccessResponse> createRegisterOptionalUser(
             UserDetails loginUser,
             UserRegisterOptionalDto userRegisterOptionalDto
@@ -189,6 +191,7 @@ public class UserService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "선택사항 저장완료"), null);
     }
 
+    // 회원가입 후 필수로 작성해야하는 것들을 등록하는 API
     public ApiResponseDto<SuccessResponse> registerEssential(UserDetails loginUser, UserRegisterEssentialDto userRegisterEssentialDto) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -281,6 +284,8 @@ public class UserService {
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), null);
     }
+
+    // 모든 멤버들을 검색할 수 있는 API
     public ApiResponseDto<FriendShipSearchResponseDto> searchUser(int pageNo, int pageSize, String sortBy, String keyword)
     {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
