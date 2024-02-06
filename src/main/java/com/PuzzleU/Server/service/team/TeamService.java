@@ -15,6 +15,7 @@ import com.PuzzleU.Server.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -60,15 +61,10 @@ public class TeamService {
     }
     // 유저 정보 리스트를 가져오고 여기에는 유저의 이름, id, 한줄소개가 있어야한다.
     @Transactional
-    public ApiResponseDto<FriendShipSearchResponseDto> firendRegister(String keyword, Long userId)
+    public ApiResponseDto<FriendShipSearchResponseDto> firendRegister(String keyword, UserDetails loginUser)
     {
-        System.out.println(userId);
-        System.out.println(keyword);
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> {
-            System.out.println("User not found");
-            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
-        });
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         FriendShipSearchResponseDto friendShipSearchResponseDto = new FriendShipSearchResponseDto();
         // 각각의 friendshipe에 대해서 user가 아닌 user에 대한 정보를 저장하고 리스트로 만들어준다
         List<FriendShip> friendShipList = friendshipRepository.findActiveFriendshipsForUserAndKeyword(user, keyword);

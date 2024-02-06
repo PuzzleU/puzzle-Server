@@ -10,6 +10,8 @@ import com.PuzzleU.Server.service.User.UserService;
 import com.PuzzleU.Server.service.team.TeamService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,11 +33,11 @@ public class TeamController {
     {
         return teamService.competitionTeamSearch(keyword);
     }
-    @GetMapping("/searchMember/{userId}/{keyword}")
+    @GetMapping("/searchMember/{keyword}")
     public ApiResponseDto<FriendShipSearchResponseDto> memberSearch(@Valid
-                                                                    @PathVariable String keyword, @PathVariable Long userId)
+         @PathVariable String keyword, @AuthenticationPrincipal UserDetails loginUser)
     {
-        return teamService.firendRegister(keyword, userId);
+        return teamService.firendRegister(keyword, loginUser);
     }
 
 }
