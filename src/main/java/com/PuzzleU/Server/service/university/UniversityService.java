@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -32,15 +33,13 @@ public class UniversityService {
 
     @Transactional
     public ApiResponseDto<SuccessResponse> createUniversity(
-            Long userId, UserUniversityDto userUniversityDto
+            UserDetails loginUser, UserUniversityDto userUniversityDto
     )
     {
         // 유저정보 저장해주고
-        Optional<User> userOptional = userRepository.findById(userId);
-        User user = userOptional.orElseThrow(() -> {
-            System.out.println("User not found");
-            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
-        });
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
         // unviersityid로 id값 얻고
         // majorid로 id값 얻어서
         // 한번에 dto에 저장하고 repository에 저장

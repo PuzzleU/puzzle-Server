@@ -13,6 +13,7 @@ import com.PuzzleU.Server.repository.ExperienceRepository;
 import com.PuzzleU.Server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,15 +29,12 @@ public class ExperienceService {
 
 
     public ApiResponseDto<SuccessResponse> createExperience(
-            Long userId,
+            UserDetails loginUser,
             ExperienceDto experienceDto
     )
     {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> {
-            System.out.println("User not found");
-            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
-        });
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         Experience experience = new Experience();
         experience.setUser(user);
         experience.setExperienceName(experienceDto.getExperienceName());
@@ -52,16 +50,13 @@ public class ExperienceService {
 
     }
     public ApiResponseDto<SuccessResponse> updateExperience(
-            Long userId,
+            UserDetails loginUser,
             Long experienceId,
             ExperienceDto experienceDto
     )
     {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> {
-            System.out.println("User not found");
-            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
-        });
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         Optional<Experience> optionalExperience = experienceRepository.findByExperienceIdAndUser(experienceId,user);
         Experience experience = optionalExperience.orElseThrow(() -> {
             System.out.println("User not found");
@@ -105,14 +100,11 @@ public class ExperienceService {
 
     }
     public ApiResponseDto<SuccessResponse> deleteExperience(
-            Long userId,Long experienceId
+            UserDetails loginUser,Long experienceId
     )
     {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> {
-            System.out.println("User not found");
-            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
-        });
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         Optional<Experience> optionalExperience = experienceRepository.findByExperienceIdAndUser(experienceId,user);
         Experience experience = optionalExperience.orElseThrow(() -> {
             System.out.println("User not found");
@@ -121,9 +113,9 @@ public class ExperienceService {
         experienceRepository.delete(experience);
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 삭제완료"), null);
     }
-    public ApiResponseDto<List<ExperienceDto>> getExperienceList(Long userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> new RestApiException(ErrorType.NOT_MATCHING_INFO));
+    public ApiResponseDto<List<ExperienceDto>> getExperienceList(UserDetails loginUser) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
 
         List<ExperienceDto> experienceList = new ArrayList<>();
         List<Experience> userExperiences = experienceRepository.findByUser(user);
@@ -144,12 +136,9 @@ public class ExperienceService {
         return ResponseUtils.ok(experienceList, null);
 
     }
-    public ApiResponseDto<ExperienceDto> getExperience(Long userId, Long experienceId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        User user = optionalUser.orElseThrow(() -> {
-            System.out.println("User not found");
-            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
-        });
+    public ApiResponseDto<ExperienceDto> getExperience(UserDetails loginUser, Long experienceId) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         Optional<Experience> optionalExperience = experienceRepository.findByExperienceIdAndUser(experienceId,user);
         Experience experience = optionalExperience.orElseThrow(() -> {
             System.out.println("User not found");

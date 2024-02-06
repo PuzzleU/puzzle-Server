@@ -7,6 +7,8 @@ import lombok.Getter;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Table(name = "friendship")
@@ -28,6 +30,7 @@ public class FriendShip {
     @JoinColumn(name = "users2")
     private User user2;
 
+    @ColumnDefault("false")
     @Column(name = "user_status")
     private Boolean userStatus;
 

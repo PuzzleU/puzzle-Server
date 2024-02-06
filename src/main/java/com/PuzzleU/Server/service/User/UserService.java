@@ -107,16 +107,13 @@ public class UserService {
 
     }
     public ApiResponseDto<SuccessResponse> createRegisterOptionalUser(
-            Long userId,
+            UserDetails loginUser,
             UserRegisterOptionalDto userRegisterOptionalDto
     ) {
-        System.out.println("userId:" + userId);
 
-        if (userId == null) {
-            throw new RestApiException(ErrorType.NOT_FOUND_USER);
-        }
-        System.out.println(userRegisterOptionalDto);
-        Optional<User> optionalUser = userRepository.findById(userId);
+
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         if(userRegisterOptionalDto.getUniversityStart() == null)
         {
             System.out.println("null");
@@ -127,10 +124,7 @@ public class UserService {
         Optional<University> optionalUniversity = universityRepository.findById(userRegisterOptionalDto.getUniversityId());
         System.out.println(optionalUniversity);
 
-        User user = optionalUser.orElseThrow(() -> {
-            System.out.println("User not found");
-            return new RestApiException(ErrorType.NOT_MATCHING_INFO);
-        });
+
 
         Major major = optionalMajor.orElseThrow(() -> {
             System.out.println("Major not found");
