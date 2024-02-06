@@ -5,10 +5,7 @@ import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.experience.ExperienceDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetDto;
-import com.PuzzleU.Server.dto.user.LoginRequestsDto;
-import com.PuzzleU.Server.dto.user.SignupRequestDto;
-import com.PuzzleU.Server.dto.user.UserRegisterEssentialDto;
-import com.PuzzleU.Server.dto.user.UserRegisterOptionalDto;
+import com.PuzzleU.Server.dto.user.*;
 import com.PuzzleU.Server.entity.enumSet.Priority;
 import com.PuzzleU.Server.entity.experience.Experience;
 import com.PuzzleU.Server.entity.interest.Interest;
@@ -36,6 +33,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.print.DocFlavor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -277,6 +275,7 @@ public class UserService {
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), null);
     }
-
-
+    public ApiResponseDto<List<UserSimpleDto>> searchUser(String keyword)
+    {
+        List<UserSimpleDto> userSimpleDtoList = userRepository.findByUserKoreaNameContaining(keyword);
 }

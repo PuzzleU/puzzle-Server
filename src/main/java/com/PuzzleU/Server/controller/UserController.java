@@ -132,6 +132,13 @@ public class UserController {
     ) {
         return userService.registerEssential(loginUser, userRegisterEssentialDto);
     }
+    @GetMapping("/friendSearch/{keyword}")
+    public ApiResponseDto<List<UserSimpleDto>> searchUser(
+            String keyword
+    )
+    {
+        return userService.searchUser(keyword);
+    }
 
 //2
 }

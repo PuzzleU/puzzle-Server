@@ -4,9 +4,11 @@ import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.competition.CompetitionSearchDto;
+import com.PuzzleU.Server.dto.competition.CompetitionSearchTotalDto;
 import com.PuzzleU.Server.dto.friendship.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.dto.team.TeamCreateDto;
 import com.PuzzleU.Server.dto.user.UserSimpleDto;
+import com.PuzzleU.Server.entity.competition.Competition;
 import com.PuzzleU.Server.entity.enumSet.ErrorType;
 import com.PuzzleU.Server.entity.friendship.FriendShip;
 import com.PuzzleU.Server.entity.user.User;
@@ -14,6 +16,7 @@ import com.PuzzleU.Server.exception.RestApiException;
 import com.PuzzleU.Server.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -48,16 +51,27 @@ public class TeamService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"팀구인글 생성완료"), null);
     }
     @Transactional
-    public ApiResponseDto<List<CompetitionSearchDto>> competitionTeamSearch(String keyword) {
-        List<CompetitionSearchDto> competitionSearchDtos = competitionRepository.findByCompetitionName(keyword).stream()
-                .map(competition -> CompetitionSearchDto.builder()
-                        .competitionName(competition.getCompetitionName())
-                        .competitionId(competition.getCompetitionId())
-                        // 다른 필드들도 필요에 따라 추가
-                        .build())
-                .collect(Collectors.toList());
+    public ApiResponseDto<CompetitionSearchTotalDto> competitionTeamSearch(int pageNo, int pageSize, String sortBy, String keyword) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<Competition> competitionPage;
+        competitionPage = new PageImpl<>(competitionRepository.findByCompetitionName(keyword, pageable));
+        List<CompetitionSearchDto> competitionSearchDtos = competitionPage.getContent().stream()
+                .map(competition -> {
+                    CompetitionSearchDto competitionSearchDto = new CompetitionSearchDto();
+                    competitionSearchDto.setCompetitionId(competition.getCompetitionId());
+                    competitionSearchDto.setCompetitionName(competition.getCompetitionName());
+                    return competitionSearchDto;
+                })
+                .toList();
+        CompetitionSearchTotalDto competitionSearchTotalDto = new CompetitionSearchTotalDto();
+        competitionSearchTotalDto.setCompetitionSearchDtoList(competitionSearchDtos);
+        competitionSearchTotalDto.setTotalPages(competitionPage.getTotalPages());
+        competitionSearchTotalDto.setTotalElements(competitionPage.getTotalElements());
+        competitionSearchTotalDto.setLast(competitionPage.isLast());
+        competitionSearchTotalDto.setPageSize(pageSize);
+        competitionSearchTotalDto.setPageNo(pageNo);
 
-        return ResponseUtils.ok(competitionSearchDtos, null);
+        return ResponseUtils.ok(competitionSearchTotalDto, null);
     }
     // 유저 정보 리스트를 가져오고 여기에는 유저의 이름, id, 한줄소개가 있어야한다.
     @Transactional
