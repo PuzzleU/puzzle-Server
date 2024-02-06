@@ -4,8 +4,10 @@ import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.experience.ExperienceDto;
+import com.PuzzleU.Server.dto.friendship.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetDto;
 import com.PuzzleU.Server.dto.user.*;
+import com.PuzzleU.Server.entity.competition.Competition;
 import com.PuzzleU.Server.entity.enumSet.Priority;
 import com.PuzzleU.Server.entity.experience.Experience;
 import com.PuzzleU.Server.entity.interest.Interest;
@@ -26,17 +28,21 @@ import com.PuzzleU.Server.jwt.JwtUtil;
 import com.PuzzleU.Server.repository.*;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.print.DocFlavor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -275,7 +281,28 @@ public class UserService {
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), null);
     }
-    public ApiResponseDto<List<UserSimpleDto>> searchUser(String keyword)
+    public ApiResponseDto<FriendShipSearchResponseDto> searchUser(int pageNo, int pageSize, String sortBy, String keyword)
     {
-        List<UserSimpleDto> userSimpleDtoList = userRepository.findByUserKoreaNameContaining(keyword);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<User> users;
+        users = new PageImpl<>(userRepository.findByUserKoreaNameContaining(keyword, pageable));
+        List<UserSimpleDto> userSimpleDtoList = users.getContent().stream()
+                .map(user -> {
+                    UserSimpleDto userSimpleDto = new UserSimpleDto();
+                    userSimpleDto.setUserId(user.getId());
+                    userSimpleDto.setUserProfile(user.getUserProfile());
+                    userSimpleDto.setUserKoreaName(user.getUserKoreaName());
+                    userSimpleDto.setUserRepresentativeProfileSentence(user.getUserRepresentativeProfileSentence());
+                    return userSimpleDto;
+                })
+                .collect(Collectors.toList());
+        FriendShipSearchResponseDto friendShipSearchResponseDto = new FriendShipSearchResponseDto();
+        friendShipSearchResponseDto.setUserSimpleDtoList(userSimpleDtoList);
+        friendShipSearchResponseDto.setLast(users.isLast());
+        friendShipSearchResponseDto.setTotalPages(users.getTotalPages());
+        friendShipSearchResponseDto.setPageNo(pageNo);
+        friendShipSearchResponseDto.setPageSize(pageSize);
+        friendShipSearchResponseDto.setTotalElements(users.getTotalElements());
+        return ResponseUtils.ok(friendShipSearchResponseDto, null);
+    }
 }

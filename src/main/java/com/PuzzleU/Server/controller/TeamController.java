@@ -31,17 +31,22 @@ public class TeamController {
     @GetMapping("/searchCompetition")
     public ApiResponseDto<CompetitionSearchTotalDto> competitionSearch(@Valid
       @RequestParam(value = "search", defaultValue = "None", required = false) String keyword,
-                                                                             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                                                       @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
-                                                                             @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy)
+      @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+      @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+      @RequestParam(value = "sortBy", defaultValue = "competitionId", required = false) String sortBy)
     {
         return teamService.competitionTeamSearch(pageNo,pageSize, sortBy, keyword);
     }
-    @GetMapping("/searchMember/{keyword}")
-    public ApiResponseDto<FriendShipSearchResponseDto> memberSearch(@Valid
-         @PathVariable String keyword, @AuthenticationPrincipal UserDetails loginUser)
+    @GetMapping("/searchMember")
+    public ApiResponseDto<FriendShipSearchResponseDto> memberSearch(
+            @Valid
+            @RequestParam(value = "search", defaultValue = "None", required = false) String keyword,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "friendshipId", required = false) String sortBy,
+            @AuthenticationPrincipal UserDetails loginUser)
     {
-        return teamService.firendRegister(keyword, loginUser);
+        return teamService.firendRegister(keyword, loginUser,pageNo,pageSize, sortBy);
     }
 
 }

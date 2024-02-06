@@ -75,13 +75,17 @@ public class TeamService {
     }
     // 유저 정보 리스트를 가져오고 여기에는 유저의 이름, id, 한줄소개가 있어야한다.
     @Transactional
-    public ApiResponseDto<FriendShipSearchResponseDto> firendRegister(String keyword, UserDetails loginUser)
+    public ApiResponseDto<FriendShipSearchResponseDto> firendRegister(String keyword, UserDetails loginUser,int pageNo, int pageSize, String sortBy)
     {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        Page<FriendShip> friendShips = friendshipRepository.findActiveFriendshipsForUserAndKeyword(user, keyword, pageable);
+        List<FriendShip> friendShipList = friendShips.getContent();
         FriendShipSearchResponseDto friendShipSearchResponseDto = new FriendShipSearchResponseDto();
         // 각각의 friendshipe에 대해서 user가 아닌 user에 대한 정보를 저장하고 리스트로 만들어준다
-        List<FriendShip> friendShipList = friendshipRepository.findActiveFriendshipsForUserAndKeyword(user, keyword);
+
         List<UserSimpleDto> userSimpleDtoList = new ArrayList<>();
         for(FriendShip friendShip:friendShipList)
         {
@@ -108,6 +112,7 @@ public class TeamService {
             }
         }
         friendShipSearchResponseDto.setUserSimpleDtoList(userSimpleDtoList);
+
      return ResponseUtils.ok(friendShipSearchResponseDto, null)  ;
     }
 }
