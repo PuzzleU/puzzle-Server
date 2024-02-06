@@ -3,6 +3,7 @@ package com.PuzzleU.Server.controller;
 import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.competition.CompetitionSearchDto;
+import com.PuzzleU.Server.dto.friendship.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.dto.team.TeamCreateDto;
 import com.PuzzleU.Server.dto.user.SignupRequestDto;
 import com.PuzzleU.Server.service.User.UserService;
@@ -24,10 +25,17 @@ public class TeamController {
     public ApiResponseDto<SuccessResponse> teamCreate(@Valid @RequestBody TeamCreateDto teamCreateDto) {
         return teamService.teamcreate(teamCreateDto);
     }
-    @GetMapping("/search/{keyword}")
-    public ApiResponseDto<List<CompetitionSearchDto>> forteamsearch(@Valid
+    @GetMapping("/searchCompetition/{keyword}")
+    public ApiResponseDto<List<CompetitionSearchDto>> competitionSearch(@Valid
                                                                     @PathVariable String keyword)
     {
         return teamService.competitionTeamSearch(keyword);
     }
+    @GetMapping("/searchMember/{userId}/{keyword}")
+    public ApiResponseDto<FriendShipSearchResponseDto> memberSearch(@Valid
+                                                                    @PathVariable String keyword, @PathVariable Long userId)
+    {
+        return teamService.firendRegister(keyword, userId);
+    }
+
 }
