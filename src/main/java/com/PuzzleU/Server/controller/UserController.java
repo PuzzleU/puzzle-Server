@@ -133,6 +133,13 @@ public class UserController {
         return userService.registerEssential(loginUser, userRegisterEssentialDto);
     }
 
-//2
+    @PatchMapping("/profile")
+    public ApiResponseDto<SuccessResponse> updateUserProfileBasic(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @RequestBody UserProfileBasicDto userProfileBasicDto
+    ) {
+        return userService.updateUserProfileBasic(loginUser, userProfileBasicDto);
+    }
+
 }
 
