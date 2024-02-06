@@ -32,7 +32,7 @@ public class TeamController {
     public ApiResponseDto<CompetitionSearchTotalDto> competitionSearch(@Valid
       @RequestParam(value = "search", defaultValue = "None", required = false) String keyword,
                                                                              @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                //2                                             @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+                                                                       @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
                                                                              @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy)
     {
         return teamService.competitionTeamSearch(pageNo,pageSize, sortBy, keyword);
