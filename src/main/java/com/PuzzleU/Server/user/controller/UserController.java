@@ -6,13 +6,11 @@ import com.PuzzleU.Server.experience.dto.ExperienceDto;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.relations.dto.UserSkillsetRelationDto;
 import com.PuzzleU.Server.skillset.dto.SkillSetListDto;
-import com.PuzzleU.Server.dto.user.*;
 import com.PuzzleU.Server.experience.service.ExperienceService;
 import com.PuzzleU.Server.skillset.service.SkillsetService;
 import com.PuzzleU.Server.university.service.UniversityService;
 import com.PuzzleU.Server.user.dto.*;
 import com.PuzzleU.Server.user.service.UserService;
-import com.PuzzleU.Server.user.User.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -147,6 +145,29 @@ public class UserController {
     ) {
         return userService.updateUserProfileBasic(loginUser, userProfileBasicDto);
     }
+    @PostMapping("/friend/{friendId}/{userId}")
+    public ApiResponseDto<SuccessResponse> registerFriend(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @PathVariable Long friendId)
+    {
+        return userService.registerFriend(loginUser, friendId);
+    }
+    @PatchMapping("/friend/{friendId}/{userId}")
+    public ApiResponseDto<SuccessResponse> responseFriend(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @PathVariable Long friendId)
+    {
+        return userService.responseFriend(loginUser, friendId);
+    }
+    @DeleteMapping("/friend/{friendId}/{userId}")
+    public ApiResponseDto<SuccessResponse> deleteFriend(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @PathVariable Long friendId)
+    {
+        return userService.deleteFriend(loginUser, friendId);
+    }
+
+
 
 }
 

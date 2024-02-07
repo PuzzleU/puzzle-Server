@@ -21,7 +21,6 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
     Page<Competition> findAll(@NonNull Pageable pageable);
     Page<Competition> findByCompetitionNameContaining(Pageable pageable,String keyword);
 
-
     @Query("SELECT c FROM Competition c LEFT JOIN FETCH c.competitionTypes WHERE c.competitionId = :id")
     Optional<Competition> findByCompetitionIdWithCompetitionTypes(@Param("id") Long id);
 

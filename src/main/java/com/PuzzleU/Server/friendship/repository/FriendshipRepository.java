@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface FriendshipRepository extends JpaRepository<FriendShip, Long> {
 
@@ -16,5 +18,7 @@ public interface FriendshipRepository extends JpaRepository<FriendShip, Long> {
     @Query("SELECT f FROM FriendShip f WHERE ((f.user1 = :user AND f.user2.userKoreaName LIKE %:keyword%) OR (f.user2 = :user AND f.user1.userKoreaName LIKE %:keyword%)) AND f.userStatus = true")
     Page<FriendShip> findActiveFriendshipsForUserAndKeyword(@Param("user") User user, @Param("keyword") String keyword, Pageable pageable);
 
+    @Query("SELECT f FROM FriendShip f WHERE ((f.user1 = :user_first AND f.user2 = :user_second) OR (f.user1 = :user_second AND f.user2 = :user_first))")
+    Optional<FriendShip> findByUser1AndUser2(@Param("user_first") User user_first, @Param("user_second") User user_second);
 
 }
