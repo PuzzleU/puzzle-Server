@@ -32,6 +32,7 @@ public class CompetitionService {
 
     private final Logger logger = LoggerFactory.getLogger(CompetitionService.class);
 
+    // 공모전 전체를 볼 수 있는 데이터를 넘기는 API
     @Transactional
     public ApiResponseDto<CompetitionHomeTotalDto> getHomepage(int pageNo, int pageSize, String sortBy, String keyword, CompetitionType type) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
@@ -85,6 +86,8 @@ public class CompetitionService {
 
         return ResponseUtils.ok(competitionHomeTotalDto, null);
     }
+
+    // 공모전 하나의 정보를 전체다 볼 수 있는 API
     @Transactional
     public ApiResponseDto<CompetitionSpecificDto> getSpecific (Long competitionId)
     {
@@ -115,7 +118,5 @@ public class CompetitionService {
         return ResponseUtils.ok(competitionSpecificDto, null);
     }
     // 최신순, 마감빠른순, 마감느린순, 인기순, 조회순, 팀빌딩순
-
-
 
 }

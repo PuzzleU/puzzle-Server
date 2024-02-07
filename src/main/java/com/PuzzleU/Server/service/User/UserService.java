@@ -4,8 +4,10 @@ import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.experience.ExperienceDto;
+import com.PuzzleU.Server.dto.friendship.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetDto;
 import com.PuzzleU.Server.dto.user.*;
+import com.PuzzleU.Server.entity.competition.Competition;
 import com.PuzzleU.Server.entity.enumSet.Priority;
 import com.PuzzleU.Server.entity.enumSet.WorkType;
 import com.PuzzleU.Server.entity.experience.Experience;
@@ -27,18 +29,23 @@ import com.PuzzleU.Server.jwt.JwtUtil;
 import com.PuzzleU.Server.repository.*;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.print.DocFlavor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -69,6 +76,7 @@ public class UserService {
     private final UserInterestRelationRepository userInterestRelationRepository;
     private final UserLocationRelationRepository userLocationRelationRepository;
 
+    // 회원가입 API
     @Transactional
     public ApiResponseDto<SuccessResponse> signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
@@ -104,6 +112,7 @@ public class UserService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "로그인 성공"),jwtToken);
 
     }
+    // 유저가 회원가입 후 옵션으로 선택해서 등록가능한 API
     public ApiResponseDto<SuccessResponse> createRegisterOptionalUser(
             UserDetails loginUser,
             UserRegisterOptionalDto userRegisterOptionalDto
@@ -185,6 +194,7 @@ public class UserService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "선택사항 저장완료"), null);
     }
 
+    // 회원가입 후 필수로 작성해야하는 것들을 등록하는 API
     public ApiResponseDto<SuccessResponse> registerEssential(UserDetails loginUser, UserRegisterEssentialDto userRegisterEssentialDto) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -278,6 +288,32 @@ public class UserService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), null);
     }
 
+    // 모든 멤버들을 검색할 수 있는 API
+    public ApiResponseDto<FriendShipSearchResponseDto> searchUser(int pageNo, int pageSize, String sortBy, String keyword)
+    {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<User> users;
+        users = new PageImpl<>(userRepository.findByUserKoreaNameContaining(keyword, pageable));
+        List<UserSimpleDto> userSimpleDtoList = users.getContent().stream()
+                .map(user -> {
+                    UserSimpleDto userSimpleDto = new UserSimpleDto();
+                    userSimpleDto.setUserId(user.getId());
+                    userSimpleDto.setUserProfile(user.getUserProfile());
+                    userSimpleDto.setUserKoreaName(user.getUserKoreaName());
+                    userSimpleDto.setUserRepresentativeProfileSentence(user.getUserRepresentativeProfileSentence());
+                    return userSimpleDto;
+                })
+                .collect(Collectors.toList());
+        FriendShipSearchResponseDto friendShipSearchResponseDto = new FriendShipSearchResponseDto();
+        friendShipSearchResponseDto.setUserSimpleDtoList(userSimpleDtoList);
+        friendShipSearchResponseDto.setLast(users.isLast());
+        friendShipSearchResponseDto.setTotalPages(users.getTotalPages());
+        friendShipSearchResponseDto.setPageNo(pageNo);
+        friendShipSearchResponseDto.setPageSize(pageSize);
+        friendShipSearchResponseDto.setTotalElements(users.getTotalElements());
+        return ResponseUtils.ok(friendShipSearchResponseDto, null);
+    }
+  
     public ApiResponseDto<SuccessResponse> updateUserProfileBasic(UserDetails loginUser, UserProfileBasicDto userProfileBasicDto) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -322,6 +358,5 @@ public class UserService {
         userRepository.save(user);
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "프로필 기본 정보 수정 완료"), null);
     }
-
 
 }

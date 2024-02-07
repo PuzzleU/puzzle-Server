@@ -34,6 +34,8 @@ public class SkillsetService {
     private final UserRepository userRepository;
     private final SkillsetRepository skillsetRepository;
     private final UserSkillsetRelationRepository userSkillsetRelationRepository;
+
+    // 유저가 본인의 스킬셋을 등록가능한 API
     public ApiResponseDto<SuccessResponse> createSkillset(
             UserDetails loginUser, SkillSetListDto skillsetList
     )
@@ -60,6 +62,7 @@ public class SkillsetService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저스킬셋 저장완료"), null);
 
     }
+    // 유저가 자신의 스킬셋을 삭제가능함
     public ApiResponseDto<SuccessResponse> deleteSkillset(
             UserDetails loginUser, Long skillsetId
     )
@@ -80,6 +83,7 @@ public class SkillsetService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저스킬셋 삭제완료"), null);
 
     }
+    // 유저가 자신이 등록한 스킬셋의 리스트를 확인가능한 API
     public ApiResponseDto<List<UserSkillsetRelationDto>> getSkillsetList(UserDetails loginUser) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));

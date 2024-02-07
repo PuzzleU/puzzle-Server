@@ -40,6 +40,6 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
     int updateVisit(@Param("id")Long id);
 
     @Query("SELECT c FROM Competition c WHERE c.competitionName LIKE %:keyword%")
-    List<Competition> findByCompetitionName(@Param("keyword") String keyword);
+    List<Competition> findByCompetitionName(@Param("keyword") String keyword, Pageable pageable);
 }
 

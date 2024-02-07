@@ -4,6 +4,7 @@ import com.PuzzleU.Server.common.ApiResponseDto;
 import com.PuzzleU.Server.common.ResponseUtils;
 import com.PuzzleU.Server.common.SuccessResponse;
 import com.PuzzleU.Server.dto.experience.ExperienceDto;
+import com.PuzzleU.Server.dto.friendship.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.dto.relation.UserSkillsetRelationDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetDto;
 import com.PuzzleU.Server.dto.skillset.SkillSetListDto;
@@ -131,6 +132,17 @@ public class UserController {
             @RequestBody UserRegisterEssentialDto userRegisterEssentialDto
     ) {
         return userService.registerEssential(loginUser, userRegisterEssentialDto);
+    }
+    @GetMapping("/friendSearch")
+    public ApiResponseDto<FriendShipSearchResponseDto> searchUser(
+            @Valid
+            @RequestParam(value = "search", defaultValue = "None", required = false) String search,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy
+    )
+    {
+        return userService.searchUser(pageNo, pageSize, sortBy, search);
     }
 
     @PatchMapping("/profile")
