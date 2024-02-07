@@ -9,6 +9,7 @@ import com.PuzzleU.Server.dto.skillset.SkillSetDto;
 import com.PuzzleU.Server.dto.user.*;
 import com.PuzzleU.Server.entity.competition.Competition;
 import com.PuzzleU.Server.entity.enumSet.Priority;
+import com.PuzzleU.Server.entity.enumSet.WorkType;
 import com.PuzzleU.Server.entity.experience.Experience;
 import com.PuzzleU.Server.entity.interest.Interest;
 import com.PuzzleU.Server.entity.location.Location;
@@ -33,10 +34,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.print.DocFlavor;
 import java.util.ArrayList;
@@ -310,4 +313,50 @@ public class UserService {
         friendShipSearchResponseDto.setTotalElements(users.getTotalElements());
         return ResponseUtils.ok(friendShipSearchResponseDto, null);
     }
+  
+    public ApiResponseDto<SuccessResponse> updateUserProfileBasic(UserDetails loginUser, UserProfileBasicDto userProfileBasicDto) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        Long userProfileId = userProfileBasicDto.getUserProfileId();
+        String userKoreaName = userProfileBasicDto.getUserKoreaName();
+        Long positionId1 = userProfileBasicDto.getPositionId1();
+        Long positionId2 = userProfileBasicDto.getPositionId2();
+        WorkType workType = userProfileBasicDto.getWorkType();
+        String userRepresentativeProfileSentence = userProfileBasicDto.getUserRepresentativeProfileSentence();
+
+        if (userProfileId != null) { // 프로필 설정
+            Profile profile = profileRepository.findByProfileId(userProfileId)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_PROFILE));
+            user.setUserProfile(profile);
+        }
+
+        if (userKoreaName != null) {
+            user.setUserKoreaName(userKoreaName);
+        }
+
+        if (positionId1 != null) {
+            Position position1 = positionRepository.findByPositionId(positionId1)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
+            user.setUserPosition1(position1);
+        }
+
+        if (positionId2 != null) {
+            Position position2 = positionRepository.findByPositionId(positionId2)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
+            user.setUserPosition2(position2);
+        }
+
+        if (workType != null) {
+            user.setWorkType(workType);
+        }
+
+        if (userRepresentativeProfileSentence != null) {
+            user.setUserRepresentativeProfileSentence(userRepresentativeProfileSentence);
+        }
+
+        userRepository.save(user);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "프로필 기본 정보 수정 완료"), null);
+    }
+
 }

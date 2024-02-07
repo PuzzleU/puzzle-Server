@@ -145,6 +145,13 @@ public class UserController {
         return userService.searchUser(pageNo, pageSize, sortBy, search);
     }
 
-//2
+    @PatchMapping("/profile")
+    public ApiResponseDto<SuccessResponse> updateUserProfileBasic(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @RequestBody UserProfileBasicDto userProfileBasicDto
+    ) {
+        return userService.updateUserProfileBasic(loginUser, userProfileBasicDto);
+    }
+
 }
 
