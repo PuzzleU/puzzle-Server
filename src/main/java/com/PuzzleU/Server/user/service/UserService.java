@@ -16,6 +16,7 @@ import com.PuzzleU.Server.relations.repository.UserLocationRelationRepository;
 import com.PuzzleU.Server.relations.repository.UserSkillsetRelationRepository;
 import com.PuzzleU.Server.skillset.dto.SkillSetDto;
 import com.PuzzleU.Server.dto.user.*;
+<<<<<<< HEAD:src/main/java/com/PuzzleU/Server/user/service/UserService.java
 import com.PuzzleU.Server.experience.entity.Experience;
 import com.PuzzleU.Server.interest.entity.Interest;
 import com.PuzzleU.Server.location.entity.Location;
@@ -37,15 +38,43 @@ import com.PuzzleU.Server.common.jwt.JwtUtil;
 import com.PuzzleU.Server.user.dto.*;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.repository.UserRepository;
+=======
+import com.PuzzleU.Server.entity.competition.Competition;
+import com.PuzzleU.Server.entity.enumSet.Priority;
+import com.PuzzleU.Server.entity.enumSet.WorkType;
+import com.PuzzleU.Server.entity.experience.Experience;
+import com.PuzzleU.Server.entity.interest.Interest;
+import com.PuzzleU.Server.entity.location.Location;
+import com.PuzzleU.Server.entity.major.Major;
+import com.PuzzleU.Server.entity.position.Position;
+import com.PuzzleU.Server.entity.profile.Profile;
+import com.PuzzleU.Server.entity.relations.UserInterestRelation;
+import com.PuzzleU.Server.entity.relations.UserLocationRelation;
+import com.PuzzleU.Server.entity.relations.UserSkillsetRelation;
+import com.PuzzleU.Server.entity.skillset.Skillset;
+import com.PuzzleU.Server.entity.university.University;
+import com.PuzzleU.Server.entity.user.User;
+import com.PuzzleU.Server.entity.enumSet.ErrorType;
+import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
+import com.PuzzleU.Server.exception.RestApiException;
+import com.PuzzleU.Server.jwt.JwtUtil;
+import com.PuzzleU.Server.repository.*;
+>>>>>>> 7452986701446d42244b9cb0453c17e303d5d995:src/main/java/com/PuzzleU/Server/service/User/UserService.java
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+<<<<<<< HEAD:src/main/java/com/PuzzleU/Server/user/service/UserService.java
+=======
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+>>>>>>> 7452986701446d42244b9cb0453c17e303d5d995:src/main/java/com/PuzzleU/Server/service/User/UserService.java
 
 import java.util.ArrayList;
 import java.util.List;
@@ -318,4 +347,50 @@ public class UserService {
         friendShipSearchResponseDto.setTotalElements(users.getTotalElements());
         return ResponseUtils.ok(friendShipSearchResponseDto, null);
     }
+  
+    public ApiResponseDto<SuccessResponse> updateUserProfileBasic(UserDetails loginUser, UserProfileBasicDto userProfileBasicDto) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        Long userProfileId = userProfileBasicDto.getUserProfileId();
+        String userKoreaName = userProfileBasicDto.getUserKoreaName();
+        Long positionId1 = userProfileBasicDto.getPositionId1();
+        Long positionId2 = userProfileBasicDto.getPositionId2();
+        WorkType workType = userProfileBasicDto.getWorkType();
+        String userRepresentativeProfileSentence = userProfileBasicDto.getUserRepresentativeProfileSentence();
+
+        if (userProfileId != null) { // 프로필 설정
+            Profile profile = profileRepository.findByProfileId(userProfileId)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_PROFILE));
+            user.setUserProfile(profile);
+        }
+
+        if (userKoreaName != null) {
+            user.setUserKoreaName(userKoreaName);
+        }
+
+        if (positionId1 != null) {
+            Position position1 = positionRepository.findByPositionId(positionId1)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
+            user.setUserPosition1(position1);
+        }
+
+        if (positionId2 != null) {
+            Position position2 = positionRepository.findByPositionId(positionId2)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
+            user.setUserPosition2(position2);
+        }
+
+        if (workType != null) {
+            user.setWorkType(workType);
+        }
+
+        if (userRepresentativeProfileSentence != null) {
+            user.setUserRepresentativeProfileSentence(userRepresentativeProfileSentence);
+        }
+
+        userRepository.save(user);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "프로필 기본 정보 수정 완료"), null);
+    }
+
 }
