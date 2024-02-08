@@ -3,18 +3,14 @@ package com.PuzzleU.Server.relations.entity;
 import com.PuzzleU.Server.location.entity.Location;
 import com.PuzzleU.Server.team.entity.Team;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "team_location_relation")
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Builder
 public class TeamLocationRelation {
 
     @Id

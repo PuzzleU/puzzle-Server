@@ -7,9 +7,16 @@ import com.PuzzleU.Server.competition.repository.CompetitionRepository;
 import com.PuzzleU.Server.competition.dto.CompetitionSearchDto;
 import com.PuzzleU.Server.competition.dto.CompetitionSearchTotalDto;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
+import com.PuzzleU.Server.location.entity.Location;
 import com.PuzzleU.Server.location.repository.LocationRepository;
+import com.PuzzleU.Server.relations.entity.TeamLocationRelation;
+import com.PuzzleU.Server.relations.entity.TeamUserRelation;
+import com.PuzzleU.Server.relations.repository.TeamLocationRelationRepository;
+import com.PuzzleU.Server.relations.repository.TeamUserRepository;
 import com.PuzzleU.Server.team.dto.TeamCreateDto;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
+import com.PuzzleU.Server.team.entity.Team;
+import com.PuzzleU.Server.team.repository.TeamRepository;
 import com.PuzzleU.Server.user.dto.UserSimpleDto;
 import com.PuzzleU.Server.competition.entity.Competition;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
@@ -26,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,23 +42,73 @@ public class TeamService {
     private final CompetitionRepository competitionRepository;
     private final FriendshipRepository friendshipRepository;
     private final LocationRepository locationRepository;
+    private final TeamRepository teamRepository;
+    private final TeamUserRepository teamUserRepository;
+    private final TeamLocationRelationRepository teamLocationRelationRepository;
 
     // 팀 구인글을 등록하는 API
+    @Transactional
     public ApiResponseDto<SuccessResponse> teamcreate(
-            TeamCreateDto teamCreateDto
+            TeamCreateDto teamCreateDto,
+            Long competitionId,
+            List<Long> teamMember,
+            UserDetails loginUser
+            ,List<Long> locations
     )
     {
-        // 공모전 검색해서 저장하고 - competition
-        // 제목 넣고
-        // 구인 포지션 중복 선택하고 - position
-        // 모집 인우너수 정하고
-        // 팀원 추가하고 - user
-        // 대면 비대면 추가하고
-        // 장소 추가하고 - location
-        // 오픈 채팅 추가하고
-        // 내용추가 하고 끝
+        User loginuser = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        Optional<Competition> competitionOptional = competitionRepository.findById(competitionId);
+        Competition competition = competitionOptional.orElseThrow(
+                ()-> new RestApiException(ErrorType.NOT_FOUND_COMPETITION)
+        );
+        Team team = new Team();
+        team.setTeamTitle(teamCreateDto.getTeamTitle());
+        team.setTeamMemberNeed(teamCreateDto.getTeamMemberNeed());
+        team.setTeamUntact(teamCreateDto.getTeamUntact());
+        team.setTeamUrl(teamCreateDto.getTeamUrl());
+        team.setTeamIntroduce(teamCreateDto.getTeamIntroduce());
+        team.setTeamContent(teamCreateDto.getTeamContent());
+        team.setTeamStatus(teamCreateDto.getTeamStatus());
+        team.setCompetition(competition);
+        team.setTeamMemberNow(teamMember.size());
+        teamRepository.save(team);
+        TeamUserRelation teamUserRelationWriter=  TeamUserRelation.builder()
+                .team(team)
+                .user(loginuser)
+                .isWriter(true)
+                .build();
+        teamUserRepository.saveAndFlush(teamUserRelationWriter);
+        for(Long userId : teamMember)
+        {
+            Optional<User> userOptional = userRepository.findById(userId);
+                    User user = userOptional.orElseThrow(
+                    ()-> new RestApiException(ErrorType.NOT_FOUND_USER)
+            );
+            TeamUserRelation teamUserRelation=  TeamUserRelation.builder()
+                    .team(team)
+                    .user(user)
+                    .isWriter(false)
+                    .build();
+            teamUserRepository.saveAndFlush(teamUserRelation);
+        }
+        for(Long locationId : locations)
+        {
+            Optional<Location> locationOptional = locationRepository.findById(locationId);
+            Location location = locationOptional.orElseThrow(
+                    () -> new RestApiException(ErrorType.NOT_FOUND_LOCATION)
+            );
+            TeamLocationRelation teamLocationRelation = TeamLocationRelation.builder()
+                    .team(team)
+                    .location(location)
+                    .build();
+            teamLocationRelationRepository.saveAndFlush(teamLocationRelation);
 
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"팀구인글 생성완료"), null);
+        }
+
+
+
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"팀 구인글 생성완료"), null);
     }
     // 공모전 팀 등록시 공모전검색을 해서 값을 가져오는 API
     @Transactional
@@ -81,7 +139,7 @@ public class TeamService {
     // 유저 정보 리스트를 가져오고 여기에는 유저의 이름, id, 한줄소개가 있어야한다.
     // 공모전글을 등록할때 내 친구들만 데이터를 가져오는 API
     @Transactional
-    public ApiResponseDto<FriendShipSearchResponseDto> frIendRegister(String keyword, UserDetails loginUser,int pageNo, int pageSize, String sortBy)
+    public ApiResponseDto<FriendShipSearchResponseDto> friendRegister(String keyword, UserDetails loginUser,int pageNo, int pageSize, String sortBy)
     {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
         User user = userRepository.findByUsername(loginUser.getUsername())

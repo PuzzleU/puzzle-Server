@@ -30,7 +30,8 @@ public enum ErrorType {
     TOO_FEW_POSITIONS(400, "너무 적은 포지션이 입력되었습니다. 하나 이상의 포지션을 선택해야 합니다."),
     NAME_NOT_PROVIDED(400, "이름이 입력되지 않았습니다."),
     PUZZLE_ID_NOT_PROVIDED(400, "퍼즐 아이디가 입력되지 않았습니다."),
-    PROFILE_NOT_PROVIDED(400, "프로필이 입력되지 않았습니다.");
+    PROFILE_NOT_PROVIDED(400, "프로필이 입력되지 않았습니다."),
+    NOT_FOUND_FRIENDSHIP(400, "등록되지 않은 관계입니다.");
 
     private int code;
     private String message;

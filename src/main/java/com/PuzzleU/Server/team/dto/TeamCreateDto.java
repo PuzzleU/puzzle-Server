@@ -2,7 +2,14 @@ package com.PuzzleU.Server.team.dto;
 
 import com.PuzzleU.Server.competition.entity.Competition;
 import jakarta.validation.constraints.Size;
+import lombok.*;
 
+@Getter
+@Data
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TeamCreateDto {
     private Competition competition;
     @Size(max = 30)
@@ -24,10 +31,6 @@ public class TeamCreateDto {
     private String teamContent;
 
     private Boolean teamStatus;
-
-
-
-
 
 }
 

@@ -6,12 +6,15 @@ import com.PuzzleU.Server.competition.dto.CompetitionSearchTotalDto;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.team.dto.TeamCreateDto;
 import com.PuzzleU.Server.team.service.TeamService;
+import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +23,13 @@ public class TeamController {
     private final UserService userService;
     private final TeamService teamService;
 
-    @PostMapping("/")
-    public ApiResponseDto<SuccessResponse> teamCreate(@Valid @RequestBody TeamCreateDto teamCreateDto) {
-        return teamService.teamcreate(teamCreateDto);
+    @PostMapping("")
+    public ApiResponseDto<SuccessResponse> teamCreate(@Valid @RequestBody TeamCreateDto teamCreateDto
+    ,@RequestParam Long competitionId,
+     @RequestParam List<Long> teamMember,
+     @AuthenticationPrincipal UserDetails loginUser,
+    @RequestParam List<Long> locations) {
+        return teamService.teamcreate(teamCreateDto, competitionId, teamMember,loginUser,locations);
     }
     @GetMapping("/searchCompetition")
     public ApiResponseDto<CompetitionSearchTotalDto> competitionSearch(@Valid
@@ -42,7 +49,7 @@ public class TeamController {
             @RequestParam(value = "sortBy", defaultValue = "friendshipId", required = false) String sortBy,
             @AuthenticationPrincipal UserDetails loginUser)
     {
-        return teamService.frIendRegister(keyword, loginUser,pageNo,pageSize, sortBy);
+        return teamService.friendRegister(keyword, loginUser,pageNo,pageSize, sortBy);
     }
 
 }
