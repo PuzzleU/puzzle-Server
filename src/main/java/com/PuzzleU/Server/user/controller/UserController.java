@@ -145,6 +145,29 @@ public class UserController {
     ) {
         return userService.updateUserProfileBasic(loginUser, userProfileBasicDto);
     }
+    @PostMapping("/friend/{friendId}/{userId}")
+    public ApiResponseDto<SuccessResponse> registerFriend(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @PathVariable Long friendId)
+    {
+        return userService.registerFriend(loginUser, friendId);
+    }
+    @PatchMapping("/friend/{friendId}/{userId}")
+    public ApiResponseDto<SuccessResponse> responseFriend(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @PathVariable Long friendId)
+    {
+        return userService.responseFriend(loginUser, friendId);
+    }
+    @DeleteMapping("/friend/{friendId}/{userId}")
+    public ApiResponseDto<SuccessResponse> deleteFriend(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @PathVariable Long friendId)
+    {
+        return userService.deleteFriend(loginUser, friendId);
+    }
+
+
 
 }
 

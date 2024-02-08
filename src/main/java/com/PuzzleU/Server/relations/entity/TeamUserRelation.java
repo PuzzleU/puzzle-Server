@@ -3,11 +3,8 @@ package com.PuzzleU.Server.relations.entity;
 import com.PuzzleU.Server.team.entity.Team;
 import com.PuzzleU.Server.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
@@ -15,6 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 
 public class TeamUserRelation {
 

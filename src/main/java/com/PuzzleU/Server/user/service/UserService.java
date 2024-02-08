@@ -7,6 +7,8 @@ import com.PuzzleU.Server.common.enumSet.WorkType;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
 import com.PuzzleU.Server.experience.repository.ExperienceRepository;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
+import com.PuzzleU.Server.friendship.entity.FriendShip;
+import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
 import com.PuzzleU.Server.position.repository.PositionRepository;
 import com.PuzzleU.Server.profile.repository.ProfileRepository;
 import com.PuzzleU.Server.relations.entity.UserInterestRelation;
@@ -79,6 +81,7 @@ public class UserService {
     private final LocationRepository locationRepository;
     private final UserInterestRelationRepository userInterestRelationRepository;
     private final UserLocationRelationRepository userLocationRelationRepository;
+    private final FriendshipRepository friendshipRepository;
 
     // 회원가입 API
     @Transactional
@@ -98,6 +101,7 @@ public class UserService {
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 성공"), null);
     }
+
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ApiResponseDto<SuccessResponse> login(LoginRequestsDto requestDto, HttpServletResponse response) {
         String username = requestDto.getUsername();
@@ -113,9 +117,10 @@ public class UserService {
         response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.get().getUsername(), user.get().getRole()));
         String jwtToken = jwtUtil.createToken(user.get().getUsername(), user.get().getRole());
         jwtToken.substring(7);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "로그인 성공"),jwtToken);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "로그인 성공"), jwtToken);
 
     }
+
     // 유저가 회원가입 후 옵션으로 선택해서 등록가능한 API
     public ApiResponseDto<SuccessResponse> createRegisterOptionalUser(
             UserDetails loginUser,
@@ -125,8 +130,7 @@ public class UserService {
 
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        if(userRegisterOptionalDto.getUniversityStart() == null)
-        {
+        if (userRegisterOptionalDto.getUniversityStart() == null) {
             System.out.println("null");
         }
         Optional<Major> optionalMajor = majorRepository.findById(userRegisterOptionalDto.getMajorId());
@@ -134,7 +138,6 @@ public class UserService {
         System.out.println(userRegisterOptionalDto.getMajorId());
         Optional<University> optionalUniversity = universityRepository.findById(userRegisterOptionalDto.getUniversityId());
         System.out.println(optionalUniversity);
-
 
 
         Major major = optionalMajor.orElseThrow(() -> {
@@ -223,7 +226,7 @@ public class UserService {
             throw new RestApiException(ErrorType.PROFILE_NOT_PROVIDED);
         }
         Profile profile = profileRepository.findByProfileId(profileId)
-                        .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_PROFILE));
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_PROFILE));
         user.setUserProfile(profile);
 
         // 포지션 설정
@@ -234,7 +237,7 @@ public class UserService {
             throw new RestApiException(ErrorType.TOO_FEW_POSITIONS);
         }
         Position position1 = positionRepository.findByPositionId(positionId1)
-                        .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
         user.setUserPosition1(position1);
 
         if (positionId2 != null) { // 2순위까지 골랐을 때
@@ -247,11 +250,11 @@ public class UserService {
 
 
         // 관심 분야 설정
-        for (Long interestId: userRegisterEssentialDto.getUserInterestIdList()) {
+        for (Long interestId : userRegisterEssentialDto.getUserInterestIdList()) {
             Interest interest = interestRepository.findByInterestId(interestId)
                     .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_INTEREST));
             Boolean interestPass = Boolean.FALSE;
-            for (UserInterestRelation userInterestRelation: user.getUserInterestRelations()) {
+            for (UserInterestRelation userInterestRelation : user.getUserInterestRelations()) {
                 if (userInterestRelation.getInterest() == interest) {
                     interestPass = Boolean.TRUE; // 이미 있는 관계면 저장하지 않음
                 }
@@ -270,12 +273,12 @@ public class UserService {
             throw new RestApiException(ErrorType.TOO_MUCH_LOCATIONS);
         }
 
-        for (Long locationId: userRegisterEssentialDto.getUserLocationIdList()) {
+        for (Long locationId : userRegisterEssentialDto.getUserLocationIdList()) {
             Location location = locationRepository.findByLocationId(locationId)
                     .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_LOCATION));
 
             Boolean locationPass = Boolean.FALSE;
-            for (UserLocationRelation userLocationRelation: user.getUserLocationRelations()) {
+            for (UserLocationRelation userLocationRelation : user.getUserLocationRelations()) {
                 if (userLocationRelation.getLocation() == location) {
                     locationPass = Boolean.TRUE; // 이미 있는 연관 관계면 저장하지 않음
                 }
@@ -293,8 +296,7 @@ public class UserService {
     }
 
     // 모든 멤버들을 검색할 수 있는 API
-    public ApiResponseDto<FriendShipSearchResponseDto> searchUser(int pageNo, int pageSize, String sortBy, String keyword)
-    {
+    public ApiResponseDto<FriendShipSearchResponseDto> searchUser(int pageNo, int pageSize, String sortBy, String keyword) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
         Page<User> users;
         users = new PageImpl<>(userRepository.findByUserKoreaNameContaining(keyword, pageable));
@@ -317,7 +319,7 @@ public class UserService {
         friendShipSearchResponseDto.setTotalElements(users.getTotalElements());
         return ResponseUtils.ok(friendShipSearchResponseDto, null);
     }
-  
+
     public ApiResponseDto<SuccessResponse> updateUserProfileBasic(UserDetails loginUser, UserProfileBasicDto userProfileBasicDto) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -363,4 +365,51 @@ public class UserService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "프로필 기본 정보 수정 완료"), null);
     }
 
+    // 특정 유저에게 친구신청을 거는 것
+    public ApiResponseDto<SuccessResponse> registerFriend(UserDetails loginUser, Long userId) {
+        User user1 = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        // friendship이 만들어져야한다
+        // 무조건 거는 사람이 user1, 받는 사람이 user2로 되도록
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user2 = userOptional.orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        // 만약에 user1과 2가 존재한다면 끝
+        Optional<FriendShip> friendShip_check = friendshipRepository.findByUser1AndUser2(user1, user2);
+
+        if (friendShip_check.isPresent()) {
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "이미 진행된 친구신청입니다."), null);
+        } else {
+            // 친구 관계가 존재하지 않는 경우, 새로운 친구 관계 생성
+            FriendShip friendShip = new FriendShip();
+            friendShip.setUser2(user2);
+            friendShip.setUser1(user1);
+            friendShip.setUserStatus(false);
+            friendshipRepository.save(friendShip);
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
+        }
+
+    }
+    public ApiResponseDto<SuccessResponse> responseFriend(UserDetails loginUser, Long userId) {
+        User user1 = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user2 = userOptional.orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        Optional<FriendShip> friendShip_check = friendshipRepository.findByUser1AndUser2(user1, user2);
+        FriendShip friendShip = friendShip_check.orElseThrow(()-> new RestApiException(ErrorType.NOT_FOUND_FRIENDSHIP));
+        friendShip.setUserStatus(true);
+        friendshipRepository.save(friendShip);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
+
+    }
+    public ApiResponseDto<SuccessResponse> deleteFriend(UserDetails loginUser, Long userId) {
+        User user1 = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user2 = userOptional.orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        Optional<FriendShip> friendShip_check = friendshipRepository.findByUser1AndUser2(user1, user2);
+        FriendShip friendShip = friendShip_check.orElseThrow(()-> new RestApiException(ErrorType.NOT_FOUND_FRIENDSHIP));
+        friendshipRepository.delete(friendShip);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
+
+    }
 }
