@@ -3,6 +3,7 @@ package com.PuzzleU.Server.user.service;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
+import com.PuzzleU.Server.common.enumSet.WorkType;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
 import com.PuzzleU.Server.experience.repository.ExperienceRepository;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
@@ -15,8 +16,6 @@ import com.PuzzleU.Server.relations.repository.UserInterestRelationRepository;
 import com.PuzzleU.Server.relations.repository.UserLocationRelationRepository;
 import com.PuzzleU.Server.relations.repository.UserSkillsetRelationRepository;
 import com.PuzzleU.Server.skillset.dto.SkillSetDto;
-import com.PuzzleU.Server.dto.user.*;
-<<<<<<< HEAD:src/main/java/com/PuzzleU/Server/user/service/UserService.java
 import com.PuzzleU.Server.experience.entity.Experience;
 import com.PuzzleU.Server.interest.entity.Interest;
 import com.PuzzleU.Server.location.entity.Location;
@@ -30,7 +29,6 @@ import com.PuzzleU.Server.university.entity.University;
 import com.PuzzleU.Server.interest.repository.InterestRepository;
 import com.PuzzleU.Server.location.repository.LocationRepository;
 import com.PuzzleU.Server.university.repository.UniversityRepository;
-import com.PuzzleU.Server.user.User.dto.*;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
 import com.PuzzleU.Server.common.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.common.exception.RestApiException;
@@ -38,43 +36,15 @@ import com.PuzzleU.Server.common.jwt.JwtUtil;
 import com.PuzzleU.Server.user.dto.*;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.repository.UserRepository;
-=======
-import com.PuzzleU.Server.entity.competition.Competition;
-import com.PuzzleU.Server.entity.enumSet.Priority;
-import com.PuzzleU.Server.entity.enumSet.WorkType;
-import com.PuzzleU.Server.entity.experience.Experience;
-import com.PuzzleU.Server.entity.interest.Interest;
-import com.PuzzleU.Server.entity.location.Location;
-import com.PuzzleU.Server.entity.major.Major;
-import com.PuzzleU.Server.entity.position.Position;
-import com.PuzzleU.Server.entity.profile.Profile;
-import com.PuzzleU.Server.entity.relations.UserInterestRelation;
-import com.PuzzleU.Server.entity.relations.UserLocationRelation;
-import com.PuzzleU.Server.entity.relations.UserSkillsetRelation;
-import com.PuzzleU.Server.entity.skillset.Skillset;
-import com.PuzzleU.Server.entity.university.University;
-import com.PuzzleU.Server.entity.user.User;
-import com.PuzzleU.Server.entity.enumSet.ErrorType;
-import com.PuzzleU.Server.entity.enumSet.UserRoleEnum;
-import com.PuzzleU.Server.exception.RestApiException;
-import com.PuzzleU.Server.jwt.JwtUtil;
-import com.PuzzleU.Server.repository.*;
->>>>>>> 7452986701446d42244b9cb0453c17e303d5d995:src/main/java/com/PuzzleU/Server/service/User/UserService.java
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-<<<<<<< HEAD:src/main/java/com/PuzzleU/Server/user/service/UserService.java
-=======
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
->>>>>>> 7452986701446d42244b9cb0453c17e303d5d995:src/main/java/com/PuzzleU/Server/service/User/UserService.java
 
 import java.util.ArrayList;
 import java.util.List;
