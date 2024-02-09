@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.position.entity;
 
+import com.PuzzleU.Server.team.entity.Team;
 import com.PuzzleU.Server.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,4 +30,8 @@ public class Position {
 
     @OneToMany(mappedBy = "userPosition2")
     private List<User> userList2 = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team")
+    private Team team;
 }
