@@ -38,6 +38,7 @@ public class OAuthService {
     // code를 넘기면 access token을 반환
     public String getKakaoAccessToken(String code) {
         String accessToken = "";
+        String refreshToken = "";
         String reqURL = "https://kauth.kakao.com/oauth/token"; // access token을 반환해주는 주소 (카카오에서 제공하는 기능)
 
         try {
@@ -91,12 +92,12 @@ public class OAuthService {
             JsonElement element = parser.parse(result);
 
             accessToken = element.getAsJsonObject().get("access_token").getAsString();
-
+            refreshToken = element.getAsJsonObject().get("refresh_token").getAsString();
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        System.out.println(refreshToken);
         return accessToken;
     }
 

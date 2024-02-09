@@ -28,8 +28,27 @@ public class TeamController {
     ,@RequestParam Long competitionId,
      @RequestParam List<Long> teamMember,
      @AuthenticationPrincipal UserDetails loginUser,
+    @RequestParam List<Long> positions,
     @RequestParam List<Long> locations) {
-        return teamService.teamcreate(teamCreateDto, competitionId, teamMember,loginUser,locations);
+        return teamService.teamcreate(teamCreateDto, competitionId, teamMember,loginUser,locations, positions);
+    }
+
+    @PatchMapping("/{teamId}")
+    public ApiResponseDto<SuccessResponse> teamUpdate(@Valid @RequestBody TeamCreateDto teamCreateDto
+            ,@RequestParam Long competitionId,
+            @RequestParam List<Long> teamMember,
+            @AuthenticationPrincipal UserDetails loginUser,
+            @RequestParam List<Long> locations,
+            @RequestParam List<Long> positions,
+            @PathVariable Long teamId) {
+        return teamService.teamUpdate(teamCreateDto, competitionId, teamMember,loginUser,locations, positions, teamId);
+    }
+    @DeleteMapping("/{teamId}")
+    public ApiResponseDto<SuccessResponse> teamDelete(@Valid
+            @PathVariable Long teamId,
+            @AuthenticationPrincipal UserDetails loginUser
+            ) {
+        return teamService.teamdelete(teamId,loginUser);
     }
     @GetMapping("/searchCompetition")
     public ApiResponseDto<CompetitionSearchTotalDto> competitionSearch(@Valid

@@ -10,6 +10,16 @@ import com.PuzzleU.Server.competition.dto.CompetitionHomeTotalDto;
 import com.PuzzleU.Server.competition.dto.CompetitionSpecificDto;
 import com.PuzzleU.Server.competition.entity.Competition;
 import com.PuzzleU.Server.competition.repository.CompetitionRepository;
+import com.PuzzleU.Server.location.entity.Location;
+import com.PuzzleU.Server.position.entity.Position;
+import com.PuzzleU.Server.relations.entity.TeamLocationRelation;
+import com.PuzzleU.Server.relations.entity.TeamUserRelation;
+import com.PuzzleU.Server.relations.repository.TeamLocationRelationRepository;
+import com.PuzzleU.Server.relations.repository.TeamUserRepository;
+import com.PuzzleU.Server.team.dto.TeamAbstractDto;
+import com.PuzzleU.Server.team.dto.TeamListDto;
+import com.PuzzleU.Server.team.entity.Team;
+import com.PuzzleU.Server.team.repository.TeamRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +29,9 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,6 +40,9 @@ import java.util.stream.Collectors;
 public class CompetitionService {
 
     private final CompetitionRepository competitionRepository;
+    private final TeamRepository teamRepository;
+    private final TeamLocationRelationRepository teamLocationRelationRepository;
+    private final TeamUserRepository teamUserRepository;
 
     private final Logger logger = LoggerFactory.getLogger(CompetitionService.class);
 
@@ -118,4 +133,61 @@ public class CompetitionService {
     }
     // 최신순, 마감빠른순, 마감느린순, 인기순, 조회순, 팀빌딩순
 
+    @Transactional
+    public ApiResponseDto<TeamListDto> getTeamList(Long competition_Id,int pageNo, int pageSize, String sortBy)
+
+
+    {
+        TeamListDto teamListDto = new TeamListDto();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<Team> teamPage;
+        Competition competition = competitionRepository.findById(competition_Id).orElseThrow(
+                ()-> new RestApiException(ErrorType.NOT_FOUND_COMPETITION)
+        );
+        teamPage = new PageImpl<>(teamRepository.findByCompetition(competition, pageable));
+        List<TeamAbstractDto> teamAbstractDtos = new ArrayList<>();
+        teamAbstractDtos = teamPage.getContent().stream()
+                .map(team ->
+                {
+                    TeamAbstractDto teamAbstractDto = new TeamAbstractDto();
+                    List<TeamUserRelation> teamUserRelation = teamUserRepository.findByTeam(team);
+                    for (TeamUserRelation teamuserRelation : teamUserRelation) {
+                        if (teamuserRelation.getIsWriter())
+                        {
+                            System.out.println(teamuserRelation.getIsWriter());
+                            System.out.println(teamuserRelation.getUser().getUserKoreaName());
+                            teamAbstractDto.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
+                            break;
+                        }
+                    }
+                    List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team);
+                    List<String> locationList = new ArrayList<>();
+                    for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
+                        String location = teamLocationRelation1.getLocation().getLocationName();
+                        locationList.add(location);
+                    }
+
+                    teamAbstractDto.setTeamNeed(team.getTeamMemberNeed());
+                    teamAbstractDto.setTeamNowMember(team.getTeamMemberNow());
+                    teamAbstractDto.setTeamTitle(team.getTeamTitle());
+                    teamAbstractDto.setTeamPoster(competition.getCompetitionPoster());
+                    teamAbstractDto.setTeamLocations(locationList);
+                    List<String> PositionList = new ArrayList<>();
+                    for(Position position : team.getPositionList())
+                    {
+                        PositionList.add(position.getPositionName());
+                    }
+                    teamAbstractDto.setPositionList(PositionList);
+                    return teamAbstractDto;
+                })
+                .collect(Collectors.toList());
+        teamListDto.setTeamList(teamAbstractDtos);
+        teamListDto.setLast(teamPage.isLast());
+        teamListDto.setTotalPages(teamPage.getTotalPages());
+        teamListDto.setTotalElements(teamPage.getTotalElements());
+        teamListDto.setPageNo(pageNo);
+        teamListDto.setPageSize(pageSize);
+
+        return ResponseUtils.ok(teamListDto, null);
+    }
 }
