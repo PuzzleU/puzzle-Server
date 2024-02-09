@@ -4,7 +4,7 @@ import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.UniversityType;
-import com.PuzzleU.Server.university.dto.UniversityDto;
+import com.PuzzleU.Server.major.dto.MajorSearchDto;
 import com.PuzzleU.Server.university.dto.UniversitySearchDto;
 import com.PuzzleU.Server.university.dto.UniversitySearchTotalDto;
 import com.PuzzleU.Server.university.entity.University;
@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +68,7 @@ public class UniversityService {
 
     }
 
+    // 대학교 검색 API
     public ApiResponseDto<UniversitySearchTotalDto> searchUniversityList(String searchKeyword, String type, Pageable pageable) {
         UniversityType universityType = UniversityType.UNIVERSITY;
 
@@ -92,8 +92,8 @@ public class UniversityService {
         List<UniversitySearchDto> universitySearchList = universitySearchDtoPage.getContent();
 
         UniversitySearchTotalDto universitySearchTotalDto = UniversitySearchTotalDto.builder()
-                .universityList(universitySearchList)
-                .universityType(universityType)
+                .UniversityList(universitySearchList)
+                .UniversityType(universityType)
                 .pageNo(pageable.getPageNumber())
                 .pageSize(pageable.getPageSize())
                 .totalElements(universityPage.getTotalElements())

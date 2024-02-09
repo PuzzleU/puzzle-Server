@@ -12,5 +12,5 @@ import lombok.*;
 @Builder
 public class UniversitySearchDto {
     private Long UniversityId;
-    private String universityName;
+    private String UniversityName;
 }

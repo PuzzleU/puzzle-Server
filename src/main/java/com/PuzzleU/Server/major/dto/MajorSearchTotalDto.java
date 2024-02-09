@@ -1,6 +1,6 @@
-package com.PuzzleU.Server.university.dto;
+package com.PuzzleU.Server.major.dto;
 
-import com.PuzzleU.Server.common.enumSet.UniversityType;
+import com.PuzzleU.Server.major.dto.MajorSearchDto;
 import lombok.*;
 
 import java.util.List;
@@ -11,9 +11,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UniversitySearchTotalDto {
-    private List<UniversitySearchDto> UniversityList;
-    private UniversityType UniversityType;
+public class MajorSearchTotalDto {
+    private List<MajorSearchDto> MajorList;
+    private Long UniversityId;
+    private String UniversityName;
+
+
     private int pageNo;
     private int pageSize;
     private long totalElements;
