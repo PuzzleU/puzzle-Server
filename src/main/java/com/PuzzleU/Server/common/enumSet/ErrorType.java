@@ -31,7 +31,8 @@ public enum ErrorType {
     NAME_NOT_PROVIDED(400, "이름이 입력되지 않았습니다."),
     PUZZLE_ID_NOT_PROVIDED(400, "퍼즐 아이디가 입력되지 않았습니다."),
     PROFILE_NOT_PROVIDED(400, "프로필이 입력되지 않았습니다."),
-    NOT_FOUND_FRIENDSHIP(400, "등록되지 않은 관계입니다.");
+    NOT_FOUND_FRIENDSHIP(400, "등록되지 않은 관계입니다."),
+    NOT_MATCHING_UNIVERSITY_TYPE(400, "학교 타입이 적절하게 설정되지 않았습니다. 학교 타입은 UNIVERSITY 또는 GRADUATE여야 합니다.");
 
     private int code;
     private String message;
