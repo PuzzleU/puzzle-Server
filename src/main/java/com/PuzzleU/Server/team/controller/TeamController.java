@@ -32,6 +32,7 @@ public class TeamController {
     @RequestParam List<Long> locations) {
         return teamService.teamcreate(teamCreateDto, competitionId, teamMember,loginUser,locations, positions);
     }
+
     @PatchMapping("/{teamId}")
     public ApiResponseDto<SuccessResponse> teamUpdate(@Valid @RequestBody TeamCreateDto teamCreateDto
             ,@RequestParam Long competitionId,
