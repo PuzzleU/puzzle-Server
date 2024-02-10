@@ -4,6 +4,7 @@ import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.WorkType;
+import com.PuzzleU.Server.competition.entity.Competition;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
 import com.PuzzleU.Server.experience.repository.ExperienceRepository;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
@@ -11,9 +12,7 @@ import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
 import com.PuzzleU.Server.position.repository.PositionRepository;
 import com.PuzzleU.Server.profile.repository.ProfileRepository;
-import com.PuzzleU.Server.relations.entity.UserInterestRelation;
-import com.PuzzleU.Server.relations.entity.UserLocationRelation;
-import com.PuzzleU.Server.relations.entity.UserSkillsetRelation;
+import com.PuzzleU.Server.relations.entity.*;
 import com.PuzzleU.Server.relations.repository.UserInterestRelationRepository;
 import com.PuzzleU.Server.relations.repository.UserLocationRelationRepository;
 import com.PuzzleU.Server.relations.repository.UserSkillsetRelationRepository;
@@ -27,6 +26,9 @@ import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.profile.entity.Profile;
 import com.PuzzleU.Server.skillset.entity.Skillset;
 import com.PuzzleU.Server.skillset.repository.SkillsetRepository;
+import com.PuzzleU.Server.team.dto.TeamAbstractDto;
+import com.PuzzleU.Server.team.dto.TeamListDto;
+import com.PuzzleU.Server.team.entity.Team;
 import com.PuzzleU.Server.university.entity.University;
 import com.PuzzleU.Server.interest.repository.InterestRepository;
 import com.PuzzleU.Server.location.repository.LocationRepository;
@@ -412,4 +414,62 @@ public class UserService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
 
     }
+    public ApiResponseDto<TeamListDto>getApply(UserDetails loginUser, int pageNo, int pageSize, String sortBy, String type)
+    {
+
+        TeamListDto teamListDto = new TeamListDto();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<Team> teamPage;
+        Competition competition = competitionRepository.findById(competition_Id).orElseThrow(
+                ()-> new RestApiException(ErrorType.NOT_FOUND_COMPETITION)
+        );
+        teamPage = new PageImpl<>(teamRepository.findByCompetition(competition, pageable));
+        List<TeamAbstractDto> teamAbstractDtos = new ArrayList<>();
+        teamAbstractDtos = teamPage.getContent().stream()
+                .map(team ->
+                {
+                    TeamAbstractDto teamAbstractDto = new TeamAbstractDto();
+                    List<TeamUserRelation> teamUserRelation = teamUserRepository.findByTeam(team);
+                    for (TeamUserRelation teamuserRelation : teamUserRelation) {
+                        if (teamuserRelation.getIsWriter())
+                        {
+                            System.out.println(teamuserRelation.getIsWriter());
+                            System.out.println(teamuserRelation.getUser().getUserKoreaName());
+                            teamAbstractDto.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
+                            break;
+                        }
+                    }
+                    List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team);
+                    List<String> locationList = new ArrayList<>();
+                    for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
+                        String location = teamLocationRelation1.getLocation().getLocationName();
+                        locationList.add(location);
+                    }
+
+                    teamAbstractDto.setTeamNeed(team.getTeamMemberNeed());
+                    teamAbstractDto.setTeamNowMember(team.getTeamMemberNow());
+                    teamAbstractDto.setTeamTitle(team.getTeamTitle());
+                    teamAbstractDto.setTeamPoster(competition.getCompetitionPoster());
+                    teamAbstractDto.setTeamLocations(locationList);
+                    List<String> PositionList = new ArrayList<>();
+                    for(Position position : team.getPositionList())
+                    {
+                        PositionList.add(position.getPositionName());
+                    }
+                    teamAbstractDto.setPositionList(PositionList);
+                    return teamAbstractDto;
+                })
+                .collect(Collectors.toList());
+        teamListDto.setTotalTeam(teamAbstractDtos.size());
+        teamListDto.setTeamList(teamAbstractDtos);
+        teamListDto.setLast(teamPage.isLast());
+        teamListDto.setTotalPages(teamPage.getTotalPages());
+        teamListDto.setTotalElements(teamPage.getTotalElements());
+        teamListDto.setPageNo(pageNo);
+        teamListDto.setPageSize(pageSize);
+
+        return ResponseUtils.ok(teamListDto, null);
+    }
+
+
 }

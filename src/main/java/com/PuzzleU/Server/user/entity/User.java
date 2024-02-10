@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.user.entity;
 
+import com.PuzzleU.Server.apply.entity.Apply;
 import com.PuzzleU.Server.common.enumSet.UniversityStatus;
 import com.PuzzleU.Server.common.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.common.enumSet.WorkType;
@@ -101,7 +102,7 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<Experience> experience = new ArrayList<>();
 
     @OneToMany(mappedBy = "user1",cascade = CascadeType.REMOVE)
@@ -110,9 +111,11 @@ public class User {
     @OneToMany(mappedBy = "user2",cascade = CascadeType.REMOVE)
     private List<FriendShip> friendShip2 = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<Heart> hearts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Apply> applies = new ArrayList<>();
     @Builder
     public User(
             Long id,
