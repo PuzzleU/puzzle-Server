@@ -9,7 +9,9 @@ import com.PuzzleU.Server.skillset.dto.SkillSetListDto;
 import com.PuzzleU.Server.experience.service.ExperienceService;
 import com.PuzzleU.Server.skillset.service.SkillsetService;
 import com.PuzzleU.Server.team.dto.ApplyTeamDto;
+import com.PuzzleU.Server.team.dto.TeamApplyDto;
 import com.PuzzleU.Server.team.dto.TeamListDto;
+import com.PuzzleU.Server.team.dto.TeamStatusDto;
 import com.PuzzleU.Server.university.service.UniversityService;
 import com.PuzzleU.Server.user.dto.*;
 import com.PuzzleU.Server.user.service.UserService;
@@ -196,6 +198,35 @@ public class UserController {
     )
     {
         return userService.deleteApply(loginUser, apply_id);
+    }
+    @GetMapping("/team")
+    public ApiResponseDto<TeamApplyDto> teamApplyTotal(
+            @AuthenticationPrincipal UserDetails loginUser
+    )
+    {
+        return userService.getTeamApplyTotal(loginUser);
+    }
+    @GetMapping("/team/{type}")
+    public ApiResponseDto<TeamListDto> teamApplyType(
+            @Valid
+            @AuthenticationPrincipal UserDetails loginUser,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "team_user_id", required = false) String sortBy,
+            @PathVariable(value = "type",required = false) String type
+    )
+    {
+        return userService.getTeamApplyType(loginUser,pageNo,pageSize,sortBy,type);
+    }
+    @PatchMapping("/team/{team_id}")
+    public ApiResponseDto<SuccessResponse> teamStatus(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @PathVariable Long team_id,
+            @RequestBody TeamStatusDto teamStatusDto
+
+            )
+    {
+        return userService.teamStatus(loginUser, team_id, teamStatusDto);
     }
 
 

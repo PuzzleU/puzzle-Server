@@ -27,10 +27,9 @@ import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.profile.entity.Profile;
 import com.PuzzleU.Server.skillset.entity.Skillset;
 import com.PuzzleU.Server.skillset.repository.SkillsetRepository;
-import com.PuzzleU.Server.team.dto.ApplyTeamDto;
-import com.PuzzleU.Server.team.dto.TeamAbstractDto;
-import com.PuzzleU.Server.team.dto.TeamListDto;
+import com.PuzzleU.Server.team.dto.*;
 import com.PuzzleU.Server.team.entity.Team;
+import com.PuzzleU.Server.team.repository.TeamRepository;
 import com.PuzzleU.Server.university.entity.University;
 import com.PuzzleU.Server.interest.repository.InterestRepository;
 import com.PuzzleU.Server.location.repository.LocationRepository;
@@ -89,6 +88,7 @@ public class UserService {
     private final ApplyRepository applyRepository;
     private final TeamUserRepository teamUserRepository;
     private final TeamLocationRelationRepository teamLocationRelationRepository;
+    private final TeamRepository teamRepository;
 
     // 회원가입 API
     @Transactional
@@ -480,60 +480,65 @@ public class UserService {
 
         return ResponseUtils.ok(teamListDto, null);
     }
-    public ApiResponseDto<ApplyTeamDto> getApply(UserDetails loginUser)
-    {
+    public ApiResponseDto<ApplyTeamDto> getApply(UserDetails loginUser) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         ApplyTeamDto applyTeamDto = new ApplyTeamDto();
 
-        for(int i=0 ; i<=1; i++) {
-            List<Team> team1 = new ArrayList<>();
-            Team team2 = new Team();
-            if(i==0)
-            {
+        for (int i = 0; i <= 1; i++) {
+            List<Team> team1;
+            Team team2;
+            if (i == 0) {
                 team1 = applyRepository.findFirstByUserAndApplyStatusIsWaitingOne(user);
-                team2 = team1.get(0);
-            }
-            else
-            {
+                if (team1.isEmpty()) {
+                    team2 = new Team(); // 빈 팀 생성
+                } else {
+                    team2 = team1.get(0);
+                }
+            } else {
                 team1 = applyRepository.findFirstByUserAndApplyStatusIsFinishedOne(user);
-                team2 = team1.get(0);
-            }
-            TeamAbstractDto teamAbstractDto1 = new TeamAbstractDto();
-            List<TeamUserRelation> teamUserRelation1 = teamUserRepository.findByTeam(team2);
-            for (TeamUserRelation teamuserRelation : teamUserRelation1) {
-                if (teamuserRelation.getIsWriter()) {
-                    teamAbstractDto1.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
-                    break;
+                if (team1.isEmpty()) {
+                    team2 = new Team(); // 빈 팀 생성
+                } else {
+                    team2 = team1.get(0);
                 }
             }
-            List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team2);
-            List<String> locationList1 = new ArrayList<>();
-            for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
-                String location = teamLocationRelation1.getLocation().getLocationName();
-                locationList1.add(location);
+            TeamAbstractDto teamAbstractDto1 = new TeamAbstractDto();
+            if (!team1.isEmpty()) {
+                List<TeamUserRelation> teamUserRelation1 = teamUserRepository.findByTeam(team2);
+                for (TeamUserRelation teamuserRelation : teamUserRelation1) {
+                    if (teamuserRelation.getIsWriter()) {
+                        teamAbstractDto1.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
+                        break;
+                    }
+                }
+                List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team2);
+                List<String> locationList1 = new ArrayList<>();
+                for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
+                    String location = teamLocationRelation1.getLocation().getLocationName();
+                    locationList1.add(location);
+                }
+                teamAbstractDto1.setTeamId(team2.getTeamId());
+                teamAbstractDto1.setTeamNeed(team2.getTeamMemberNeed());
+                teamAbstractDto1.setTeamNowMember(team2.getTeamMemberNow());
+                teamAbstractDto1.setTeamTitle(team2.getTeamTitle());
+                teamAbstractDto1.setTeamPoster(team2.getCompetition().getCompetitionPoster());
+                teamAbstractDto1.setTeamLocations(locationList1);
+                List<String> PositionList1 = new ArrayList<>();
+                for (Position position : team2.getPositionList()) {
+                    PositionList1.add(position.getPositionName());
+                }
+                teamAbstractDto1.setPositionList(PositionList1);
             }
-            teamAbstractDto1.setTeamId(team2.getTeamId());
-            teamAbstractDto1.setTeamNeed(team2.getTeamMemberNeed());
-            teamAbstractDto1.setTeamNowMember(team2.getTeamMemberNow());
-            teamAbstractDto1.setTeamTitle(team2.getTeamTitle());
-            teamAbstractDto1.setTeamPoster(team2.getCompetition().getCompetitionPoster());
-            teamAbstractDto1.setTeamLocations(locationList1);
-            List<String> PositionList1 = new ArrayList<>();
-            for (Position position : team2.getPositionList()) {
-                PositionList1.add(position.getPositionName());
-            }
-            teamAbstractDto1.setPositionList(PositionList1);
-            if(i==0)
-            {
+            if (i == 0) {
                 applyTeamDto.setTeamListDto1(teamAbstractDto1);
-            }
-            else{
+            } else {
                 applyTeamDto.setTeamListDto2(teamAbstractDto1);
             }
         }
         return ResponseUtils.ok(applyTeamDto, null);
     }
+
     public ApiResponseDto<SuccessResponse> deleteApply(UserDetails loginUser, Long apply_id)
     {
         Optional<Apply> applyOptional = applyRepository.findById(apply_id);
@@ -553,5 +558,151 @@ public class UserService {
         }
 
     }
+    public ApiResponseDto<TeamApplyDto> getTeamApplyTotal(UserDetails loginUser) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        TeamApplyDto teamApplyDto = new TeamApplyDto();
+
+        for (int i = 0; i <= 1; i++) {
+            List<Team> team1;
+            Team team2;
+            if (i == 0) {
+                team1 = teamUserRepository.findByUserAndWaitingOne(user);
+                if (team1.isEmpty()) {
+                    team2 = new Team(); // 빈 팀 생성
+                } else {
+                    team2 = team1.get(0);
+                }
+            } else {
+                team1 = teamUserRepository.findByUserAndEndOne(user);
+                if (team1.isEmpty()) {
+                    team2 = new Team(); // 빈 팀 생성
+                } else {
+                    team2 = team1.get(0);
+                }
+            }
+            TeamAbstractDto teamAbstractDto1 = new TeamAbstractDto();
+            if (!team1.isEmpty()) {
+                List<TeamUserRelation> teamUserRelation1 = teamUserRepository.findByTeam(team2);
+                for (TeamUserRelation teamuserRelation : teamUserRelation1) {
+                    if (teamuserRelation.getIsWriter()) {
+                        teamAbstractDto1.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
+                        break;
+                    }
+                }
+                List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team2);
+                List<String> locationList1 = new ArrayList<>();
+                for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
+                    String location = teamLocationRelation1.getLocation().getLocationName();
+                    locationList1.add(location);
+                }
+                teamAbstractDto1.setTeamId(team2.getTeamId());
+                teamAbstractDto1.setTeamNeed(team2.getTeamMemberNeed());
+                teamAbstractDto1.setTeamNowMember(team2.getTeamMemberNow());
+                teamAbstractDto1.setTeamTitle(team2.getTeamTitle());
+                teamAbstractDto1.setTeamPoster(team2.getCompetition().getCompetitionPoster());
+                teamAbstractDto1.setTeamLocations(locationList1);
+                List<String> PositionList1 = new ArrayList<>();
+                for (Position position : team2.getPositionList()) {
+                    PositionList1.add(position.getPositionName());
+                }
+                teamAbstractDto1.setPositionList(PositionList1);
+            }
+            if (i == 0) {
+                teamApplyDto.setTeamAbstractDtoWaiting(teamAbstractDto1);
+            } else {
+                teamApplyDto.setTeamAbstractDtoEnd(teamAbstractDto1);
+            }
+        }
+        return ResponseUtils.ok(teamApplyDto, null);
+    }
+    public ApiResponseDto<TeamListDto> getTeamApplyType(UserDetails loginUser, int pageNo, int pageSize, String sortBy, String type) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<Team> teamPage;
+        if ("total".equals(type)) {
+            teamPage = new PageImpl<>(applyRepository.findByUser(user, pageable));
+        } else if ("wait".equals(type)) {
+            teamPage = new PageImpl<>(applyRepository.findByUserAndApplyStatusIsWaiting(user, pageable));
+        } else if ("end".equals(type)) {
+            teamPage = new PageImpl<>(applyRepository.findByUserAndApplyStatusIsFinished(user, pageable));
+        } else {
+            throw new RestApiException(ErrorType.NAME_NOT_PROVIDED);
+        }
+
+        TeamListDto teamListDto = new TeamListDto();
+        List<TeamAbstractDto> teamAbstractDtos = teamPage.getContent().stream()
+                .map(team ->
+                {
+                    TeamAbstractDto teamAbstractDto = new TeamAbstractDto();
+                    List<TeamUserRelation> teamUserRelation = teamUserRepository.findByTeam(team);
+                    for (TeamUserRelation teamuserRelation : teamUserRelation) {
+                        if (teamuserRelation.getIsWriter()) {
+                            teamAbstractDto.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
+                            break;
+                        }
+                    }
+                    List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team);
+                    List<String> locationList = new ArrayList<>();
+                    for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
+                        String location = teamLocationRelation1.getLocation().getLocationName();
+                        locationList.add(location);
+                    }
+                    teamAbstractDto.setTeamId(team.getTeamId());
+                    teamAbstractDto.setTeamNeed(team.getTeamMemberNeed());
+                    teamAbstractDto.setTeamNowMember(team.getTeamMemberNow());
+                    teamAbstractDto.setTeamTitle(team.getTeamTitle());
+                    teamAbstractDto.setTeamPoster(team.getCompetition().getCompetitionPoster());
+                    teamAbstractDto.setTeamLocations(locationList);
+                    List<String> PositionList = new ArrayList<>();
+                    for (Position position : team.getPositionList()) {
+                        PositionList.add(position.getPositionName());
+                    }
+                    teamAbstractDto.setPositionList(PositionList);
+                    return teamAbstractDto;
+                })
+                .collect(Collectors.toList());
+
+        teamListDto.setTotalTeam(teamAbstractDtos.size());
+        teamListDto.setTeamList(teamAbstractDtos);
+        teamListDto.setLast(teamPage.isLast());
+        teamListDto.setTotalPages(teamPage.getTotalPages());
+        teamListDto.setTotalElements(teamPage.getTotalElements());
+        teamListDto.setPageNo(pageNo);
+        teamListDto.setPageSize(pageSize);
+
+        return ResponseUtils.ok(teamListDto, null);
+    }
+    public ApiResponseDto<SuccessResponse> teamStatus(UserDetails loginUser, Long team_id, TeamStatusDto teamStatusDto)
+    {
+        Optional<Team> teamOptional  = teamRepository.findById(team_id);
+        Team team = teamOptional.orElseThrow(
+                () -> new RestApiException(ErrorType.NOT_FOUND_TEAM)
+        );
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        // 유저가 권한이 없거나
+        Optional<TeamUserRelation> teamUserRelationOptional = teamUserRepository.findByUserAndTeam(user, team);
+        TeamUserRelation teamUserRelation = teamUserRelationOptional.orElseThrow(
+                () -> new RestApiException(ErrorType.NOT_FOUND_USER_TEAM)
+        );
+        if(teamUserRelation.getIsWriter()==true)
+        {
+            team.setTeamStatus(teamStatusDto.getTeamStatus());
+            teamRepository.save(team);
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 공고글 상태 변경완료"),null);
+        }
+        else
+        {
+            return ResponseUtils.error(ErrorResponse.of(HttpStatus.NOT_ACCEPTABLE,"권한이 없습니다"));
+        }
+
+    }
+
 
 }
+
+
+
+
