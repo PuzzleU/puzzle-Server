@@ -157,8 +157,6 @@ public class CompetitionService {
                     for (TeamUserRelation teamuserRelation : teamUserRelation) {
                         if (teamuserRelation.getIsWriter())
                         {
-                            System.out.println(teamuserRelation.getIsWriter());
-                            System.out.println(teamuserRelation.getUser().getUserKoreaName());
                             teamAbstractDto.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
                             break;
                         }
