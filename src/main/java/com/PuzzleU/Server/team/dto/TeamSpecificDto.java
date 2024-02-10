@@ -1,7 +1,6 @@
 package com.PuzzleU.Server.team.dto;
 
-import com.PuzzleU.Server.location.entity.Location;
-import com.PuzzleU.Server.position.entity.Position;
+import com.PuzzleU.Server.user.dto.UserSimpleDto;
 import lombok.*;
 
 import java.util.List;
@@ -12,9 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TeamAbstractDto {
-
-    private Long teamId;
+public class TeamSpecificDto {
     private String teamTitle;
     private String teamWriter;
     private List<String> positionList;
@@ -23,4 +20,8 @@ public class TeamAbstractDto {
     private Boolean teamUntact;
     private List<String> teamLocations;
     private String teamPoster;
+    private List<UserSimpleDto> members;
+    private String teamIntroduce;
+    private String teamContent;
+
 }

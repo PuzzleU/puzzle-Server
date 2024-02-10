@@ -8,6 +8,8 @@ import com.PuzzleU.Server.relations.dto.UserSkillsetRelationDto;
 import com.PuzzleU.Server.skillset.dto.SkillSetListDto;
 import com.PuzzleU.Server.experience.service.ExperienceService;
 import com.PuzzleU.Server.skillset.service.SkillsetService;
+import com.PuzzleU.Server.team.dto.ApplyTeamDto;
+import com.PuzzleU.Server.team.dto.TeamListDto;
 import com.PuzzleU.Server.university.service.UniversityService;
 import com.PuzzleU.Server.user.dto.*;
 import com.PuzzleU.Server.user.service.UserService;
@@ -165,6 +167,26 @@ public class UserController {
             @PathVariable Long friendId)
     {
         return userService.deleteFriend(loginUser, friendId);
+    }
+    @GetMapping("/apply")
+    public ApiResponseDto<ApplyTeamDto> getApply(
+            @Valid
+            @AuthenticationPrincipal UserDetails loginUser
+    )
+    {
+        return userService.getApply(loginUser);
+    }
+    @GetMapping("/apply/{type}")
+    public ApiResponseDto<TeamListDto> getApplyType(
+            @Valid
+            @AuthenticationPrincipal UserDetails loginUser,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "applyid", required = false) String sortBy,
+            @PathVariable(value = "type",required = false) String type
+    )
+    {
+        return userService.getApplyType(loginUser,pageNo,pageSize,sortBy,type);
     }
 
 

@@ -2,6 +2,7 @@ package com.PuzzleU.Server.apply.entity;
 
 import com.PuzzleU.Server.common.enumSet.ApplyStatus;
 import com.PuzzleU.Server.team.entity.Team;
+import com.PuzzleU.Server.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,4 +34,8 @@ public class Apply {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user")
+    private User user;
 }
