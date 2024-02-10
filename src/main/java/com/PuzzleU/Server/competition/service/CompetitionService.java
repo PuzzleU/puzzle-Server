@@ -184,6 +184,7 @@ public class CompetitionService {
                     return teamAbstractDto;
                 })
                 .collect(Collectors.toList());
+        teamListDto.setTotalTeam(teamAbstractDtos.size());
         teamListDto.setTeamList(teamAbstractDtos);
         teamListDto.setLast(teamPage.isLast());
         teamListDto.setTotalPages(teamPage.getTotalPages());
