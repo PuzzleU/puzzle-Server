@@ -3,6 +3,7 @@ package com.PuzzleU.Server.user.service;
 import com.PuzzleU.Server.apply.entity.Apply;
 import com.PuzzleU.Server.apply.repository.ApplyRepository;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.WorkType;
@@ -532,6 +533,25 @@ public class UserService {
             }
         }
         return ResponseUtils.ok(applyTeamDto, null);
+    }
+    public ApiResponseDto<SuccessResponse> deleteApply(UserDetails loginUser, Long apply_id)
+    {
+        Optional<Apply> applyOptional = applyRepository.findById(apply_id);
+        Apply apply = applyOptional.orElseThrow(
+                () -> new RestApiException(ErrorType.NOT_FOUND_APPLY)
+        );
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        if(apply.getUser() == user)
+        {
+            applyRepository.delete(apply);
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 삭제완료"),null);
+        }
+        else
+        {
+            return ResponseUtils.error(ErrorResponse.of(HttpStatus.NOT_ACCEPTABLE,"권한이 없습니다"));
+        }
+
     }
 
 }

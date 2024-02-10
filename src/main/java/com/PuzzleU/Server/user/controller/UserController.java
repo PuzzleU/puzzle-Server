@@ -188,6 +188,15 @@ public class UserController {
     {
         return userService.getApplyType(loginUser,pageNo,pageSize,sortBy,type);
     }
+    @DeleteMapping("/apply/{apply_id}")
+    public ApiResponseDto<SuccessResponse> deleteApply(
+            @Valid
+            @AuthenticationPrincipal UserDetails loginUser,
+            @PathVariable Long apply_id
+    )
+    {
+        return userService.deleteApply(loginUser, apply_id);
+    }
 
 
 
