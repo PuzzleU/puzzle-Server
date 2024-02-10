@@ -15,4 +15,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     @Query("SELECT t FROM Team t WHERE t.competition =:competition")
     List<Team> findByCompetition(@Param("competition") Competition competition, Pageable pageable);
+
+    List<Team> findByTeamTitleContaining(String search, Pageable pageable);
 }

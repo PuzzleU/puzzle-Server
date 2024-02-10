@@ -248,4 +248,59 @@ public class CompetitionService {
 
         return ResponseUtils.ok(teamSpecificDto, null);
     }
+    @Transactional
+    public ApiResponseDto<TeamListDto> getTeamSearchList(int pageNo, int pageSize, String sortBy, String search)
+
+
+    {
+        TeamListDto teamListDto = new TeamListDto();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<Team> teamPage;
+
+        teamPage = new PageImpl<>(teamRepository.findByTeamTitleContaining(search, pageable));
+        List<TeamAbstractDto> teamAbstractDtos;
+        teamAbstractDtos = teamPage.getContent().stream()
+                .map(team ->
+                {
+                    TeamAbstractDto teamAbstractDto = new TeamAbstractDto();
+                    List<TeamUserRelation> teamUserRelation = teamUserRepository.findByTeam(team);
+                    for (TeamUserRelation teamuserRelation : teamUserRelation) {
+                        if (teamuserRelation.getIsWriter())
+                        {
+                            System.out.println(teamuserRelation.getIsWriter());
+                            System.out.println(teamuserRelation.getUser().getUserKoreaName());
+                            teamAbstractDto.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
+                            break;
+                        }
+                    }
+                    List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team);
+                    List<String> locationList = new ArrayList<>();
+                    for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
+                        String location = teamLocationRelation1.getLocation().getLocationName();
+                        locationList.add(location);
+                    }
+
+                    teamAbstractDto.setTeamNeed(team.getTeamMemberNeed());
+                    teamAbstractDto.setTeamNowMember(team.getTeamMemberNow());
+                    teamAbstractDto.setTeamTitle(team.getTeamTitle());
+                    teamAbstractDto.setTeamPoster(team.getCompetition().getCompetitionPoster());
+                    teamAbstractDto.setTeamLocations(locationList);
+                    List<String> PositionList = new ArrayList<>();
+                    for(Position position : team.getPositionList())
+                    {
+                        PositionList.add(position.getPositionName());
+                    }
+                    teamAbstractDto.setPositionList(PositionList);
+                    return teamAbstractDto;
+                })
+                .collect(Collectors.toList());
+        teamListDto.setTeamList(teamAbstractDtos);
+        teamListDto.setLast(teamPage.isLast());
+        teamListDto.setTotalPages(teamPage.getTotalPages());
+        teamListDto.setTotalElements(teamPage.getTotalElements());
+        teamListDto.setPageNo(pageNo);
+        teamListDto.setPageSize(pageSize);
+
+        return ResponseUtils.ok(teamListDto, null);
+    }
 }

@@ -48,6 +48,15 @@ public class CompetitionController {
     {
         return competitionService.getTeamSpecific(competition_id, team_id);
     }
+    @GetMapping("/homepage/team")
+    public ApiResponseDto<TeamListDto> teamSearch(@Valid
+                                                  @RequestParam(value = "search", defaultValue = "None", required = false) String search,
+                                                  @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                                @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+                                                @RequestParam(value = "sortBy", defaultValue = "teamId", required = false) String sortBy)
+    {
+        return competitionService.getTeamSearchList(pageNo, pageSize, sortBy,search);
+    }
 
 
 }
