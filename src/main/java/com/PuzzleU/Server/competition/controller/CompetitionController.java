@@ -6,6 +6,7 @@ import com.PuzzleU.Server.competition.dto.CompetitionSpecificDto;
 import com.PuzzleU.Server.common.enumSet.CompetitionType;
 import com.PuzzleU.Server.competition.service.CompetitionService;
 import com.PuzzleU.Server.team.dto.TeamListDto;
+import com.PuzzleU.Server.team.dto.TeamSpecificDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,11 @@ public class CompetitionController {
     @RequestParam(value = "sortBy", defaultValue = "teamId", required = false) String sortBy)
     {
         return competitionService.getTeamList(competition_id, pageNo, pageSize, sortBy);
+    }
+    @GetMapping("/homepage/{competition_id}/team/{team_id}")
+    public ApiResponseDto<TeamSpecificDto> teamSpecific(@Valid @PathVariable Long competition_id, @PathVariable Long team_id)
+    {
+        return competitionService.getTeamSpecific(competition_id, team_id);
     }
 
 
