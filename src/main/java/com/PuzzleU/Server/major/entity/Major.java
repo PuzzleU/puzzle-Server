@@ -18,7 +18,7 @@ public class Major {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long majorId;
 
-    @Column(length = 30)
+    @Column(name="major_name", length = 30)
     private String majorName; // 전공 이름
 
     // 의존 관계 매핑 (University)

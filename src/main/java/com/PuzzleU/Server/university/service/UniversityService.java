@@ -3,6 +3,10 @@ package com.PuzzleU.Server.university.service;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
+import com.PuzzleU.Server.common.enumSet.UniversityType;
+import com.PuzzleU.Server.major.dto.MajorSearchDto;
+import com.PuzzleU.Server.university.dto.UniversitySearchDto;
+import com.PuzzleU.Server.university.dto.UniversitySearchTotalDto;
 import com.PuzzleU.Server.university.entity.University;
 import com.PuzzleU.Server.university.repository.UniversityRepository;
 import com.PuzzleU.Server.user.dto.UserUniversityDto;
@@ -15,10 +19,13 @@ import com.PuzzleU.Server.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -59,5 +66,40 @@ public class UniversityService {
         user.setUniversityStatus(userUniversityDto.getUniversityStatus());
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저학력 저장완료"), null);
 
+    }
+
+    // 대학교 검색 API
+    public ApiResponseDto<UniversitySearchTotalDto> searchUniversityList(String searchKeyword, String type, Pageable pageable) {
+        UniversityType universityType = UniversityType.UNIVERSITY;
+
+        System.out.println("universityType: " + type);
+
+        if (type.equals("UNIVERSITY")) {
+            universityType = UniversityType.UNIVERSITY;
+        }
+        else if (type.equals("GRADUATE")) {
+            universityType = UniversityType.GRADUATE;
+        }
+        else {
+            throw new RestApiException(ErrorType.NOT_MATCHING_UNIVERSITY_TYPE);
+        }
+
+        Page<University> universityPage = universityRepository.findByUniversityNameContainingAndUniversityType(searchKeyword, universityType, pageable);
+        Page<UniversitySearchDto> universitySearchDtoPage = universityPage.map(u
+                -> new UniversitySearchDto(u.getUniversityId(), u.getUniversityName()));
+
+
+        List<UniversitySearchDto> universitySearchList = universitySearchDtoPage.getContent();
+
+        UniversitySearchTotalDto universitySearchTotalDto = UniversitySearchTotalDto.builder()
+                .UniversityList(universitySearchList)
+                .UniversityType(universityType)
+                .pageNo(pageable.getPageNumber())
+                .pageSize(pageable.getPageSize())
+                .totalElements(universityPage.getTotalElements())
+                .totalPages(universityPage.getTotalPages())
+                .last(universityPage.isLast()).build();
+
+        return ResponseUtils.ok(universitySearchTotalDto, null);
     }
 }
