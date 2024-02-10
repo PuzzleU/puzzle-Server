@@ -3,16 +3,14 @@ package com.PuzzleU.Server.relations.entity;
 import com.PuzzleU.Server.apply.entity.Apply;
 import com.PuzzleU.Server.position.entity.Position;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "position_apply_relation")
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class PositionApplyRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
