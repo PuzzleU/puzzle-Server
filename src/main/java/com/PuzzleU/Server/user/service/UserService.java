@@ -453,7 +453,7 @@ public class UserService {
                         String location = teamLocationRelation1.getLocation().getLocationName();
                         locationList.add(location);
                     }
-
+                    teamAbstractDto.setTeamId(team.getTeamId());
                     teamAbstractDto.setTeamNeed(team.getTeamMemberNeed());
                     teamAbstractDto.setTeamNowMember(team.getTeamMemberNow());
                     teamAbstractDto.setTeamTitle(team.getTeamTitle());
@@ -512,7 +512,7 @@ public class UserService {
                 String location = teamLocationRelation1.getLocation().getLocationName();
                 locationList1.add(location);
             }
-
+            teamAbstractDto1.setTeamId(team2.getTeamId());
             teamAbstractDto1.setTeamNeed(team2.getTeamMemberNeed());
             teamAbstractDto1.setTeamNowMember(team2.getTeamMemberNow());
             teamAbstractDto1.setTeamTitle(team2.getTeamTitle());

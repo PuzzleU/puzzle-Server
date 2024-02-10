@@ -167,6 +167,7 @@ public class CompetitionService {
                         String location = teamLocationRelation1.getLocation().getLocationName();
                         locationList.add(location);
                     }
+                    teamAbstractDto.setTeamId(team.getTeamId());
 
                     teamAbstractDto.setTeamNeed(team.getTeamMemberNeed());
                     teamAbstractDto.setTeamNowMember(team.getTeamMemberNow());
@@ -278,7 +279,7 @@ public class CompetitionService {
                         String location = teamLocationRelation1.getLocation().getLocationName();
                         locationList.add(location);
                     }
-
+                    teamAbstractDto.setTeamId(team.getTeamId());
                     teamAbstractDto.setTeamNeed(team.getTeamMemberNeed());
                     teamAbstractDto.setTeamNowMember(team.getTeamMemberNow());
                     teamAbstractDto.setTeamTitle(team.getTeamTitle());
