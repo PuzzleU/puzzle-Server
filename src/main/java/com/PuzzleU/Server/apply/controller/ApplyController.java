@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.apply.controller;
 
+import com.PuzzleU.Server.apply.dto.ApplyDetailDto;
 import com.PuzzleU.Server.apply.dto.ApplyPostDto;
 import com.PuzzleU.Server.apply.service.ApplyService;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
@@ -21,5 +22,10 @@ public class ApplyController {
     @PathVariable Long teamId,
     @RequestBody ApplyPostDto applyPostDto) {
         return applyService.postApply(loginUser, teamId, applyPostDto);
+    }
+
+    @GetMapping("/{applyId}")
+    public ApiResponseDto<ApplyDetailDto> applyDetail(@PathVariable Long applyId) {
+        return applyService.applyDetail(applyId);
     }
 }

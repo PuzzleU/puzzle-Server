@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.awt.print.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ApplyRepository extends JpaRepository<Apply, Long> {
@@ -28,4 +29,5 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     @Query("SELECT DISTINCT a.team FROM Apply a WHERE a.user = :user AND a.applyStatus = 'FINISHED'")
     List<Team> findFirstByUserAndApplyStatusIsFinishedOne(User user);
 
+    Optional<Apply> findByApplyId(Long applyId);
 }
