@@ -5,6 +5,7 @@ import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.relations.dto.UserSkillsetRelationDto;
+import com.PuzzleU.Server.relations.dto.UserSkillsetRelationListDto;
 import com.PuzzleU.Server.skillset.dto.SkillSetListDto;
 import com.PuzzleU.Server.experience.service.ExperienceService;
 import com.PuzzleU.Server.skillset.service.SkillsetService;
@@ -107,7 +108,7 @@ public class UserController {
         return skillsetService.deleteSkillset(loginUser, skillsetId);
     }
     @GetMapping("/skillset")
-    public ApiResponseDto<List<UserSkillsetRelationDto>> getUserSkillsetList(@Valid
+    public ApiResponseDto<List<UserSkillsetRelationListDto>> getUserSkillsetList(@Valid
             @AuthenticationPrincipal UserDetails loginUser
 
     )

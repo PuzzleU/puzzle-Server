@@ -129,33 +129,34 @@ public class UserService {
     }
 
     // 유저가 회원가입 후 옵션으로 선택해서 등록가능한 API
+    @Transactional
     public ApiResponseDto<SuccessResponse> createRegisterOptionalUser(
             UserDetails loginUser,
             UserRegisterOptionalDto userRegisterOptionalDto
     ) {
-
-
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        if (userRegisterOptionalDto.getUniversityStart() == null) {
-            System.out.println("null");
+
+        Optional<Major> optionalMajor = Optional.empty();
+        if (userRegisterOptionalDto.getMajorId() != null) {
+            optionalMajor = majorRepository.findById(userRegisterOptionalDto.getMajorId());
         }
-        Optional<Major> optionalMajor = majorRepository.findById(userRegisterOptionalDto.getMajorId());
 
-        System.out.println(userRegisterOptionalDto.getMajorId());
-        Optional<University> optionalUniversity = universityRepository.findById(userRegisterOptionalDto.getUniversityId());
-        System.out.println(optionalUniversity);
+        Optional<University> optionalUniversity = Optional.empty();
+        if (userRegisterOptionalDto.getUniversityId() != null) {
+            optionalUniversity = universityRepository.findById(userRegisterOptionalDto.getUniversityId());
+        }
 
+        Major major = optionalMajor.orElse(null);
+        University university = optionalUniversity.orElse(null);
 
-        Major major = optionalMajor.orElseThrow(() -> {
-            System.out.println("Major not found");
-            return new RestApiException(ErrorType.NOT_FOUND_MAJOR);
-        });
+        if (major == null) {
+            throw new RestApiException(ErrorType.NOT_FOUND_MAJOR);
+        }
 
-        University university = optionalUniversity.orElseThrow(() -> {
-            System.out.println("University not found");
-            return new RestApiException(ErrorType.NOT_FOUND_UNIVERSITY);
-        });
+        if (university == null) {
+            throw new RestApiException(ErrorType.NOT_FOUND_UNIVERSITY);
+        }
 
         user.setUniversityStart(userRegisterOptionalDto.getUniversityStart());
         user.setUniversityEnd(userRegisterOptionalDto.getUniversityEnd());
@@ -166,47 +167,48 @@ public class UserService {
         user.setMajor(major);
         user.setUniversity(university);
 
-
         List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();
-        for (SkillSetDto skillSetDto : userRegisterOptionalDto.getSkillSetDtoList()) {
-            Long skillSetId = skillSetDto.getSkillSetId();
-            Optional<Skillset> savedSkillset = skillsetRepository.findById(skillSetId);
+        if (userRegisterOptionalDto.getSkillSetDtoList() != null) {
+            for (SkillSetDto skillSetDto : userRegisterOptionalDto.getSkillSetDtoList()) {
+                Long skillSetId = skillSetDto.getSkillSetId();
+                Optional<Skillset> savedSkillset = skillsetRepository.findById(skillSetId);
 
-            if (savedSkillset.isPresent()) {
-                UserSkillsetRelation userSkillsetRelation = new UserSkillsetRelation();
-                userSkillsetRelation.setUser(user);
-                userSkillsetRelation.setSkillset(savedSkillset.get());
-                userSkillsetRelation.setLevel(skillSetDto.getSkillSetLevel());
-                userSkillsetRelations.add(userSkillsetRelation);
-            } else {
-                throw new RestApiException(ErrorType.NOT_FOUND_SKILLSET);
+                if (savedSkillset.isPresent()) {
+                    UserSkillsetRelation userSkillsetRelation = new UserSkillsetRelation();
+                    userSkillsetRelation.setUser(user);
+                    userSkillsetRelation.setSkillset(savedSkillset.get());
+                    userSkillsetRelation.setLevel(skillSetDto.getSkillSetLevel());
+                    userSkillsetRelations.add(userSkillsetRelation);
+                } else {
+                    throw new RestApiException(ErrorType.NOT_FOUND_SKILLSET);
+                }
             }
         }
 
-
         List<Experience> experiences = new ArrayList<>();
-        for (ExperienceDto experienceDto : userRegisterOptionalDto.getExperienceDtoList()) {
-            Experience experience = new Experience();
-            experience.setUser(user);
-            experience.setExperienceName(experienceDto.getExperienceName());
-            experience.setExperienceStartYear(experienceDto.getExperienceStartYear());
-            experience.setExperienceStartMonth(experienceDto.getExperienceStartMonth());
-            experience.setExperienceEndYear(experienceDto.getExperienceEndYear());
-            experience.setExperienceEndMonth(experienceDto.getExperienceEndMonth());
-            experience.setExperienceType(experienceDto.getExperienceType());
-            experience.setExperienceStatus(experienceDto.getExperienceStatus());
-            experience.setExperienceRole(experienceDto.getExperienceRole());
-            experiences.add(experience);
+        if (userRegisterOptionalDto.getExperienceDtoList() != null) {
+            for (ExperienceDto experienceDto : userRegisterOptionalDto.getExperienceDtoList()) {
+                Experience experience = new Experience();
+                experience.setUser(user);
+                experience.setExperienceName(experienceDto.getExperienceName());
+                experience.setExperienceStartYear(experienceDto.getExperienceStartYear());
+                experience.setExperienceStartMonth(experienceDto.getExperienceStartMonth());
+                experience.setExperienceEndYear(experienceDto.getExperienceEndYear());
+                experience.setExperienceEndMonth(experienceDto.getExperienceEndMonth());
+                experience.setExperienceType(experienceDto.getExperienceType());
+                experience.setExperienceStatus(experienceDto.getExperienceStatus());
+                experience.setExperienceRole(experienceDto.getExperienceRole());
+                experiences.add(experience);
+            }
         }
-
 
         userRepository.save(user);
         userSkillsetRelationRepository.saveAll(userSkillsetRelations);
         experienceRepository.saveAll(experiences);
 
-
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "선택사항 저장완료"), null);
     }
+
 
     // 회원가입 후 필수로 작성해야하는 것들을 등록하는 API
     public ApiResponseDto<SuccessResponse> registerEssential(UserDetails loginUser, UserRegisterEssentialDto userRegisterEssentialDto) {
