@@ -35,7 +35,9 @@ public enum ErrorType {
     NOT_FOUND_TEAM(400, "팀을 찾을 수 없습니다"),
     NOT_FOUND_RELATION(400, "올바르지 않은 관계입니다"),
     NOT_MATCHING_UNIVERSITY_TYPE(400, "학교 타입이 적절하게 설정되지 않았습니다. 학교 타입은 UNIVERSITY 또는 GRADUATE여야 합니다."),
-    NOT_FOUND_APPLY(400, "지원서가 존재하지 않습니다.");
+    NOT_FOUND_APPLY(400, "해당 지원서가 없습니다"),
+    NOT_PERMITTED(400, "권한이 없습니다"),
+    NOT_FOUND_USER_TEAM(400, "회원님은 이 팀에 대한 권한이 없습니다");
 
     private int code;
     private String message;
