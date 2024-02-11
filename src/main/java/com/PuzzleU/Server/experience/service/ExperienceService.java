@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,17 @@ public class ExperienceService {
     public ApiResponseDto<SuccessResponse> createExperience(
             UserDetails loginUser,
             ExperienceDto experienceDto
-    )
-    {
+    ) {
+        // ExperienceDto의 필드 유효성 검사 추가
+        if (experienceDto == null || StringUtils.isEmpty(experienceDto.getExperienceName()) ||
+                experienceDto.getExperienceStartYear() == null || experienceDto.getExperienceStartMonth() == null ||
+                experienceDto.getExperienceEndYear() == null || experienceDto.getExperienceEndMonth() == null ||
+                StringUtils.isEmpty(experienceDto.getExperienceType()) ||
+                StringUtils.isEmpty(experienceDto.getExperienceStatus()) ||
+                StringUtils.isEmpty(experienceDto.getExperienceRole())) {
+            throw new RestApiException(ErrorType.NOT_EXPERIENCE_YET);
+        }
+
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         Experience experience = new Experience();
@@ -48,7 +58,6 @@ public class ExperienceService {
         experience.setExperienceRole(experienceDto.getExperienceRole());
         experienceRepository.save(experience);
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 저장완료"), null);
-
     }
     // 유저의 경험을 수정하는 API
     public ApiResponseDto<SuccessResponse> updateExperience(
@@ -124,9 +133,14 @@ public class ExperienceService {
 
         List<ExperienceDto> experienceList = new ArrayList<>();
         List<Experience> userExperiences = experienceRepository.findByUser(user);
-        System.out.println(userExperiences);
+
+        if (userExperiences.isEmpty()) {
+            throw new RestApiException(ErrorType.NOT_FOUND);
+        }
+
         for (Experience experience : userExperiences) {
             ExperienceDto experienceDto = new ExperienceDto();
+
             experienceDto.setExperienceId(experience.getExperienceId());
             experienceDto.setExperienceName(experience.getExperienceName());
             experienceDto.setExperienceStartYear(experience.getExperienceStartYear());
@@ -139,8 +153,8 @@ public class ExperienceService {
             experienceList.add(experienceDto);
         }
         return ResponseUtils.ok(experienceList, null);
-
     }
+
     // 유저가 경험 리스트들중 하나를 클릭하면 자신의 세부적인 경험을 확인할 수 있는 API
     public ApiResponseDto<ExperienceDto> getExperience(UserDetails loginUser, Long experienceId) {
         User user = userRepository.findByUsername(loginUser.getUsername())

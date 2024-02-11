@@ -99,13 +99,13 @@ public class UserController {
     {
         return skillsetService.createSkillset(loginUser, skillsetList);
     }
-    @DeleteMapping("/skillset/{skillsetId}")
+    @DeleteMapping("/skillset/{userSkillsetId}")
     public ApiResponseDto<SuccessResponse> deleteSkillset(@Valid
             @AuthenticationPrincipal UserDetails loginUser,
-            @PathVariable Long skillsetId
+            @PathVariable Long userSkillsetId
     )
     {
-        return skillsetService.deleteSkillset(loginUser, skillsetId);
+        return skillsetService.deleteSkillset(loginUser, userSkillsetId);
     }
     @GetMapping("/skillset")
     public ApiResponseDto<List<UserSkillsetRelationListDto>> getUserSkillsetList(@Valid

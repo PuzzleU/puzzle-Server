@@ -64,17 +64,12 @@ public class SkillsetService {
     }
     // 유저가 자신의 스킬셋을 삭제가능함
     public ApiResponseDto<SuccessResponse> deleteSkillset(
-            UserDetails loginUser, Long skillsetId
+            UserDetails loginUser, Long userSkillsetId
     )
     {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        Optional<Skillset> userSkillset = skillsetRepository.findById(skillsetId);
-        Skillset skillset = userSkillset.orElseThrow(() -> {
-            System.out.println("Skillset not found");
-            return new RestApiException(ErrorType.NOT_FOUND_SKILLSET);
-        });
-        Optional<UserSkillsetRelation> userSkillsetRelation = userSkillsetRelationRepository.findByUserAndSkillset(user,skillset);
+        Optional<UserSkillsetRelation> userSkillsetRelation = userSkillsetRelationRepository.findByUserAndUserSkillsetId(user,userSkillsetId);
         UserSkillsetRelation userSkillsetrelation = userSkillsetRelation.orElseThrow(() -> {
             System.out.println("UserSkillset not found");
             return new RestApiException(ErrorType.NOT_FOUND_USERSKILLSETRELATION);
