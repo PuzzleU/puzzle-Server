@@ -22,4 +22,10 @@ public interface TeamUserRepository extends JpaRepository<TeamUserRelation, Long
 
     List<TeamUserRelation> findByTeam(Team team);
 
+    @Query("SELECT f.team FROM TeamUserRelation f WHERE (f.user = :user AND f.isWriter=true)")
+    List<Team> findByUserAndWaitingOne(@Param("user") User user);
+
+    @Query("SELECT f.team FROM TeamUserRelation f WHERE (f.user = :user AND f.isWriter=false)")
+    List<Team> findByUserAndEndOne(@Param("user") User user);
+
 }
