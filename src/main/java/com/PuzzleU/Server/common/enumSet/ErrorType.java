@@ -39,7 +39,8 @@ public enum ErrorType {
     NOT_PERMITTED(400, "권한이 없습니다"),
     NOT_FOUND_USER_TEAM(400, "회원님은 이 팀에 대한 권한이 없습니다"),
     NOT_EXPERIENCE_YET(400, "경험 정보를 모두 기입해 주세요"),
-    NOT_FOUND(400, "해당 정보가 존재하지 않습니다." );
+    NOT_FOUND(400, "해당 정보가 존재하지 않습니다." ),
+    INTERNAL_SERVER_ERROR(500, "서버에러");
 
     private int code;
     private String message;

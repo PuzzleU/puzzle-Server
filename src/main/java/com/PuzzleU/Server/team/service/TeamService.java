@@ -123,6 +123,7 @@ public class TeamService {
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"팀 구인글 생성완료"), null);
     }
+    // 구인글 수정
     public ApiResponseDto<SuccessResponse> teamUpdate(TeamCreateDto teamCreateDto, Long competitionId,
                                                       List<Long> teamMember, UserDetails loginUser,
                                                       List<Long> locations, List<Long> positions, Long teamId) {
@@ -204,6 +205,7 @@ public class TeamService {
         } else {
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.NOT_ACCEPTABLE, "유저의 권한이 없습니다."));
         }
+        // 구인글 삭제
     }
     public ApiResponseDto<SuccessResponse> teamdelete(
             Long teamId,
