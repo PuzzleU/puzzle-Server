@@ -65,7 +65,7 @@ public class TeamController {
             @RequestParam(value = "search", defaultValue = "None", required = false) String keyword,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
-            @RequestParam(value = "sortBy", defaultValue = "friendshipId", required = false) String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = "friend_ship_id", required = false) String sortBy,
             @AuthenticationPrincipal UserDetails loginUser)
     {
         return teamService.friendRegister(keyword, loginUser,pageNo,pageSize, sortBy);

@@ -307,7 +307,11 @@ public class TeamService {
             }
         }
         friendShipSearchResponseDto.setUserSimpleDtoList(userSimpleDtoList);
-
+        friendShipSearchResponseDto.setLast(friendShips.isLast());
+        friendShipSearchResponseDto.setPageSize(friendShips.getSize());
+        friendShipSearchResponseDto.setTotalPages(friendShips.getTotalPages());
+        friendShipSearchResponseDto.setPageNo(pageNo);
+        friendShipSearchResponseDto.setTotalElements(friendShips.getTotalElements());
      return ResponseUtils.ok(friendShipSearchResponseDto, null)  ;
     }
 }

@@ -212,60 +212,74 @@ public class CompetitionService {
     }
 
     @Transactional
-    public ApiResponseDto<TeamSpecificDto> getTeamSpecific(Long competition_Id,Long team_Id)
-    {
-        TeamSpecificDto teamSpecificDto = new TeamSpecificDto();
-        Competition competition = competitionRepository.findById(competition_Id).orElseThrow(
-                ()-> new RestApiException(ErrorType.NOT_FOUND_COMPETITION)
-        );
-        Optional<Team> teamOptional = teamRepository.findById(team_Id);
-        Team team  = teamOptional.orElseThrow(
-                () -> new RestApiException(ErrorType.NOT_FOUND_TEAM)
-        );
-        List<TeamUserRelation> teamUserRelation = teamUserRepository.findByTeam(team);
-        for (TeamUserRelation teamuserRelation : teamUserRelation) {
-            if (teamuserRelation.getIsWriter())
-            {
-                System.out.println(teamuserRelation.getIsWriter());
-                System.out.println(teamuserRelation.getUser().getUserKoreaName());
-                teamSpecificDto.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
-                break;
-            }
-        }
-        List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team);
-        List<String> locationList = new ArrayList<>();
-        for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
-            String location = teamLocationRelation1.getLocation().getLocationName();
-            locationList.add(location);
-        }
-        teamSpecificDto.setTeamNeed(team.getTeamMemberNeed());
-        teamSpecificDto.setTeamNowMember(team.getTeamMemberNow());
-        teamSpecificDto.setTeamTitle(team.getTeamTitle());
-        teamSpecificDto.setTeamPoster(competition.getCompetitionPoster());
-        teamSpecificDto.setTeamLocations(locationList);
-        List<String> PositionList = new ArrayList<>();
-        for(Position position : team.getPositionList())
-        {
-            PositionList.add(position.getPositionName());
-        }
-        teamSpecificDto.setPositionList(PositionList);
-        teamSpecificDto.setTeamContent(team.getTeamContent());
-        teamSpecificDto.setTeamIntroduce(team.getTeamIntroduce());
-        List<UserSimpleDto> userSimpleDtoList = new ArrayList<>();
-        List<TeamUserRelation> teamUserRelations = teamUserRepository.findByTeam(team);
-        for(TeamUserRelation teamUserRelation1 : teamUserRelations)
-        {
-            UserSimpleDto userSimpleDto = new UserSimpleDto();
-            userSimpleDto.setUserId(teamUserRelation1.getUser().getId());
-            userSimpleDto.setUserProfile(teamUserRelation1.getUser().getUserProfile());
-            userSimpleDto.setUserKoreaName(teamUserRelation1.getUser().getUserKoreaName());
-            userSimpleDto.setUserRepresentativeProfileSentence(teamUserRelation1.getUser().getUserRepresentativeProfileSentence());
-            userSimpleDtoList.add(userSimpleDto);
-        }
-        teamSpecificDto.setMembers(userSimpleDtoList);
+    public ApiResponseDto<TeamSpecificDto> getTeamSpecific(Long competition_Id, Long team_Id) {
+        try {
+            TeamSpecificDto teamSpecificDto = new TeamSpecificDto();
+            Competition competition = competitionRepository.findById(competition_Id)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_COMPETITION));
 
-        return ResponseUtils.ok(teamSpecificDto, null);
+            Team team = teamRepository.findById(team_Id)
+                    .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_TEAM));
+
+            // 팀 작성자 설정
+
+            List<TeamUserRelation> writerList = teamUserRepository.findByTeam(team);
+            if (!writerList.isEmpty()) {
+                for(TeamUserRelation teamUserRelation : writerList) {
+                    if(teamUserRelation.getIsWriter()) {
+                        teamSpecificDto.setTeamWriter(teamUserRelation.getUser().getUserKoreaName());
+                        break;
+                    }
+                }
+            } else {
+                throw new RestApiException(ErrorType.NOT_FOUND);
+            }
+
+
+
+            // 팀 위치 설정
+            List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team);
+            List<String> locationList = new ArrayList<>();
+            for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
+                String location = teamLocationRelation1.getLocation().getLocationName();
+                locationList.add(location);
+            }
+            teamSpecificDto.setTeamNeed(team.getTeamMemberNeed());
+            teamSpecificDto.setTeamNowMember(team.getTeamMemberNow());
+            teamSpecificDto.setTeamTitle(team.getTeamTitle());
+            teamSpecificDto.setTeamPoster(competition.getCompetitionPoster());
+            teamSpecificDto.setTeamLocations(locationList);
+
+            // 포지션 설정
+            List<String> PositionList = team.getPositionList().stream()
+                    .map(Position::getPositionName)
+                    .collect(Collectors.toList());
+            teamSpecificDto.setPositionList(PositionList);
+
+            teamSpecificDto.setTeamContent(team.getTeamContent());
+            teamSpecificDto.setTeamIntroduce(team.getTeamIntroduce());
+
+            // 팀 멤버 설정
+            List<UserSimpleDto> userSimpleDtoList = new ArrayList<>();
+            List<TeamUserRelation> teamUserRelations = teamUserRepository.findByTeam(team);
+            for (TeamUserRelation teamUserRelation1 : teamUserRelations) {
+                UserSimpleDto userSimpleDto = new UserSimpleDto();
+                userSimpleDto.setUserId(teamUserRelation1.getUser().getId());
+                userSimpleDto.setUserProfile(teamUserRelation1.getUser().getUserProfile());
+                userSimpleDto.setUserKoreaName(teamUserRelation1.getUser().getUserKoreaName());
+                userSimpleDto.setUserRepresentativeProfileSentence(teamUserRelation1.getUser().getUserRepresentativeProfileSentence());
+                userSimpleDtoList.add(userSimpleDto);
+            }
+            teamSpecificDto.setMembers(userSimpleDtoList);
+
+            return ResponseUtils.ok(teamSpecificDto, null);
+        } catch (RestApiException e) {
+            throw e; // 이미 정의된 예외인 경우 그대로 던집니다.
+        } catch (Exception e) {
+            throw new RestApiException(ErrorType.INTERNAL_SERVER_ERROR);
+        }
     }
+
     @Transactional
     public ApiResponseDto<TeamListDto> getTeamSearchList(int pageNo, int pageSize, String sortBy, String search)
 
