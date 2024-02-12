@@ -14,6 +14,8 @@ import java.util.List;
 @Builder
 public class TeamAbstractDto {
 
+    private Long applyId;
+
     private Long teamId;
     private String teamTitle;
     private String teamWriter;

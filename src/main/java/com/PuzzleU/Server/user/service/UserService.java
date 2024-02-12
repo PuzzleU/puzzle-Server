@@ -459,6 +459,11 @@ public class UserService {
                         String location = teamLocationRelation1.getLocation().getLocationName();
                         locationList.add(location);
                     }
+                    Optional<Apply> applyOptional = applyRepository.findByUserAndTeam(user, team);
+                    Apply apply = applyOptional.orElseThrow(
+                            ()-> new RestApiException(ErrorType.NOT_FOUND_APPLY)
+                    );
+                    teamAbstractDto.setApplyId(apply.getApplyId());
                     teamAbstractDto.setTeamId(team.getTeamId());
                     teamAbstractDto.setTeamNeed(team.getTeamMemberNeed());
                     teamAbstractDto.setTeamNowMember(team.getTeamMemberNow());
@@ -523,6 +528,11 @@ public class UserService {
                     String location = teamLocationRelation1.getLocation().getLocationName();
                     locationList1.add(location);
                 }
+                Optional<Apply> applyOptional = applyRepository.findByUserAndTeam(user, team2);
+                Apply apply = applyOptional.orElseThrow(
+                        ()-> new RestApiException(ErrorType.NOT_FOUND_APPLY)
+                );
+                teamAbstractDto1.setApplyId(apply.getApplyId());
                 teamAbstractDto1.setTeamId(team2.getTeamId());
                 teamAbstractDto1.setTeamNeed(team2.getTeamMemberNeed());
                 teamAbstractDto1.setTeamNowMember(team2.getTeamMemberNow());
