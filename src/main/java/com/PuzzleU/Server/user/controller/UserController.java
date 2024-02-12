@@ -229,6 +229,11 @@ public class UserController {
         return userService.teamStatus(loginUser, team_id, teamStatusDto);
     }
 
+    @GetMapping("/profile/my")
+    public ApiResponseDto<UserMyProfileDto> readMyProfile(@AuthenticationPrincipal UserDetails loginUser) {
+        return userService.readMyProfile(loginUser);
+    }
+
 
 
 }

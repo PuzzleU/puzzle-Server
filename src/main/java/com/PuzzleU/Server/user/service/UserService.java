@@ -6,6 +6,7 @@ import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
+import com.PuzzleU.Server.common.enumSet.Level;
 import com.PuzzleU.Server.common.enumSet.WorkType;
 import com.PuzzleU.Server.competition.entity.Competition;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
@@ -13,7 +14,9 @@ import com.PuzzleU.Server.experience.repository.ExperienceRepository;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
+import com.PuzzleU.Server.position.dto.PositionDto;
 import com.PuzzleU.Server.position.repository.PositionRepository;
+import com.PuzzleU.Server.profile.dto.ProfileDto;
 import com.PuzzleU.Server.profile.repository.ProfileRepository;
 import com.PuzzleU.Server.relations.entity.*;
 import com.PuzzleU.Server.relations.repository.*;
@@ -700,6 +703,114 @@ public class UserService {
 
     }
 
+    // 내 프로필 보기
+    public ApiResponseDto<UserMyProfileDto> readMyProfile(UserDetails loginUser) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        if (user.getUserKoreaName() == null) {
+            throw new RestApiException(ErrorType.NAME_NOT_PROVIDED); // 필수 회원가입 정보가 없으면 에러 처리
+        }
+
+        if (user.getUserPuzzleId() == null) {
+            throw new RestApiException(ErrorType.PUZZLE_ID_NOT_PROVIDED); // 필수 회원가입 정보가 없으면 에러 처리
+        }
+
+        if (user.getUserPosition1() == null) {
+            throw  new RestApiException(ErrorType.POSITION_NOT_PROVIDED); // 필수 회원가입 정보가 없으면 에러 처리
+        }
+
+        if (user.getUserProfile() == null) {
+            throw new RestApiException(ErrorType.PROFILE_NOT_PROVIDED); // 필수 회원가입 정보가 없으면 에러 처리
+        }
+
+
+        Profile profile = user.getUserProfile();
+
+        ProfileDto profileDto = ProfileDto.builder()
+                .ProfileId(profile.getProfileId())
+                .ProfileUrl(profile.getProfielUrl()).build();
+
+        Position position1 = user.getUserPosition1();
+
+        PositionDto positionDto1 = PositionDto.builder()
+                .PositionId(position1.getPositionId())
+                .PositionName(position1.getPositionName()).build();
+
+        Position position2 = user.getUserPosition2();
+        PositionDto positionDto2 = new PositionDto();
+        if (position2 == null) {
+            positionDto2 = null;
+        }
+        else {
+                    positionDto2 = PositionDto.builder()
+                    .PositionId(position2.getPositionId())
+                    .PositionName(position2.getPositionName()).build();
+        }
+
+        University university = user.getUniversity();
+        Major major = user.getMajor();
+
+        UserProfileUniversityDto  userProfileUniversityDto = new UserProfileUniversityDto();
+        if (university == null) {
+            userProfileUniversityDto = null;
+        }
+        else if (major == null) {
+            userProfileUniversityDto = null;
+        }
+        else {
+            userProfileUniversityDto = UserProfileUniversityDto.builder()
+                    .UniversityId(university.getUniversityId())
+                    .UniversityName(university.getUniversityName())
+                    .MajorId(major.getMajorId())
+                    .MajorName(major.getMajorName())
+                    .UserUniversityStatus(user.getUniversityStatus())
+                    .UserUniversityStart(user.getUniversityStart())
+                    .UserUniversityEnd(user.getUniversityEnd()).build();
+        }
+
+        List<Experience> userExperienceList = user.getExperience();
+        List<UserProfileExperienceDto> userProfileExperienceDtoList = userExperienceList.stream()
+                .map(e -> UserProfileExperienceDto.builder()
+                        .ExperienceId(e.getExperienceId())
+                        .ExperienceType(e.getExperienceType())
+                        .ExperienceName(e.getExperienceName()).build())
+                .collect(Collectors.toList());
+
+        List<UserSkillsetRelation> userSkillsetRelationList = user.getUserSkillsetRelations();
+        List<UserProfileSkillsetDto> userProfileSkillsetDtoList = new ArrayList<>();
+
+        for (UserSkillsetRelation rel : userSkillsetRelationList) {
+            Skillset skillset = rel.getSkillset();
+            Level level = rel.getLevel();
+
+            UserProfileSkillsetDto userProfileSkillsetDto = UserProfileSkillsetDto.builder()
+                    .SkillsetId(skillset.getSkillsetId())
+                    .SkillsetName(skillset.getSkillsetName())
+                    .SkillsetLogo(skillset.getSkillsetLogo())
+                    .SKillsetLevel(level).build();
+
+            userProfileSkillsetDtoList.add(userProfileSkillsetDto);
+        }
+
+
+        UserMyProfileDto userMyProfileDto = new UserMyProfileDto();
+
+
+        userMyProfileDto.setUserId(user.getId());
+        userMyProfileDto.setUserProfile(profileDto);
+        userMyProfileDto.setUserKoreaName(user.getUserKoreaName());
+        userMyProfileDto.setUserPuzzleId(user.getUserPuzzleId());
+        userMyProfileDto.setPosition1(positionDto1);
+        userMyProfileDto.setPosition2(positionDto2);
+        userMyProfileDto.setWorkType(user.getWorkType());
+        userMyProfileDto.setUserRepresentativeProfileSentence(user.getUserRepresentativeProfileSentence());
+        userMyProfileDto.setUserUniversity(userProfileUniversityDto);
+        userMyProfileDto.setExperienceList(userProfileExperienceDtoList);
+        userMyProfileDto.setSkillsetList(userProfileSkillsetDtoList);
+
+        return ResponseUtils.ok(userMyProfileDto, null);
+    }
 
 }
 
