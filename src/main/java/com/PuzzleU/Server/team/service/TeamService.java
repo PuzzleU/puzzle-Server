@@ -120,8 +120,10 @@ public class TeamService {
                     .build();
             teamLocationRelationRepository.saveAndFlush(teamLocationRelation);
         }
-
-
+        int competetion_team = competition.getCompetitionMatching();
+        competetion_team+=1;
+        competition.setCompetitionMatching(competetion_team);
+        competitionRepository.save(competition);
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"팀 구인글 생성완료"), null);
     }
