@@ -1,46 +1,40 @@
 package com.PuzzleU.Server.user.service;
 
-import com.PuzzleU.Server.apply.entity.Apply;
 import com.PuzzleU.Server.apply.repository.ApplyRepository;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
-import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
-import com.PuzzleU.Server.common.enumSet.Level;
-import com.PuzzleU.Server.common.enumSet.WorkType;
-import com.PuzzleU.Server.competition.entity.Competition;
+import com.PuzzleU.Server.common.enumSet.*;
+import com.PuzzleU.Server.common.exception.RestApiException;
+import com.PuzzleU.Server.common.jwt.JwtUtil;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
+import com.PuzzleU.Server.experience.entity.Experience;
 import com.PuzzleU.Server.experience.repository.ExperienceRepository;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
+import com.PuzzleU.Server.interest.entity.Interest;
+import com.PuzzleU.Server.interest.repository.InterestRepository;
+import com.PuzzleU.Server.location.entity.Location;
+import com.PuzzleU.Server.location.repository.LocationRepository;
+import com.PuzzleU.Server.major.entity.Major;
+import com.PuzzleU.Server.major.repository.MajorRepository;
 import com.PuzzleU.Server.position.dto.PositionDto;
+import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.position.repository.PositionRepository;
 import com.PuzzleU.Server.profile.dto.ProfileDto;
+import com.PuzzleU.Server.profile.entity.Profile;
 import com.PuzzleU.Server.profile.repository.ProfileRepository;
-import com.PuzzleU.Server.relations.entity.*;
+import com.PuzzleU.Server.relations.entity.UserInterestRelation;
+import com.PuzzleU.Server.relations.entity.UserLocationRelation;
+import com.PuzzleU.Server.relations.entity.UserSkillsetRelation;
 import com.PuzzleU.Server.relations.repository.*;
 import com.PuzzleU.Server.skillset.dto.SkillSetDto;
-import com.PuzzleU.Server.experience.entity.Experience;
-import com.PuzzleU.Server.interest.entity.Interest;
-import com.PuzzleU.Server.location.entity.Location;
-import com.PuzzleU.Server.major.repository.MajorRepository;
-import com.PuzzleU.Server.major.entity.Major;
-import com.PuzzleU.Server.position.entity.Position;
-import com.PuzzleU.Server.profile.entity.Profile;
 import com.PuzzleU.Server.skillset.entity.Skillset;
 import com.PuzzleU.Server.skillset.repository.SkillsetRepository;
-import com.PuzzleU.Server.team.dto.*;
-import com.PuzzleU.Server.team.entity.Team;
 import com.PuzzleU.Server.team.repository.TeamRepository;
 import com.PuzzleU.Server.university.entity.University;
-import com.PuzzleU.Server.interest.repository.InterestRepository;
-import com.PuzzleU.Server.location.repository.LocationRepository;
 import com.PuzzleU.Server.university.repository.UniversityRepository;
-import com.PuzzleU.Server.common.enumSet.ErrorType;
-import com.PuzzleU.Server.common.enumSet.UserRoleEnum;
-import com.PuzzleU.Server.common.exception.RestApiException;
-import com.PuzzleU.Server.common.jwt.JwtUtil;
 import com.PuzzleU.Server.user.dto.*;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.repository.UserRepository;
@@ -509,6 +503,148 @@ public class UserService {
                 .collect(Collectors.toList());
 
         return ResponseUtils.<List<UserSimpleDto>>ok(userSimpleDtoList, null);
+    }
+
+    @Transactional
+    // 유저 프로필 보기
+    public ApiResponseDto<UserProfileDto> readUserProfile(UserDetails loginUser, Long profileUserId) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        User profileUser = userRepository.findById(profileUserId)
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+
+
+        if (profileUser.getUserKoreaName() == null) {
+            throw new RestApiException(ErrorType.NAME_NOT_PROVIDED); // 필수 회원가입 정보가 없으면 에러 처리
+        }
+
+        if (profileUser.getUserPuzzleId() == null) {
+            throw new RestApiException(ErrorType.PUZZLE_ID_NOT_PROVIDED); // 필수 회원가입 정보가 없으면 에러 처리
+        }
+
+        if (profileUser.getUserPosition1() == null) {
+            throw  new RestApiException(ErrorType.POSITION_NOT_PROVIDED); // 필수 회원가입 정보가 없으면 에러 처리
+        }
+
+        if (profileUser.getUserProfile() == null) {
+            throw new RestApiException(ErrorType.PROFILE_NOT_PROVIDED); // 필수 회원가입 정보가 없으면 에러 처리
+        }
+
+
+        Profile profile = profileUser.getUserProfile();
+
+        ProfileDto profileDto = ProfileDto.builder()
+                .ProfileId(profile.getProfileId())
+                .ProfileUrl(profile.getProfielUrl()).build();
+
+        Position position1 = profileUser.getUserPosition1();
+
+        PositionDto positionDto1 = PositionDto.builder()
+                .PositionId(position1.getPositionId())
+                .PositionName(position1.getPositionName()).build();
+
+        Position position2 = profileUser.getUserPosition2();
+        PositionDto positionDto2 = new PositionDto();
+        if (position2 == null) {
+            positionDto2 = null;
+        }
+        else {
+            positionDto2 = PositionDto.builder()
+                    .PositionId(position2.getPositionId())
+                    .PositionName(position2.getPositionName()).build();
+        }
+
+        University university = profileUser.getUniversity();
+        Major major = profileUser.getMajor();
+
+        UserProfileUniversityDto  userProfileUniversityDto = new UserProfileUniversityDto();
+        if (university == null) {
+            userProfileUniversityDto = null;
+        }
+        else if (major == null) {
+            userProfileUniversityDto = null;
+        }
+        else {
+            userProfileUniversityDto = UserProfileUniversityDto.builder()
+                    .UniversityId(university.getUniversityId())
+                    .UniversityName(university.getUniversityName())
+                    .MajorId(major.getMajorId())
+                    .MajorName(major.getMajorName())
+                    .UserUniversityStatus(profileUser.getUniversityStatus())
+                    .UserUniversityStart(profileUser.getUniversityStart())
+                    .UserUniversityEnd(profileUser.getUniversityEnd()).build();
+        }
+
+        List<Experience> userExperienceList = profileUser.getExperience();
+        List<UserProfileExperienceDto> userProfileExperienceDtoList = userExperienceList.stream()
+                .map(e -> UserProfileExperienceDto.builder()
+                        .ExperienceId(e.getExperienceId())
+                        .ExperienceType(e.getExperienceType())
+                        .ExperienceName(e.getExperienceName()).build())
+                .collect(Collectors.toList());
+
+        List<UserSkillsetRelation> userSkillsetRelationList = profileUser.getUserSkillsetRelations();
+        List<UserProfileSkillsetDto> userProfileSkillsetDtoList = new ArrayList<>();
+
+        for (UserSkillsetRelation rel : userSkillsetRelationList) {
+            Skillset skillset = rel.getSkillset();
+            Level level = rel.getLevel();
+
+            UserProfileSkillsetDto userProfileSkillsetDto = UserProfileSkillsetDto.builder()
+                    .SkillsetId(skillset.getSkillsetId())
+                    .SkillsetName(skillset.getSkillsetName())
+                    .SkillsetLogo(skillset.getSkillsetLogo())
+                    .SKillsetLevel(level).build();
+
+            userProfileSkillsetDtoList.add(userProfileSkillsetDto);
+        }
+
+        // 친구 여부
+        FriendStatus friendStatus = FriendStatus.NOT_FRIEND;
+        List<FriendShip> friendShipList1 = user.getFriendShip1();
+        List<FriendShip> friendShipList2 = user.getFriendShip2();
+
+        for (FriendShip friendShip : friendShipList1) {
+            if (friendShip.getUser2() == profileUser) { // 로그인한 유저가 친구 요청을 한 경우
+                if (friendShip.getUserStatus() == Boolean.TRUE) { // 프로필 유저와 친구인 상태
+                    friendStatus = FriendStatus.FRIEND;
+                }
+                else if (friendShip.getUserStatus() == Boolean.FALSE) { // 프로필 유저에게 친구 신청을 보내고, 아직 수락하지 않은 상태(대기중)
+                    friendStatus = FriendStatus.WAITING;
+                }
+            }
+        }
+
+        for (FriendShip friendShip : friendShipList2) {
+            if (friendShip.getUser1() == profileUser) { // 로그인한 유저가 친구 신청을 받은 경우
+                if (friendShip.getUserStatus() == Boolean.TRUE) { // 프로필 유저와 친구인 상태
+                    friendStatus = FriendStatus.FRIEND;
+                }
+                else if (friendShip.getUserStatus() == Boolean.FALSE) { // 친구 신청을 받고 수락하지 않은 상태
+                    friendStatus = FriendStatus.REQUEST_RECEIVED;
+                }
+            }
+        }
+
+        UserProfileDto userProfileDto = new UserProfileDto();
+
+        userProfileDto.setFriendStatus(friendStatus);
+
+        userProfileDto.setUserId(profileUser.getId());
+        userProfileDto.setUserProfile(profileDto);
+        userProfileDto.setUserKoreaName(profileUser.getUserKoreaName());
+        userProfileDto.setUserPuzzleId(profileUser.getUserPuzzleId());
+        userProfileDto.setPosition1(positionDto1);
+        userProfileDto.setPosition2(positionDto2);
+        userProfileDto.setWorkType(profileUser.getWorkType());
+        userProfileDto.setUserRepresentativeProfileSentence(profileUser.getUserRepresentativeProfileSentence());
+        userProfileDto.setUserUniversity(userProfileUniversityDto);
+        userProfileDto.setExperienceList(userProfileExperienceDtoList);
+        userProfileDto.setSkillsetList(userProfileSkillsetDtoList);
+
+        return ResponseUtils.ok(userProfileDto, null);
     }
 
 }
