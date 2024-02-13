@@ -2,14 +2,22 @@ package com.PuzzleU.Server.competition.controller;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.competition.dto.CompetitionHomeTotalDto;
+import com.PuzzleU.Server.competition.dto.CompetitionSearchTotalDto;
 import com.PuzzleU.Server.competition.dto.CompetitionSpecificDto;
 import com.PuzzleU.Server.common.enumSet.CompetitionType;
 import com.PuzzleU.Server.competition.service.CompetitionService;
 import com.PuzzleU.Server.team.dto.TeamListDto;
 import com.PuzzleU.Server.team.dto.TeamSpecificDto;
+import com.PuzzleU.Server.team.service.TeamService;
+import com.PuzzleU.Server.user.dto.UserSimpleDto;
+import com.PuzzleU.Server.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 public class CompetitionController {
 
     private final CompetitionService competitionService;
+    private final TeamService teamService;
+    private final UserService userService;
 
     @GetMapping("/homepage")
     public ApiResponseDto<CompetitionHomeTotalDto> homepage(
@@ -57,6 +67,26 @@ public class CompetitionController {
     {
         return competitionService.getTeamSearchList(pageNo, pageSize, sortBy,search);
     }
+    @GetMapping("/homepage/competition")
+    public ApiResponseDto<CompetitionSearchTotalDto> competitionSearch(@Valid
+                                                  @RequestParam(value = "search", defaultValue = "None", required = false) String search,
+                                                                       @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                                                       @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+                                                                       @RequestParam(value = "sortBy", defaultValue = "competitionId", required = false) String sortBy)
+    {
+        return teamService.competitionTeamSearch(pageNo,pageSize, sortBy, search);
+    }
+    @GetMapping("/homepage/users")
+    public ApiResponseDto<List<UserSimpleDto>> userSearch(@Valid
+                                                              @AuthenticationPrincipal UserDetails loginUser,
+                                                           @RequestParam(value = "search", defaultValue = "None", required = false) String search,
+                                                          @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                                          @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+                                                          @RequestParam(value = "sortBy", defaultValue = "competitionId", required = false) String sortBy)
+    {
+        return userService.userSearch(loginUser, pageNo, pageSize, sortBy, search);
+    }
+
 
 
 }

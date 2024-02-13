@@ -272,7 +272,7 @@ public class TeamService {
     // 유저 정보 리스트를 가져오고 여기에는 유저의 이름, id, 한줄소개가 있어야한다.
     // 공모전글을 등록할때 내 친구들만 데이터를 가져오는 API
     @Transactional
-    public ApiResponseDto<FriendShipSearchResponseDto> friendRegister(String keyword, UserDetails loginUser,int pageNo, int pageSize, String sortBy)
+    public ApiResponseDto<FriendShipSearchResponseDto> getfriendRegister(String keyword, UserDetails loginUser,int pageNo, int pageSize, String sortBy)
     {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
         User user = userRepository.findByUsername(loginUser.getUsername())

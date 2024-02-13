@@ -212,7 +212,7 @@ public class UserService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "선택사항 저장완료"), null);
     }
 
-
+    @org.springframework.transaction.annotation.Transactional
     // 회원가입 후 필수로 작성해야하는 것들을 등록하는 API
     public ApiResponseDto<SuccessResponse> registerEssential(UserDetails loginUser, UserRegisterEssentialDto userRegisterEssentialDto) {
         User user = userRepository.findByUsername(loginUser.getUsername())
@@ -306,7 +306,7 @@ public class UserService {
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), null);
     }
-
+    @Transactional
     // 모든 멤버들을 검색할 수 있는 API
     public ApiResponseDto<FriendShipSearchResponseDto> searchUser(int pageNo, int pageSize, String sortBy, String keyword) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
@@ -332,6 +332,7 @@ public class UserService {
         return ResponseUtils.ok(friendShipSearchResponseDto, null);
     }
 
+    @Transactional
     public ApiResponseDto<SuccessResponse> updateUserProfileBasic(UserDetails loginUser, UserProfileBasicDto userProfileBasicDto) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -380,7 +381,7 @@ public class UserService {
 
 
 
-
+    @Transactional
     // 내 프로필 보기
     public ApiResponseDto<UserMyProfileDto> readMyProfile(UserDetails loginUser) {
         User user = userRepository.findByUsername(loginUser.getUsername())
@@ -488,6 +489,26 @@ public class UserService {
         userMyProfileDto.setSkillsetList(userProfileSkillsetDtoList);
 
         return ResponseUtils.ok(userMyProfileDto, null);
+    }
+    public ApiResponseDto<List<UserSimpleDto>> userSearch(UserDetails loginUser, int pageNo, int pageSize, String sortBy, String search) {
+        User loginuser = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<User> userPage;
+        userPage = new PageImpl<>(userRepository.findAllExcept(loginuser, pageable));
+
+        List<UserSimpleDto> userSimpleDtoList = userPage.getContent().stream()
+                .map(user -> {
+                    UserSimpleDto userSimpleDto = new UserSimpleDto();
+                    userSimpleDto.setUserProfile(user.getUserProfile());
+                    userSimpleDto.setUserKoreaName(user.getUserKoreaName());
+                    userSimpleDto.setUserId(user.getId());
+                    userSimpleDto.setUserRepresentativeProfileSentence(user.getUserRepresentativeProfileSentence());
+                    return userSimpleDto;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseUtils.<List<UserSimpleDto>>ok(userSimpleDtoList, null);
     }
 
 }

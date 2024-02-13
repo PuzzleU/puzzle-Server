@@ -68,7 +68,7 @@ public class TeamController {
             @RequestParam(value = "sortBy", defaultValue = "friend_ship_id", required = false) String sortBy,
             @AuthenticationPrincipal UserDetails loginUser)
     {
-        return teamService.friendRegister(keyword, loginUser,pageNo,pageSize, sortBy);
+        return teamService.getfriendRegister(keyword, loginUser,pageNo,pageSize, sortBy);
     }
 
 }
