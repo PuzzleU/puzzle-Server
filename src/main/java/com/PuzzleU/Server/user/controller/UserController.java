@@ -239,6 +239,11 @@ public class UserController {
         return userService.readMyProfile(loginUser);
     }
 
+    @GetMapping("/profile/{userId}")
+    public ApiResponseDto<UserProfileDto> readUserProfile(@AuthenticationPrincipal UserDetails loginUser, @PathVariable Long userId) {
+        return userService.readUserProfile(loginUser, userId);
+    }
+
 
 
 }
