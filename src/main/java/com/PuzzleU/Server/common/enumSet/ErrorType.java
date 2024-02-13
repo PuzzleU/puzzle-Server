@@ -41,7 +41,8 @@ public enum ErrorType {
     NOT_EXPERIENCE_YET(400, "경험 정보를 모두 기입해 주세요"),
     NOT_FOUND(400, "해당 정보가 존재하지 않습니다." ),
     INTERNAL_SERVER_ERROR(500, "서버에러"),
-    POSITION_NOT_PROVIDED(400, "포지션이 입력되지 않았습니다.");
+    POSITION_NOT_PROVIDED(400, "포지션이 입력되지 않았습니다."),
+    FOUND_LIKE(400, "이미 좋아요를 눌렀습니다");
 
 
     private int code;

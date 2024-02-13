@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.competition.controller;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.competition.dto.CompetitionHomeTotalDto;
 import com.PuzzleU.Server.competition.dto.CompetitionSearchTotalDto;
 import com.PuzzleU.Server.competition.dto.CompetitionSpecificDto;
@@ -10,6 +11,7 @@ import com.PuzzleU.Server.team.dto.TeamListDto;
 import com.PuzzleU.Server.team.dto.TeamSpecificDto;
 import com.PuzzleU.Server.team.service.TeamService;
 import com.PuzzleU.Server.user.dto.UserSimpleDto;
+import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -85,6 +87,20 @@ public class CompetitionController {
                                                           @RequestParam(value = "sortBy", defaultValue = "competitionId", required = false) String sortBy)
     {
         return userService.userSearch(loginUser, pageNo, pageSize, sortBy, search);
+    }
+    @PatchMapping("/homepage/{competition_id}")
+    public ApiResponseDto<SuccessResponse> heartCreate(@Valid
+    @AuthenticationPrincipal UserDetails loginUser,
+    @PathVariable Long competition_id)
+    {
+        return competitionService.heartCreate(loginUser, competition_id);
+    }
+    @DeleteMapping("/homepage/{competition_id}")
+    public ApiResponseDto<SuccessResponse> heartDelete(@Valid
+                                                       @AuthenticationPrincipal UserDetails loginUser,
+                                                       @PathVariable Long competition_id)
+    {
+        return competitionService.heartDelete(loginUser, competition_id);
     }
 
 
