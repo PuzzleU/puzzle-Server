@@ -126,6 +126,7 @@ public class TeamService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"팀 구인글 생성완료"), null);
     }
     // 구인글 수정
+    @Transactional
     public ApiResponseDto<SuccessResponse> teamUpdate(TeamCreateDto teamCreateDto, Long competitionId,
                                                       List<Long> teamMember, UserDetails loginUser,
                                                       List<Long> locations, List<Long> positions, Long teamId) {
@@ -209,6 +210,7 @@ public class TeamService {
         }
         // 구인글 삭제
     }
+    @Transactional
     public ApiResponseDto<SuccessResponse> teamdelete(
             Long teamId,
             UserDetails loginUser
@@ -316,6 +318,8 @@ public class TeamService {
         friendShipSearchResponseDto.setTotalElements(friendShips.getTotalElements());
      return ResponseUtils.ok(friendShipSearchResponseDto, null)  ;
     }
+    // 내가 만든 팀에 대한 정보를 모두 가져온다
+    @Transactional
     public ApiResponseDto<TeamApplyDto> getTeamApplyTotal(UserDetails loginUser) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -374,6 +378,8 @@ public class TeamService {
         }
         return ResponseUtils.ok(teamApplyDto, null);
     }
+    @Transactional
+    // 타입에 따라 내가 만든 팀의 정보를 가져온다
     public ApiResponseDto<TeamListDto> getTeamApplyType(UserDetails loginUser, int pageNo, int pageSize, String sortBy, String type) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -432,6 +438,8 @@ public class TeamService {
 
         return ResponseUtils.ok(teamListDto, null);
     }
+    // 팀의 상태(진행/완료)를 수정한다
+    @Transactional
     public ApiResponseDto<SuccessResponse> teamStatus(UserDetails loginUser, Long team_id, TeamStatusDto teamStatusDto)
     {
         Optional<Team> teamOptional  = teamRepository.findById(team_id);

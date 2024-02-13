@@ -9,6 +9,7 @@ import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
 
     // 특정 유저에게 친구신청을 거는 것
+    @Transactional
     public ApiResponseDto<SuccessResponse> registerFriend(UserDetails loginUser, Long userId) {
         User user1 = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -47,6 +49,7 @@ public class FriendshipService {
         }
 
     }
+    @Transactional
     public ApiResponseDto<SuccessResponse> responseFriend(UserDetails loginUser, Long userId) {
         System.out.println(loginUser);
         System.out.println(userId);
@@ -64,6 +67,7 @@ public class FriendshipService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구수락이 완료되었습니다"), null);
 
     }
+    @Transactional
     public ApiResponseDto<SuccessResponse> deleteFriend(UserDetails loginUser, Long userId) {
         User user1 = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));

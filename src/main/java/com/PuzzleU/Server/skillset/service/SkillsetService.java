@@ -15,6 +15,7 @@ import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.user.repository.UserRepository;
 import com.PuzzleU.Server.relations.repository.UserSkillsetRelationRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ public class SkillsetService {
     private final UserSkillsetRelationRepository userSkillsetRelationRepository;
 
     // 유저가 본인의 스킬셋을 등록가능한 API
+    @Transactional
     public ApiResponseDto<SuccessResponse> createSkillset(
             UserDetails loginUser, SkillSetListDto skillsetList
     )
@@ -62,6 +64,7 @@ public class SkillsetService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저스킬셋 저장완료"), null);
 
     }
+    @Transactional
     // 유저가 자신의 스킬셋을 삭제가능함
     public ApiResponseDto<SuccessResponse> deleteSkillset(
             UserDetails loginUser, Long userSkillsetId
@@ -79,6 +82,7 @@ public class SkillsetService {
 
     }
     // 유저가 자신이 등록한 스킬셋의 리스트를 확인가능한 API
+    @Transactional
     public ApiResponseDto<List<UserSkillsetRelationListDto>> getSkillsetList(UserDetails loginUser) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));

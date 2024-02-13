@@ -4,6 +4,7 @@ import com.PuzzleU.Server.interest.dto.InterestDto;
 import com.PuzzleU.Server.interest.dto.InterestTypeDto;
 import com.PuzzleU.Server.interest.entity.Interest;
 import com.PuzzleU.Server.interest.repository.InterestRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class InterestService {
     private final InterestRepository interestRepository;
 
     // interest list: 전체 interest list 반환 (공모전/직무/스터디로 구분)
+    @Transactional
     public List<InterestTypeDto> listAllInterest() {
 
         // interest list 받아오기

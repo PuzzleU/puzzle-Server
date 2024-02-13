@@ -3,6 +3,7 @@ package com.PuzzleU.Server.profile.service;
 import com.PuzzleU.Server.profile.dto.ProfileDto;
 import com.PuzzleU.Server.profile.entity.Profile;
 import com.PuzzleU.Server.profile.repository.ProfileRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
 
     // profile list: 전체 profile list 반환
+    @Transactional
     public List<ProfileDto> listAllProfiles() {
         List<Profile> profileList = profileRepository.findAll();
 

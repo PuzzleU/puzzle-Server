@@ -28,6 +28,7 @@ import com.PuzzleU.Server.team.entity.Team;
 import com.PuzzleU.Server.team.repository.TeamRepository;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -54,6 +55,7 @@ public class ApplyService {
     private final TeamUserRepository teamUserRepository;
     private final TeamLocationRelationRepository teamLocationRelationRepository;
     // 팀에 대한 지원서 작성
+    @Transactional
     public ApiResponseDto<SuccessResponse> postApply(UserDetails loginUser, Long teamId, ApplyPostDto applyPostDto) {
         Team team = teamRepository.findByTeamId(teamId)
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_TEAM));
@@ -85,6 +87,7 @@ public class ApplyService {
     }
 
     // 지원서 상세
+    @Transactional
     public ApiResponseDto<ApplyDetailDto> applyDetail(Long applyId) {
 
         Apply apply = applyRepository.findByApplyId(applyId)
@@ -118,6 +121,7 @@ public class ApplyService {
         return ResponseUtils.ok(applyDetailDto, null);
     }
     // type에 따라 내가 지원한 팀들을 볼 수 있는 기능
+    @Transactional
     public ApiResponseDto<ApplyTeamListDto> getApplyType(UserDetails loginUser, int pageNo, int pageSize, String sortBy, String type) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -184,6 +188,8 @@ public class ApplyService {
 
         return ResponseUtils.ok(teamListDto, null);
     }
+    // 내가 지원한 지원서나 팀을 볼 수 있음
+    @Transactional
     public ApiResponseDto<ApplyTeamDto> getApply(UserDetails loginUser) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -247,7 +253,8 @@ public class ApplyService {
         }
         return ResponseUtils.ok(applyTeamDto, null);
     }
-
+    // 나의 지원을 삭제함
+    @Transactional
     public ApiResponseDto<SuccessResponse> deleteApply(UserDetails loginUser, Long apply_id)
     {
         Optional<Apply> applyOptional = applyRepository.findById(apply_id);
