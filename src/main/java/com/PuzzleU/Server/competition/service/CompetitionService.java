@@ -16,6 +16,7 @@ import com.PuzzleU.Server.relations.entity.TeamLocationRelation;
 import com.PuzzleU.Server.relations.entity.TeamUserRelation;
 import com.PuzzleU.Server.relations.repository.TeamLocationRelationRepository;
 import com.PuzzleU.Server.relations.repository.TeamUserRepository;
+import com.PuzzleU.Server.team.dto.TeamAbstractBaseDto;
 import com.PuzzleU.Server.team.dto.TeamAbstractDto;
 import com.PuzzleU.Server.team.dto.TeamListDto;
 import com.PuzzleU.Server.team.dto.TeamSpecificDto;
@@ -156,9 +157,9 @@ public class CompetitionService {
             Page<Team> teamPage;
             teamPage = new PageImpl<>(teamRepository.findByCompetition(competition, pageable));
             // 팀 목록 및 팀 정보 DTO 작성
-            List<TeamAbstractDto> teamAbstractDtos = teamPage.getContent().stream()
+            List<TeamAbstractBaseDto> teamAbstractDtos = teamPage.getContent().stream()
                     .map(team -> {
-                        TeamAbstractDto teamAbstractDto = new TeamAbstractDto();
+                        TeamAbstractBaseDto teamAbstractDto = new TeamAbstractBaseDto();
                         // 팀 작성자 설정
                         List<TeamUserRelation> teamUserRelation = teamUserRepository.findByTeam(team);
                         for (TeamUserRelation teamuserRelation : teamUserRelation) {
@@ -280,6 +281,7 @@ public class CompetitionService {
         }
     }
 
+    // 팀을 검색했을때 정보 얻기
     @Transactional
     public ApiResponseDto<TeamListDto> getTeamSearchList(int pageNo, int pageSize, String sortBy, String search)
 
@@ -290,11 +292,11 @@ public class CompetitionService {
         Page<Team> teamPage;
 
         teamPage = new PageImpl<>(teamRepository.findByTeamTitleContaining(search, pageable));
-        List<TeamAbstractDto> teamAbstractDtos;
+        List<TeamAbstractBaseDto> teamAbstractDtos;
         teamAbstractDtos = teamPage.getContent().stream()
                 .map(team ->
                 {
-                    TeamAbstractDto teamAbstractDto = new TeamAbstractDto();
+                    TeamAbstractBaseDto teamAbstractDto = new TeamAbstractBaseDto();
                     List<TeamUserRelation> teamUserRelation = teamUserRepository.findByTeam(team);
                     for (TeamUserRelation teamuserRelation : teamUserRelation) {
                         if (teamuserRelation.getIsWriter())

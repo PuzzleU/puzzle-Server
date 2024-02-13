@@ -12,17 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TeamAbstractDto {
+public class TeamAbstractDto extends TeamAbstractBaseDto{
 
     private Long applyId;
 
-    private Long teamId;
-    private String teamTitle;
-    private String teamWriter;
-    private List<String> positionList;
-    private Integer teamNowMember;
-    private Integer teamNeed;
-    private Boolean teamUntact;
-    private List<String> teamLocations;
-    private String teamPoster;
 }

@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.user.controller;
 
+import com.PuzzleU.Server.apply.service.ApplyService;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
@@ -9,10 +10,8 @@ import com.PuzzleU.Server.relations.dto.UserSkillsetRelationListDto;
 import com.PuzzleU.Server.skillset.dto.SkillSetListDto;
 import com.PuzzleU.Server.experience.service.ExperienceService;
 import com.PuzzleU.Server.skillset.service.SkillsetService;
-import com.PuzzleU.Server.team.dto.ApplyTeamDto;
-import com.PuzzleU.Server.team.dto.TeamApplyDto;
-import com.PuzzleU.Server.team.dto.TeamListDto;
-import com.PuzzleU.Server.team.dto.TeamStatusDto;
+import com.PuzzleU.Server.team.dto.*;
+import com.PuzzleU.Server.team.service.TeamService;
 import com.PuzzleU.Server.university.service.UniversityService;
 import com.PuzzleU.Server.user.dto.*;
 import com.PuzzleU.Server.user.service.UserService;
@@ -33,6 +32,8 @@ public class UserController {
     private final ExperienceService experienceService;
     private final SkillsetService skillsetService;
     private final UniversityService universityService;
+    private final ApplyService applyService;
+    private final TeamService teamService;
     @PostMapping("/signup")
     public ApiResponseDto<SuccessResponse> signup(@Valid @RequestBody SignupRequestDto requestDto) {
         return userService.signup(requestDto);
@@ -150,21 +151,21 @@ public class UserController {
     ) {
         return userService.updateUserProfileBasic(loginUser, userProfileBasicDto);
     }
-    @PostMapping("/friend/{friendId}/{userId}")
+    @PostMapping("/friend/{friendId}")
     public ApiResponseDto<SuccessResponse> registerFriend(
             @AuthenticationPrincipal UserDetails loginUser,
             @PathVariable Long friendId)
     {
         return userService.registerFriend(loginUser, friendId);
     }
-    @PatchMapping("/friend/{friendId}/{userId}")
+    @PatchMapping("/friend/{friendId}")
     public ApiResponseDto<SuccessResponse> responseFriend(
             @AuthenticationPrincipal UserDetails loginUser,
             @PathVariable Long friendId)
     {
         return userService.responseFriend(loginUser, friendId);
     }
-    @DeleteMapping("/friend/{friendId}/{userId}")
+    @DeleteMapping("/friend/{friendId}")
     public ApiResponseDto<SuccessResponse> deleteFriend(
             @AuthenticationPrincipal UserDetails loginUser,
             @PathVariable Long friendId)
@@ -177,10 +178,10 @@ public class UserController {
             @AuthenticationPrincipal UserDetails loginUser
     )
     {
-        return userService.getApply(loginUser);
+        return applyService.getApply(loginUser);
     }
     @GetMapping("/apply/{type}")
-    public ApiResponseDto<TeamListDto> getApplyType(
+    public ApiResponseDto<ApplyTeamListDto> getApplyType(
             @Valid
             @AuthenticationPrincipal UserDetails loginUser,
             @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
@@ -189,7 +190,7 @@ public class UserController {
             @PathVariable(value = "type",required = false) String type
     )
     {
-        return userService.getApplyType(loginUser,pageNo,pageSize,sortBy,type);
+        return applyService.getApplyType(loginUser,pageNo,pageSize,sortBy,type);
     }
     @DeleteMapping("/apply/{apply_id}")
     public ApiResponseDto<SuccessResponse> deleteApply(
@@ -198,14 +199,14 @@ public class UserController {
             @PathVariable Long apply_id
     )
     {
-        return userService.deleteApply(loginUser, apply_id);
+        return applyService.deleteApply(loginUser, apply_id);
     }
     @GetMapping("/team")
     public ApiResponseDto<TeamApplyDto> teamApplyTotal(
             @AuthenticationPrincipal UserDetails loginUser
     )
     {
-        return userService.getTeamApplyTotal(loginUser);
+        return teamService.getTeamApplyTotal(loginUser);
     }
     @GetMapping("/team/{type}")
     public ApiResponseDto<TeamListDto> teamApplyType(
@@ -217,7 +218,7 @@ public class UserController {
             @PathVariable(value = "type",required = false) String type
     )
     {
-        return userService.getTeamApplyType(loginUser,pageNo,pageSize,sortBy,type);
+        return teamService.getTeamApplyType(loginUser,pageNo,pageSize,sortBy,type);
     }
     @PatchMapping("/team/{team_id}")
     public ApiResponseDto<SuccessResponse> teamStatus(
@@ -227,7 +228,7 @@ public class UserController {
 
             )
     {
-        return userService.teamStatus(loginUser, team_id, teamStatusDto);
+        return teamService.teamStatus(loginUser, team_id, teamStatusDto);
     }
 
     @GetMapping("/profile/my")
