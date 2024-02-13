@@ -132,33 +132,34 @@ public class UserService {
     }
 
     // 유저가 회원가입 후 옵션으로 선택해서 등록가능한 API
+    @Transactional
     public ApiResponseDto<SuccessResponse> createRegisterOptionalUser(
             UserDetails loginUser,
             UserRegisterOptionalDto userRegisterOptionalDto
     ) {
-
-
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        if (userRegisterOptionalDto.getUniversityStart() == null) {
-            System.out.println("null");
+
+        Optional<Major> optionalMajor = Optional.empty();
+        if (userRegisterOptionalDto.getMajorId() != null) {
+            optionalMajor = majorRepository.findById(userRegisterOptionalDto.getMajorId());
         }
-        Optional<Major> optionalMajor = majorRepository.findById(userRegisterOptionalDto.getMajorId());
 
-        System.out.println(userRegisterOptionalDto.getMajorId());
-        Optional<University> optionalUniversity = universityRepository.findById(userRegisterOptionalDto.getUniversityId());
-        System.out.println(optionalUniversity);
+        Optional<University> optionalUniversity = Optional.empty();
+        if (userRegisterOptionalDto.getUniversityId() != null) {
+            optionalUniversity = universityRepository.findById(userRegisterOptionalDto.getUniversityId());
+        }
 
+        Major major = optionalMajor.orElse(null);
+        University university = optionalUniversity.orElse(null);
 
-        Major major = optionalMajor.orElseThrow(() -> {
-            System.out.println("Major not found");
-            return new RestApiException(ErrorType.NOT_FOUND_MAJOR);
-        });
+        if (major == null) {
+            throw new RestApiException(ErrorType.NOT_FOUND_MAJOR);
+        }
 
-        University university = optionalUniversity.orElseThrow(() -> {
-            System.out.println("University not found");
-            return new RestApiException(ErrorType.NOT_FOUND_UNIVERSITY);
-        });
+        if (university == null) {
+            throw new RestApiException(ErrorType.NOT_FOUND_UNIVERSITY);
+        }
 
         user.setUniversityStart(userRegisterOptionalDto.getUniversityStart());
         user.setUniversityEnd(userRegisterOptionalDto.getUniversityEnd());
@@ -169,48 +170,49 @@ public class UserService {
         user.setMajor(major);
         user.setUniversity(university);
 
-
         List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();
-        for (SkillSetDto skillSetDto : userRegisterOptionalDto.getSkillSetDtoList()) {
-            Long skillSetId = skillSetDto.getSkillSetId();
-            Optional<Skillset> savedSkillset = skillsetRepository.findById(skillSetId);
+        if (userRegisterOptionalDto.getSkillSetDtoList() != null) {
+            for (SkillSetDto skillSetDto : userRegisterOptionalDto.getSkillSetDtoList()) {
+                Long skillSetId = skillSetDto.getSkillSetId();
+                Optional<Skillset> savedSkillset = skillsetRepository.findById(skillSetId);
 
-            if (savedSkillset.isPresent()) {
-                UserSkillsetRelation userSkillsetRelation = new UserSkillsetRelation();
-                userSkillsetRelation.setUser(user);
-                userSkillsetRelation.setSkillset(savedSkillset.get());
-                userSkillsetRelation.setLevel(skillSetDto.getSkillSetLevel());
-                userSkillsetRelations.add(userSkillsetRelation);
-            } else {
-                throw new RestApiException(ErrorType.NOT_FOUND_SKILLSET);
+                if (savedSkillset.isPresent()) {
+                    UserSkillsetRelation userSkillsetRelation = new UserSkillsetRelation();
+                    userSkillsetRelation.setUser(user);
+                    userSkillsetRelation.setSkillset(savedSkillset.get());
+                    userSkillsetRelation.setLevel(skillSetDto.getSkillSetLevel());
+                    userSkillsetRelations.add(userSkillsetRelation);
+                } else {
+                    throw new RestApiException(ErrorType.NOT_FOUND_SKILLSET);
+                }
             }
         }
 
-
         List<Experience> experiences = new ArrayList<>();
-        for (ExperienceDto experienceDto : userRegisterOptionalDto.getExperienceDtoList()) {
-            Experience experience = new Experience();
-            experience.setUser(user);
-            experience.setExperienceName(experienceDto.getExperienceName());
-            experience.setExperienceStartYear(experienceDto.getExperienceStartYear());
-            experience.setExperienceStartMonth(experienceDto.getExperienceStartMonth());
-            experience.setExperienceEndYear(experienceDto.getExperienceEndYear());
-            experience.setExperienceEndMonth(experienceDto.getExperienceEndMonth());
-            experience.setExperienceType(experienceDto.getExperienceType());
-            experience.setExperienceStatus(experienceDto.getExperienceStatus());
-            experience.setExperienceRole(experienceDto.getExperienceRole());
-            experiences.add(experience);
+        if (userRegisterOptionalDto.getExperienceDtoList() != null) {
+            for (ExperienceDto experienceDto : userRegisterOptionalDto.getExperienceDtoList()) {
+                Experience experience = new Experience();
+                experience.setUser(user);
+                experience.setExperienceName(experienceDto.getExperienceName());
+                experience.setExperienceStartYear(experienceDto.getExperienceStartYear());
+                experience.setExperienceStartMonth(experienceDto.getExperienceStartMonth());
+                experience.setExperienceEndYear(experienceDto.getExperienceEndYear());
+                experience.setExperienceEndMonth(experienceDto.getExperienceEndMonth());
+                experience.setExperienceType(experienceDto.getExperienceType());
+                experience.setExperienceStatus(experienceDto.getExperienceStatus());
+                experience.setExperienceRole(experienceDto.getExperienceRole());
+                experiences.add(experience);
+            }
         }
-
 
         userRepository.save(user);
         userSkillsetRelationRepository.saveAll(userSkillsetRelations);
         experienceRepository.saveAll(experiences);
 
-
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "선택사항 저장완료"), null);
     }
 
+    @org.springframework.transaction.annotation.Transactional
     // 회원가입 후 필수로 작성해야하는 것들을 등록하는 API
     public ApiResponseDto<SuccessResponse> registerEssential(UserDetails loginUser, UserRegisterEssentialDto userRegisterEssentialDto) {
         User user = userRepository.findByUsername(loginUser.getUsername())
@@ -304,7 +306,7 @@ public class UserService {
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), null);
     }
-
+    @Transactional
     // 모든 멤버들을 검색할 수 있는 API
     public ApiResponseDto<FriendShipSearchResponseDto> searchUser(int pageNo, int pageSize, String sortBy, String keyword) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
@@ -330,6 +332,7 @@ public class UserService {
         return ResponseUtils.ok(friendShipSearchResponseDto, null);
     }
 
+    @Transactional
     public ApiResponseDto<SuccessResponse> updateUserProfileBasic(UserDetails loginUser, UserProfileBasicDto userProfileBasicDto) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
@@ -375,334 +378,10 @@ public class UserService {
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "프로필 기본 정보 수정 완료"), null);
     }
 
-    // 특정 유저에게 친구신청을 거는 것
-    public ApiResponseDto<SuccessResponse> registerFriend(UserDetails loginUser, Long userId) {
-        User user1 = userRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        // friendship이 만들어져야한다
-        // 무조건 거는 사람이 user1, 받는 사람이 user2로 되도록
-        Optional<User> userOptional = userRepository.findById(userId);
-        User user2 = userOptional.orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        // 만약에 user1과 2가 존재한다면 끝
-        Optional<FriendShip> friendShip_check = friendshipRepository.findByUser1AndUser2(user1, user2);
-
-        if (friendShip_check.isPresent()) {
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "이미 진행된 친구신청입니다."), null);
-        } else {
-            // 친구 관계가 존재하지 않는 경우, 새로운 친구 관계 생성
-            FriendShip friendShip = new FriendShip();
-            friendShip.setUser2(user2);
-            friendShip.setUser1(user1);
-            friendShip.setUserStatus(false);
-            friendshipRepository.save(friendShip);
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
-        }
-
-    }
-    public ApiResponseDto<SuccessResponse> responseFriend(UserDetails loginUser, Long userId) {
-        User user1 = userRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        Optional<User> userOptional = userRepository.findById(userId);
-        User user2 = userOptional.orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        Optional<FriendShip> friendShip_check = friendshipRepository.findByUser1AndUser2(user1, user2);
-        FriendShip friendShip = friendShip_check.orElseThrow(()-> new RestApiException(ErrorType.NOT_FOUND_FRIENDSHIP));
-        friendShip.setUserStatus(true);
-        friendshipRepository.save(friendShip);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
-
-    }
-    public ApiResponseDto<SuccessResponse> deleteFriend(UserDetails loginUser, Long userId) {
-        User user1 = userRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        Optional<User> userOptional = userRepository.findById(userId);
-        User user2 = userOptional.orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        Optional<FriendShip> friendShip_check = friendshipRepository.findByUser1AndUser2(user1, user2);
-        FriendShip friendShip = friendShip_check.orElseThrow(()-> new RestApiException(ErrorType.NOT_FOUND_FRIENDSHIP));
-        friendshipRepository.delete(friendShip);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
-
-    }
-    public ApiResponseDto<TeamListDto> getApplyType(UserDetails loginUser, int pageNo, int pageSize, String sortBy, String type) {
-        User user = userRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
-        Page<Team> teamPage;
-        if ("total".equals(type)) {
-            teamPage = new PageImpl<>(applyRepository.findByUser(user, pageable));
-        } else if ("wait".equals(type)) {
-            teamPage = new PageImpl<>(applyRepository.findByUserAndApplyStatusIsWaiting(user, pageable));
-        } else if ("end".equals(type)) {
-            teamPage = new PageImpl<>(applyRepository.findByUserAndApplyStatusIsFinished(user, pageable));
-        } else {
-            throw new RestApiException(ErrorType.NAME_NOT_PROVIDED);
-        }
-
-        TeamListDto teamListDto = new TeamListDto();
-        List<TeamAbstractDto> teamAbstractDtos = new ArrayList<>();
-        teamAbstractDtos = teamPage.getContent().stream()
-                .map(team ->
-                {
-                    TeamAbstractDto teamAbstractDto = new TeamAbstractDto();
-                    List<TeamUserRelation> teamUserRelation = teamUserRepository.findByTeam(team);
-                    for (TeamUserRelation teamuserRelation : teamUserRelation) {
-                        if (teamuserRelation.getIsWriter())
-                        {
-                            teamAbstractDto.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
-                            break;
-                        }
-                    }
-                    List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team);
-                    List<String> locationList = new ArrayList<>();
-                    for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
-                        String location = teamLocationRelation1.getLocation().getLocationName();
-                        locationList.add(location);
-                    }
-                    teamAbstractDto.setTeamId(team.getTeamId());
-                    teamAbstractDto.setTeamNeed(team.getTeamMemberNeed());
-                    teamAbstractDto.setTeamNowMember(team.getTeamMemberNow());
-                    teamAbstractDto.setTeamTitle(team.getTeamTitle());
-                    teamAbstractDto.setTeamPoster(team.getCompetition().getCompetitionPoster());
-                    teamAbstractDto.setTeamLocations(locationList);
-                    List<String> PositionList = new ArrayList<>();
-                    for(Position position : team.getPositionList())
-                    {
-                        PositionList.add(position.getPositionName());
-                    }
-                    teamAbstractDto.setPositionList(PositionList);
-                    return teamAbstractDto;
-                })
-                .collect(Collectors.toList());
-        teamListDto.setTotalTeam(teamAbstractDtos.size());
-        teamListDto.setTeamList(teamAbstractDtos);
-        teamListDto.setLast(teamPage.isLast());
-        teamListDto.setTotalPages(teamPage.getTotalPages());
-        teamListDto.setTotalElements(teamPage.getTotalElements());
-        teamListDto.setPageNo(pageNo);
-        teamListDto.setPageSize(pageSize);
 
 
-        return ResponseUtils.ok(teamListDto, null);
-    }
-    public ApiResponseDto<ApplyTeamDto> getApply(UserDetails loginUser) {
-        User user = userRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        ApplyTeamDto applyTeamDto = new ApplyTeamDto();
 
-        for (int i = 0; i <= 1; i++) {
-            List<Team> team1;
-            Team team2;
-            if (i == 0) {
-                team1 = applyRepository.findFirstByUserAndApplyStatusIsWaitingOne(user);
-                if (team1.isEmpty()) {
-                    team2 = new Team(); // 빈 팀 생성
-                } else {
-                    team2 = team1.get(0);
-                }
-            } else {
-                team1 = applyRepository.findFirstByUserAndApplyStatusIsFinishedOne(user);
-                if (team1.isEmpty()) {
-                    team2 = new Team(); // 빈 팀 생성
-                } else {
-                    team2 = team1.get(0);
-                }
-            }
-            TeamAbstractDto teamAbstractDto1 = new TeamAbstractDto();
-            if (!team1.isEmpty()) {
-                List<TeamUserRelation> teamUserRelation1 = teamUserRepository.findByTeam(team2);
-                for (TeamUserRelation teamuserRelation : teamUserRelation1) {
-                    if (teamuserRelation.getIsWriter()) {
-                        teamAbstractDto1.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
-                        break;
-                    }
-                }
-                List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team2);
-                List<String> locationList1 = new ArrayList<>();
-                for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
-                    String location = teamLocationRelation1.getLocation().getLocationName();
-                    locationList1.add(location);
-                }
-                teamAbstractDto1.setTeamId(team2.getTeamId());
-                teamAbstractDto1.setTeamNeed(team2.getTeamMemberNeed());
-                teamAbstractDto1.setTeamNowMember(team2.getTeamMemberNow());
-                teamAbstractDto1.setTeamTitle(team2.getTeamTitle());
-                teamAbstractDto1.setTeamPoster(team2.getCompetition().getCompetitionPoster());
-                teamAbstractDto1.setTeamLocations(locationList1);
-                List<String> PositionList1 = new ArrayList<>();
-                for (Position position : team2.getPositionList()) {
-                    PositionList1.add(position.getPositionName());
-                }
-                teamAbstractDto1.setPositionList(PositionList1);
-            }
-            if (i == 0) {
-                applyTeamDto.setTeamListDto1(teamAbstractDto1);
-            } else {
-                applyTeamDto.setTeamListDto2(teamAbstractDto1);
-            }
-        }
-        return ResponseUtils.ok(applyTeamDto, null);
-    }
-
-    public ApiResponseDto<SuccessResponse> deleteApply(UserDetails loginUser, Long apply_id)
-    {
-        Optional<Apply> applyOptional = applyRepository.findById(apply_id);
-        Apply apply = applyOptional.orElseThrow(
-                () -> new RestApiException(ErrorType.NOT_FOUND_APPLY)
-        );
-        User user = userRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        if(apply.getUser() == user)
-        {
-            applyRepository.delete(apply);
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 삭제완료"),null);
-        }
-        else
-        {
-            return ResponseUtils.error(ErrorResponse.of(HttpStatus.NOT_ACCEPTABLE,"권한이 없습니다"));
-        }
-
-    }
-    public ApiResponseDto<TeamApplyDto> getTeamApplyTotal(UserDetails loginUser) {
-        User user = userRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        TeamApplyDto teamApplyDto = new TeamApplyDto();
-
-        for (int i = 0; i <= 1; i++) {
-            List<Team> team1;
-            Team team2;
-            if (i == 0) {
-                team1 = teamUserRepository.findByUserAndWaitingOne(user);
-                if (team1.isEmpty()) {
-                    team2 = new Team(); // 빈 팀 생성
-                } else {
-                    team2 = team1.get(0);
-                }
-            } else {
-                team1 = teamUserRepository.findByUserAndEndOne(user);
-                if (team1.isEmpty()) {
-                    team2 = new Team(); // 빈 팀 생성
-                } else {
-                    team2 = team1.get(0);
-                }
-            }
-            TeamAbstractDto teamAbstractDto1 = new TeamAbstractDto();
-            if (!team1.isEmpty()) {
-                List<TeamUserRelation> teamUserRelation1 = teamUserRepository.findByTeam(team2);
-                for (TeamUserRelation teamuserRelation : teamUserRelation1) {
-                    if (teamuserRelation.getIsWriter()) {
-                        teamAbstractDto1.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
-                        break;
-                    }
-                }
-                List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team2);
-                List<String> locationList1 = new ArrayList<>();
-                for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
-                    String location = teamLocationRelation1.getLocation().getLocationName();
-                    locationList1.add(location);
-                }
-                teamAbstractDto1.setTeamId(team2.getTeamId());
-                teamAbstractDto1.setTeamNeed(team2.getTeamMemberNeed());
-                teamAbstractDto1.setTeamNowMember(team2.getTeamMemberNow());
-                teamAbstractDto1.setTeamTitle(team2.getTeamTitle());
-                teamAbstractDto1.setTeamPoster(team2.getCompetition().getCompetitionPoster());
-                teamAbstractDto1.setTeamLocations(locationList1);
-                List<String> PositionList1 = new ArrayList<>();
-                for (Position position : team2.getPositionList()) {
-                    PositionList1.add(position.getPositionName());
-                }
-                teamAbstractDto1.setPositionList(PositionList1);
-            }
-            if (i == 0) {
-                teamApplyDto.setTeamAbstractDtoWaiting(teamAbstractDto1);
-            } else {
-                teamApplyDto.setTeamAbstractDtoEnd(teamAbstractDto1);
-            }
-        }
-        return ResponseUtils.ok(teamApplyDto, null);
-    }
-    public ApiResponseDto<TeamListDto> getTeamApplyType(UserDetails loginUser, int pageNo, int pageSize, String sortBy, String type) {
-        User user = userRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
-        Page<Team> teamPage;
-        if ("total".equals(type)) {
-            teamPage = new PageImpl<>(applyRepository.findByUser(user, pageable));
-        } else if ("wait".equals(type)) {
-            teamPage = new PageImpl<>(applyRepository.findByUserAndApplyStatusIsWaiting(user, pageable));
-        } else if ("end".equals(type)) {
-            teamPage = new PageImpl<>(applyRepository.findByUserAndApplyStatusIsFinished(user, pageable));
-        } else {
-            throw new RestApiException(ErrorType.NAME_NOT_PROVIDED);
-        }
-
-        TeamListDto teamListDto = new TeamListDto();
-        List<TeamAbstractDto> teamAbstractDtos = teamPage.getContent().stream()
-                .map(team ->
-                {
-                    TeamAbstractDto teamAbstractDto = new TeamAbstractDto();
-                    List<TeamUserRelation> teamUserRelation = teamUserRepository.findByTeam(team);
-                    for (TeamUserRelation teamuserRelation : teamUserRelation) {
-                        if (teamuserRelation.getIsWriter()) {
-                            teamAbstractDto.setTeamWriter(teamuserRelation.getUser().getUserKoreaName());
-                            break;
-                        }
-                    }
-                    List<TeamLocationRelation> teamLocationRelation = teamLocationRelationRepository.findByTeam(team);
-                    List<String> locationList = new ArrayList<>();
-                    for (TeamLocationRelation teamLocationRelation1 : teamLocationRelation) {
-                        String location = teamLocationRelation1.getLocation().getLocationName();
-                        locationList.add(location);
-                    }
-                    teamAbstractDto.setTeamId(team.getTeamId());
-                    teamAbstractDto.setTeamNeed(team.getTeamMemberNeed());
-                    teamAbstractDto.setTeamNowMember(team.getTeamMemberNow());
-                    teamAbstractDto.setTeamTitle(team.getTeamTitle());
-                    teamAbstractDto.setTeamPoster(team.getCompetition().getCompetitionPoster());
-                    teamAbstractDto.setTeamLocations(locationList);
-                    List<String> PositionList = new ArrayList<>();
-                    for (Position position : team.getPositionList()) {
-                        PositionList.add(position.getPositionName());
-                    }
-                    teamAbstractDto.setPositionList(PositionList);
-                    return teamAbstractDto;
-                })
-                .collect(Collectors.toList());
-
-        teamListDto.setTotalTeam(teamAbstractDtos.size());
-        teamListDto.setTeamList(teamAbstractDtos);
-        teamListDto.setLast(teamPage.isLast());
-        teamListDto.setTotalPages(teamPage.getTotalPages());
-        teamListDto.setTotalElements(teamPage.getTotalElements());
-        teamListDto.setPageNo(pageNo);
-        teamListDto.setPageSize(pageSize);
-
-        return ResponseUtils.ok(teamListDto, null);
-    }
-    public ApiResponseDto<SuccessResponse> teamStatus(UserDetails loginUser, Long team_id, TeamStatusDto teamStatusDto)
-    {
-        Optional<Team> teamOptional  = teamRepository.findById(team_id);
-        Team team = teamOptional.orElseThrow(
-                () -> new RestApiException(ErrorType.NOT_FOUND_TEAM)
-        );
-        User user = userRepository.findByUsername(loginUser.getUsername())
-                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        // 유저가 권한이 없거나
-        Optional<TeamUserRelation> teamUserRelationOptional = teamUserRepository.findByUserAndTeam(user, team);
-        TeamUserRelation teamUserRelation = teamUserRelationOptional.orElseThrow(
-                () -> new RestApiException(ErrorType.NOT_FOUND_USER_TEAM)
-        );
-        if(teamUserRelation.getIsWriter()==true)
-        {
-            team.setTeamStatus(teamStatusDto.getTeamStatus());
-            teamRepository.save(team);
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 공고글 상태 변경완료"),null);
-        }
-        else
-        {
-            return ResponseUtils.error(ErrorResponse.of(HttpStatus.NOT_ACCEPTABLE,"권한이 없습니다"));
-        }
-
-    }
-
+    @Transactional
     // 내 프로필 보기
     public ApiResponseDto<UserMyProfileDto> readMyProfile(UserDetails loginUser) {
         User user = userRepository.findByUsername(loginUser.getUsername())
@@ -810,6 +489,26 @@ public class UserService {
         userMyProfileDto.setSkillsetList(userProfileSkillsetDtoList);
 
         return ResponseUtils.ok(userMyProfileDto, null);
+    }
+    public ApiResponseDto<List<UserSimpleDto>> userSearch(UserDetails loginUser, int pageNo, int pageSize, String sortBy, String search) {
+        User loginuser = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<User> userPage;
+        userPage = new PageImpl<>(userRepository.findAllExcept(loginuser, pageable));
+
+        List<UserSimpleDto> userSimpleDtoList = userPage.getContent().stream()
+                .map(user -> {
+                    UserSimpleDto userSimpleDto = new UserSimpleDto();
+                    userSimpleDto.setUserProfile(user.getUserProfile());
+                    userSimpleDto.setUserKoreaName(user.getUserKoreaName());
+                    userSimpleDto.setUserId(user.getId());
+                    userSimpleDto.setUserRepresentativeProfileSentence(user.getUserRepresentativeProfileSentence());
+                    return userSimpleDto;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseUtils.<List<UserSimpleDto>>ok(userSimpleDtoList, null);
     }
 
 }

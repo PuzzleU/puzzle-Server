@@ -4,6 +4,7 @@ import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.relations.dto.UserSkillsetRelationDto;
+import com.PuzzleU.Server.relations.dto.UserSkillsetRelationListDto;
 import com.PuzzleU.Server.skillset.entity.Skillset;
 import com.PuzzleU.Server.skillset.repository.SkillsetRepository;
 import com.PuzzleU.Server.skillset.dto.SkillSetDto;
@@ -46,6 +47,7 @@ public class SkillsetService {
         for(SkillSetDto skillsetDto : skillsetList.getSkillSetDtoList())
         {
             Optional<Skillset> optionalSkillset = skillsetRepository.findById(skillsetDto.getSkillSetId());
+            System.out.println(skillsetDto.getSkillSetId());
             Skillset skillset = optionalSkillset.orElseThrow(() -> {
                 System.out.println("Skillset not found");
                 return new RestApiException(ErrorType.NOT_FOUND_SKILLSET);
@@ -62,17 +64,12 @@ public class SkillsetService {
     }
     // 유저가 자신의 스킬셋을 삭제가능함
     public ApiResponseDto<SuccessResponse> deleteSkillset(
-            UserDetails loginUser, Long skillsetId
+            UserDetails loginUser, Long userSkillsetId
     )
     {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        Optional<Skillset> userSkillset = skillsetRepository.findById(skillsetId);
-        Skillset skillset = userSkillset.orElseThrow(() -> {
-            System.out.println("Skillset not found");
-            return new RestApiException(ErrorType.NOT_FOUND_SKILLSET);
-        });
-        Optional<UserSkillsetRelation> userSkillsetRelation = userSkillsetRelationRepository.findByUserAndSkillset(user,skillset);
+        Optional<UserSkillsetRelation> userSkillsetRelation = userSkillsetRelationRepository.findByUserAndUserSkillsetId(user,userSkillsetId);
         UserSkillsetRelation userSkillsetrelation = userSkillsetRelation.orElseThrow(() -> {
             System.out.println("UserSkillset not found");
             return new RestApiException(ErrorType.NOT_FOUND_USERSKILLSETRELATION);
@@ -82,23 +79,23 @@ public class SkillsetService {
 
     }
     // 유저가 자신이 등록한 스킬셋의 리스트를 확인가능한 API
-    public ApiResponseDto<List<UserSkillsetRelationDto>> getSkillsetList(UserDetails loginUser) {
+    public ApiResponseDto<List<UserSkillsetRelationListDto>> getSkillsetList(UserDetails loginUser) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
 
 
         List<UserSkillsetRelation> userSkillsetRelation = userSkillsetRelationRepository.findByUser(user);
-        List<UserSkillsetRelationDto> userSkillsetRelationDtos = new ArrayList<>();
+        List<UserSkillsetRelationListDto> userSkillsetRelationListDtos = new ArrayList<>();
         for (UserSkillsetRelation userSkillsetrelation : userSkillsetRelation)
         {
-            UserSkillsetRelationDto userSkillsetRelationDto = new UserSkillsetRelationDto();
-            userSkillsetRelationDto.setUserId(user.getId());
-            userSkillsetRelationDto.setSkillsetId(userSkillsetrelation.getSkillset().getSkillsetId());
-            userSkillsetRelationDto.setLevel(userSkillsetrelation.getLevel());
-            userSkillsetRelationDtos.add(userSkillsetRelationDto);
+            UserSkillsetRelationListDto userSkillsetRelationListDto = new UserSkillsetRelationListDto();
+            userSkillsetRelationListDto.setUserSkillsetRelationId(userSkillsetrelation.getUserSkillsetRelationId());
+            userSkillsetRelationListDto.setSkillsetId(userSkillsetrelation.getSkillset().getSkillsetId());
+            userSkillsetRelationListDto.setLevel(userSkillsetrelation.getLevel());
+            userSkillsetRelationListDtos.add(userSkillsetRelationListDto);
         }
 
-        return ResponseUtils.ok(userSkillsetRelationDtos, null);
+        return ResponseUtils.ok(userSkillsetRelationListDtos, null);
 
     }
 }

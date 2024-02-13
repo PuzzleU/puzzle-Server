@@ -12,9 +12,9 @@ import lombok.*;
 public class TeamApplyDto {
 
     @JsonProperty("Waiting")
-    private TeamAbstractDto teamAbstractDtoWaiting;
+    private TeamAbstractBaseDto teamAbstractDtoWaiting;
 
     @JsonProperty("End")
-    private TeamAbstractDto teamAbstractDtoEnd;
+    private TeamAbstractBaseDto teamAbstractDtoEnd;
 }
 

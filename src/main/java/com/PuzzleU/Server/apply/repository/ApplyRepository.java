@@ -29,5 +29,6 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     @Query("SELECT DISTINCT a.team FROM Apply a WHERE a.user = :user AND a.applyStatus = 'FINISHED'")
     List<Team> findFirstByUserAndApplyStatusIsFinishedOne(User user);
 
+    Optional<Apply> findByUserAndTeam(User user, Team team);
     Optional<Apply> findByApplyId(Long applyId);
 }
