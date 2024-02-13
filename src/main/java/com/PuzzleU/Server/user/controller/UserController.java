@@ -5,6 +5,7 @@ import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
+import com.PuzzleU.Server.friendship.service.FriendshipService;
 import com.PuzzleU.Server.relations.dto.UserSkillsetRelationDto;
 import com.PuzzleU.Server.relations.dto.UserSkillsetRelationListDto;
 import com.PuzzleU.Server.skillset.dto.SkillSetListDto;
@@ -34,6 +35,8 @@ public class UserController {
     private final UniversityService universityService;
     private final ApplyService applyService;
     private final TeamService teamService;
+    private final FriendshipService friendshipService;
+
     @PostMapping("/signup")
     public ApiResponseDto<SuccessResponse> signup(@Valid @RequestBody SignupRequestDto requestDto) {
         return userService.signup(requestDto);
@@ -156,21 +159,21 @@ public class UserController {
             @AuthenticationPrincipal UserDetails loginUser,
             @PathVariable Long friendId)
     {
-        return userService.registerFriend(loginUser, friendId);
+        return friendshipService.registerFriend(loginUser, friendId);
     }
     @PatchMapping("/friend/{friendId}")
     public ApiResponseDto<SuccessResponse> responseFriend(
             @AuthenticationPrincipal UserDetails loginUser,
             @PathVariable Long friendId)
     {
-        return userService.responseFriend(loginUser, friendId);
+        return friendshipService.responseFriend(loginUser, friendId);
     }
     @DeleteMapping("/friend/{friendId}")
     public ApiResponseDto<SuccessResponse> deleteFriend(
             @AuthenticationPrincipal UserDetails loginUser,
             @PathVariable Long friendId)
     {
-        return userService.deleteFriend(loginUser, friendId);
+        return friendshipService.deleteFriend(loginUser, friendId);
     }
     @GetMapping("/apply")
     public ApiResponseDto<ApplyTeamDto> getApply(
