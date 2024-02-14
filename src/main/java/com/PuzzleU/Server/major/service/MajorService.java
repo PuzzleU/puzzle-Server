@@ -10,6 +10,7 @@ import com.PuzzleU.Server.major.entity.Major;
 import com.PuzzleU.Server.major.repository.MajorRepository;
 import com.PuzzleU.Server.university.entity.University;
 import com.PuzzleU.Server.university.repository.UniversityRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ public class MajorService {
 
 
     // 대학교에 대한 전공 검색 API
+    @Transactional
     public ApiResponseDto<MajorSearchTotalDto> searchMajorList(Long universityId, String searchKeyword, Pageable pageable) {
         University university = universityRepository.findByUniversityId(universityId)
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_UNIVERSITY));

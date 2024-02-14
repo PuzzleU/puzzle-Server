@@ -3,6 +3,7 @@ package com.PuzzleU.Server.position.service;
 import com.PuzzleU.Server.position.dto.PositionDto;
 import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.position.repository.PositionRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class PositionService {
     private final PositionRepository positionRepository;
 
     // position list: 전체 position list 반환
+    @Transactional
     public List<PositionDto> listAllPositions() {
         List<Position> positionList = positionRepository.findAll();
 

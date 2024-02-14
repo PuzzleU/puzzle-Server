@@ -69,6 +69,7 @@ public class UniversityService {
     }
 
     // 대학교 검색 API
+    @Transactional
     public ApiResponseDto<UniversitySearchTotalDto> searchUniversityList(String searchKeyword, String type, Pageable pageable) {
         UniversityType universityType = UniversityType.UNIVERSITY;
 
