@@ -408,6 +408,7 @@ public class CompetitionService {
 
 
     }
+    //a
     @Scheduled(cron = "0 0 0 * * ?")
     public void updateCompetitionDday() {
         List<Competition> competitions = competitionRepository.findAll();
