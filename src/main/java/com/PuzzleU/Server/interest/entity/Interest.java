@@ -1,7 +1,7 @@
 package com.PuzzleU.Server.interest.entity;
 
 import com.PuzzleU.Server.common.enumSet.InterestTypes;
-import com.PuzzleU.Server.competition.entity.CompetitionInterestRelation;
+import com.PuzzleU.Server.relations.entity.CompetitionInterestRelation;
 import com.PuzzleU.Server.relations.entity.UserInterestRelation;
 import jakarta.persistence.*;
 

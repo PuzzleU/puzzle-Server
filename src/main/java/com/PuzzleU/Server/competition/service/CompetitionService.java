@@ -35,10 +35,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -61,9 +65,18 @@ public class CompetitionService {
     // 공모전 전체를 볼 수 있는 데이터를 넘기는 API
     @Transactional
     public ApiResponseDto<CompetitionHomeTotalDto> getHomepage(int pageNo, int pageSize, String sortBy, String keyword, CompetitionType type) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Pageable pageable;
+        if (sortBy.equals("competitionEndReverse"))
+        {
+            pageable = PageRequest.of(pageNo, pageSize, Sort.by("competitionEnd").ascending());
+        }
+        else{
+            pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+
+        }
         Page<Competition> competitionPage;
         String None = "None";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         // 키워드와 타입이 모두 제공
         // 안됨
         if (!keyword.equals(None) && type != null) {
@@ -91,16 +104,19 @@ public class CompetitionService {
         if (competitionPage == null) {
             throw new RestApiException(ErrorType.NOT_FOUND);
         }
+        //LocalDate now = LocalDate.now();
 
 
         List<CompetitionHomePageDto> competitionHomePageDtos = competitionPage.getContent().stream()
                 .map(competition -> {
+
                     CompetitionHomePageDto competitionHomePageDto = new CompetitionHomePageDto();
+                    competitionHomePageDto.setCompetitionId(competition.getCompetitionId());
                     competitionHomePageDto.setCompetitionDday(competition.getCompetitionDDay());
                     competitionHomePageDto.setCompetitionName(competition.getCompetitionName());
                     competitionHomePageDto.setCompetitionMatching(competition.getCompetitionMatching());
                     competitionHomePageDto.setCompetitionVisit(competition.getCompetitionVisit());
-                    competitionHomePageDto.setCreatedAt(competition.getCreatedDate());
+                    competitionHomePageDto.setCreatedAt(competition.getCreatedDate().format(formatter));
                     competitionHomePageDto.setCompetitionTypeList(competition.getCompetitionTypes());
                     return competitionHomePageDto;
                 })
@@ -389,5 +405,22 @@ public class CompetitionService {
         competition.setCompetitionLike(heart);
         competitionRepository.save(competition);
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "좋아요를 취소하였습니다"), null);
+
+
     }
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void updateCompetitionDday() {
+        List<Competition> competitions = competitionRepository.findAll();
+        LocalDateTime today = LocalDateTime.now();
+
+        for (Competition competition : competitions) {
+            LocalDateTime competitionEnd = competition.getCompetitionEnd();
+            if (competitionEnd != null) {
+                long daysUntilEnd = ChronoUnit.DAYS.between(today, competitionEnd);
+                competition.setCompetitionDDay((int) daysUntilEnd);
+                competitionRepository.save(competition);
+            }
+        }
+    }
+
 }

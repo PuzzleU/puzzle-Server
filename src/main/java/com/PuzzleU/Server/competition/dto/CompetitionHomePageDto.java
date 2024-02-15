@@ -13,13 +13,14 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class CompetitionHomePageDto {
+    private Long competitionId;
     @Size(max = 100)
     private String competitionName;
     private Integer CompetitionVisit;
     private Integer CompetitionMatching;
     private List<CompetitionType> competitionTypeList;
     private Integer CompetitionDday;
-    private LocalDateTime createdAt;
+    private String createdAt;
 
 
 }
