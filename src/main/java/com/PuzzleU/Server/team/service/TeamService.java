@@ -1,16 +1,21 @@
 package com.PuzzleU.Server.team.service;
 
+import com.PuzzleU.Server.apply.dto.UserApplyDto;
+import com.PuzzleU.Server.apply.entity.Apply;
 import com.PuzzleU.Server.apply.repository.ApplyRepository;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
+import com.PuzzleU.Server.common.enumSet.ApplyStatus;
 import com.PuzzleU.Server.competition.repository.CompetitionRepository;
 import com.PuzzleU.Server.competition.dto.CompetitionSearchDto;
 import com.PuzzleU.Server.competition.dto.CompetitionSearchTotalDto;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
+import com.PuzzleU.Server.location.dto.LocationDto;
 import com.PuzzleU.Server.location.entity.Location;
 import com.PuzzleU.Server.location.repository.LocationRepository;
+import com.PuzzleU.Server.position.dto.PositionDto;
 import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.position.repository.PositionRepository;
 import com.PuzzleU.Server.relations.entity.TeamLocationRelation;
@@ -30,6 +35,7 @@ import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -465,6 +471,95 @@ public class TeamService {
         {
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.NOT_ACCEPTABLE,"권한이 없습니다"));
         }
+    }
 
+    // 특정 팀에 대한 지원서 리스트를 받아온다. (나의 모집 - 지원 현황)
+    // 로그인한 유저가 모집 공고의 작성자여야 열람 가능
+
+    public ApiResponseDto<TeamApplyListDto> readTeamApplyList(UserDetails loginUser, Long teamId) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        Team team = teamRepository.findByTeamId(teamId)
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_TEAM));
+
+        TeamUserRelation teamUserRelation = teamUserRepository.findByUserAndTeam(user, team)
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_RELATION));
+
+        // 로그인한 유저가 모집 공고의 작성자여야 열람 가능
+        if (teamUserRelation.getIsWriter() == false) {
+            throw new RestApiException(ErrorType.NO_PERMISSION_TO_APPLICATION_LIST);
+        }
+
+        List<TeamLocationRelation> teamLocationRelationList = teamLocationRelationRepository.findByTeam(team);
+        List<Location> locationList = new ArrayList<>();
+        for (TeamLocationRelation teamLocationRelation : teamLocationRelationList) {
+            locationList.add(teamLocationRelation.getLocation());
+        }
+
+        // 팀(모집 공고)
+
+        List<Position> positionList = team.getPositionList();
+        List<PositionDto> positionDtoList = new ArrayList<>();
+        for (Position position : positionList) {
+            PositionDto positionDto = PositionDto.builder()
+                    .PositionId(position.getPositionId())
+                    .PositionName(position.getPositionName()).build();
+            positionDtoList.add(positionDto);
+        }
+
+        List<LocationDto> locationDtoList = new ArrayList<>();
+        for (Location location : locationList) {
+            LocationDto locationDto = LocationDto.builder()
+                    .LocationId(location.getLocationId())
+                    .LocationName(location.getLocationName()).build();
+            locationDtoList.add(locationDto);
+        }
+
+        SimpleTeamDto simpleTeamDto = new SimpleTeamDto();
+        simpleTeamDto.setTeamId(team.getTeamId());
+        simpleTeamDto.setTeamTitle(team.getTeamTitle());
+        simpleTeamDto.setTeamWriter(user.getUserKoreaName());
+        simpleTeamDto.setPositionList(positionDtoList);
+        simpleTeamDto.setTeamNowMember(team.getTeamMemberNow());
+        simpleTeamDto.setTeamNeed(team.getTeamMemberNeed());
+        simpleTeamDto.setTeamUntact(team.isTeamUntact());
+        simpleTeamDto.setTeamLocations(locationDtoList);
+        simpleTeamDto.setCompetitionPoster(team.getCompetition().getCompetitionPoster());
+
+        // 대기 중인 지원서 리스트
+
+        List<Apply> applyList = team.getApplyList();
+        List<UserApplyDto> userApplyDtoList = new ArrayList<>();
+        for (Apply apply : applyList) {
+            if (apply.getApplyStatus() == ApplyStatus.WAITING) { // 대기 중인 지원서만 가져옴
+                User applyUser = apply.getUser();
+                UserApplyDto userApplyDto = new UserApplyDto();
+                userApplyDto.setUserId(applyUser.getId());
+                userApplyDto.setUserProfile(applyUser.getUserProfile());
+                userApplyDto.setUserKoreaName(applyUser.getUserKoreaName());
+                userApplyDto.setUserRepresentativeProfileSentence(applyUser.getUserRepresentativeProfileSentence());
+
+                userApplyDto.setApplyId(apply.getApplyId());
+                userApplyDto.setApplyTitle(apply.getApplyTitle());
+
+                userApplyDtoList.add(userApplyDto);
+
+                System.out.println(apply.getApplyTitle());
+
+
+            }
+        }
+
+        System.out.println("***********표시1***************");
+
+        // 반환 데이터
+        TeamApplyListDto teamApplyListDto = new TeamApplyListDto();
+        teamApplyListDto.setTeam(simpleTeamDto);
+        teamApplyListDto.setApplyList(userApplyDtoList);
+
+        System.out.println("***************표시2***************");
+
+        return ResponseUtils.ok(teamApplyListDto, null);
     }
 }
