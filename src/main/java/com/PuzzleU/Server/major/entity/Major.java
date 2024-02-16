@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.major.entity;
 
+import com.PuzzleU.Server.relations.entity.UserUniversityRelation;
 import com.PuzzleU.Server.university.entity.University;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,5 @@ public class Major {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "university_id")
     private University university;
+
 }

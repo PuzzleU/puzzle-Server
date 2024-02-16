@@ -28,11 +28,13 @@ import com.PuzzleU.Server.profile.repository.ProfileRepository;
 import com.PuzzleU.Server.relations.entity.UserInterestRelation;
 import com.PuzzleU.Server.relations.entity.UserLocationRelation;
 import com.PuzzleU.Server.relations.entity.UserSkillsetRelation;
+import com.PuzzleU.Server.relations.entity.UserUniversityRelation;
 import com.PuzzleU.Server.relations.repository.*;
 import com.PuzzleU.Server.skillset.dto.SkillSetDto;
 import com.PuzzleU.Server.skillset.entity.Skillset;
 import com.PuzzleU.Server.skillset.repository.SkillsetRepository;
 import com.PuzzleU.Server.team.repository.TeamRepository;
+import com.PuzzleU.Server.university.dto.UniversityRegistDto;
 import com.PuzzleU.Server.university.entity.University;
 import com.PuzzleU.Server.university.repository.UniversityRepository;
 import com.PuzzleU.Server.user.dto.*;
@@ -86,6 +88,7 @@ public class UserService {
     private final TeamUserRepository teamUserRepository;
     private final TeamLocationRelationRepository teamLocationRelationRepository;
     private final TeamRepository teamRepository;
+    private final UserUniversityRelationRepository userUniversityRelationRepository;
 
     // 회원가입 API
     @Transactional
@@ -130,39 +133,47 @@ public class UserService {
     public ApiResponseDto<SuccessResponse> createRegisterOptionalUser(
             UserDetails loginUser,
             UserRegisterOptionalDto userRegisterOptionalDto
+
     ) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
 
-        Optional<Major> optionalMajor = Optional.empty();
-        if (userRegisterOptionalDto.getMajorId() != null) {
-            optionalMajor = majorRepository.findById(userRegisterOptionalDto.getMajorId());
+        for(UniversityRegistDto universityRegistDtoEach : userRegisterOptionalDto.getUniversityRegistDtoList())
+        {
+            Optional<University> optionalUniversity = Optional.empty();
+            if (universityRegistDtoEach.getUniversityId() != null) {
+                optionalUniversity = universityRepository.findById(universityRegistDtoEach.getUniversityId());
+            }
+            University university = optionalUniversity.orElse(null);
+            if (university == null) {
+                throw new RestApiException(ErrorType.NOT_FOUND_UNIVERSITY);
+            }
+            UserUniversityRelation userUniversityRelation = new UserUniversityRelation();
+            userUniversityRelation.setUniversity(university);
+            userUniversityRelation.setUser(user);
+            userUniversityRelation.setUniversityEnd(universityRegistDtoEach.getUniversityEnd());
+            userUniversityRelation.setUniversityStart(universityRegistDtoEach.getUniversityStart());
+            userUniversityRelation.setUniversityStatus(universityRegistDtoEach.getUniversityStatus());
+            Optional<Major> optionalMajor = Optional.empty();
+            if (universityRegistDtoEach.getMajorId() != null) {
+                optionalMajor = majorRepository.findById(universityRegistDtoEach.getMajorId());
+            }
+            Major major = optionalMajor.orElse(null);
+            if (major == null) {
+                throw new RestApiException(ErrorType.NOT_FOUND_MAJOR);
+            }
+            userUniversityRelation.setMajorId(major.getMajorId());
+            userUniversityRelation.setMajorName(major.getMajorName());
+            userUniversityRelationRepository.save(userUniversityRelation);
         }
 
-        Optional<University> optionalUniversity = Optional.empty();
-        if (userRegisterOptionalDto.getUniversityId() != null) {
-            optionalUniversity = universityRepository.findById(userRegisterOptionalDto.getUniversityId());
-        }
 
-        Major major = optionalMajor.orElse(null);
-        University university = optionalUniversity.orElse(null);
 
-        if (major == null) {
-            throw new RestApiException(ErrorType.NOT_FOUND_MAJOR);
-        }
-
-        if (university == null) {
-            throw new RestApiException(ErrorType.NOT_FOUND_UNIVERSITY);
-        }
-
-        user.setUniversityStart(userRegisterOptionalDto.getUniversityStart());
-        user.setUniversityEnd(userRegisterOptionalDto.getUniversityEnd());
-        user.setUniversityStatus(userRegisterOptionalDto.getUniversityStatus());
         user.setUserRepresentativeExperience(userRegisterOptionalDto.getUserRepresentativeExperience());
         user.setUserRepresentativeProfileSentence(userRegisterOptionalDto.getUserRepresentativeProfileSentence());
         user.setWorkType(userRegisterOptionalDto.getUserWorkType());
-        user.setMajor(major);
-        user.setUniversity(university);
+
+
 
         List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();
         if (userRegisterOptionalDto.getSkillSetDtoList() != null) {
@@ -421,25 +432,21 @@ public class UserService {
                     .PositionName(position2.getPositionName()).build();
         }
 
-        University university = user.getUniversity();
-        Major major = user.getMajor();
 
-        UserProfileUniversityDto  userProfileUniversityDto = new UserProfileUniversityDto();
-        if (university == null) {
-            userProfileUniversityDto = null;
-        }
-        else if (major == null) {
-            userProfileUniversityDto = null;
-        }
-        else {
-            userProfileUniversityDto = UserProfileUniversityDto.builder()
-                    .UniversityId(university.getUniversityId())
-                    .UniversityName(university.getUniversityName())
-                    .MajorId(major.getMajorId())
-                    .MajorName(major.getMajorName())
-                    .UserUniversityStatus(user.getUniversityStatus())
-                    .UserUniversityStart(user.getUniversityStart())
-                    .UserUniversityEnd(user.getUniversityEnd()).build();
+        List<UniversityRegistDto>  universityRegistDtoList = new ArrayList<>();
+
+        List<UserUniversityRelation> userUniversityRelations = userUniversityRelationRepository.findByUser(user);
+        for(UserUniversityRelation userUniversityRelation : userUniversityRelations)
+        {
+            UniversityRegistDto universityRegistDto = new UniversityRegistDto();
+            universityRegistDto.setUniversityEnd(userUniversityRelation.getUniversityEnd());
+            universityRegistDto.setUniversityStart(userUniversityRelation.getUniversityStart());
+            universityRegistDto.setUniversityId(userUniversityRelation.getUserUniversityId());
+            universityRegistDto.setMajorId(userUniversityRelation.getMajorId());
+            universityRegistDto.setMajorName(userUniversityRelation.getMajorName());
+            universityRegistDto.setUniversityStatus(userUniversityRelation.getUniversityStatus());
+            universityRegistDto.setUniversityType(userUniversityRelation.getUniversity().getUniversityType());
+            universityRegistDtoList.add(universityRegistDto);
         }
 
         List<Experience> userExperienceList = user.getExperience();
@@ -478,7 +485,7 @@ public class UserService {
         userMyProfileDto.setPosition2(positionDto2);
         userMyProfileDto.setWorkType(user.getWorkType());
         userMyProfileDto.setUserRepresentativeProfileSentence(user.getUserRepresentativeProfileSentence());
-        userMyProfileDto.setUserUniversity(userProfileUniversityDto);
+        userMyProfileDto.setUniversityRegistDtoList(universityRegistDtoList);
         userMyProfileDto.setExperienceList(userProfileExperienceDtoList);
         userMyProfileDto.setSkillsetList(userProfileSkillsetDtoList);
 
@@ -556,25 +563,20 @@ public class UserService {
                     .PositionName(position2.getPositionName()).build();
         }
 
-        University university = profileUser.getUniversity();
-        Major major = profileUser.getMajor();
+        List<UniversityRegistDto>  universityRegistDtoList = new ArrayList<>();
 
-        UserProfileUniversityDto  userProfileUniversityDto = new UserProfileUniversityDto();
-        if (university == null) {
-            userProfileUniversityDto = null;
-        }
-        else if (major == null) {
-            userProfileUniversityDto = null;
-        }
-        else {
-            userProfileUniversityDto = UserProfileUniversityDto.builder()
-                    .UniversityId(university.getUniversityId())
-                    .UniversityName(university.getUniversityName())
-                    .MajorId(major.getMajorId())
-                    .MajorName(major.getMajorName())
-                    .UserUniversityStatus(profileUser.getUniversityStatus())
-                    .UserUniversityStart(profileUser.getUniversityStart())
-                    .UserUniversityEnd(profileUser.getUniversityEnd()).build();
+        List<UserUniversityRelation> userUniversityRelations = userUniversityRelationRepository.findByUser(user);
+        for(UserUniversityRelation userUniversityRelation : userUniversityRelations)
+        {
+            UniversityRegistDto universityRegistDto = new UniversityRegistDto();
+            universityRegistDto.setUniversityEnd(userUniversityRelation.getUniversityEnd());
+            universityRegistDto.setUniversityStart(userUniversityRelation.getUniversityStart());
+            universityRegistDto.setUniversityId(userUniversityRelation.getUserUniversityId());
+            universityRegistDto.setMajorId(userUniversityRelation.getMajorId());
+            universityRegistDto.setMajorName(userUniversityRelation.getMajorName());
+            universityRegistDto.setUniversityStatus(userUniversityRelation.getUniversityStatus());
+            universityRegistDto.setUniversityType(userUniversityRelation.getUniversity().getUniversityType());
+            universityRegistDtoList.add(universityRegistDto);
         }
 
         List<Experience> userExperienceList = profileUser.getExperience();
@@ -640,7 +642,7 @@ public class UserService {
         userProfileDto.setPosition2(positionDto2);
         userProfileDto.setWorkType(profileUser.getWorkType());
         userProfileDto.setUserRepresentativeProfileSentence(profileUser.getUserRepresentativeProfileSentence());
-        userProfileDto.setUserUniversity(userProfileUniversityDto);
+        userProfileDto.setUniversityRegistDtoList(universityRegistDtoList);
         userProfileDto.setExperienceList(userProfileExperienceDtoList);
         userProfileDto.setSkillsetList(userProfileSkillsetDtoList);
 
