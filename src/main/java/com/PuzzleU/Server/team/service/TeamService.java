@@ -14,6 +14,7 @@ import com.PuzzleU.Server.location.repository.LocationRepository;
 import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.position.repository.PositionRepository;
 import com.PuzzleU.Server.relations.entity.TeamLocationRelation;
+import com.PuzzleU.Server.relations.entity.TeamPositionRelation;
 import com.PuzzleU.Server.relations.entity.TeamUserRelation;
 import com.PuzzleU.Server.relations.repository.TeamLocationRelationRepository;
 import com.PuzzleU.Server.relations.repository.TeamUserRepository;
@@ -87,8 +88,14 @@ public class TeamService {
         team.setTeamStatus(teamCreateDto.getTeamStatus());
         team.setCompetition(competition);
         team.setTeamMemberNow(teamMember.size()+1);
-        team.setPositionList(positionList);
+
         teamRepository.save(team);
+        for(Position position : positionList)
+        {
+            TeamPositionRelation teamPositionRelation = new TeamPositionRelation();
+            teamPositionRelation.setPosition(position);
+            teamPositionRelation.setTeam(team);
+        }
         TeamUserRelation teamUserRelationWriter=  TeamUserRelation.builder()
                 .team(team)
                 .user(loginuser)
