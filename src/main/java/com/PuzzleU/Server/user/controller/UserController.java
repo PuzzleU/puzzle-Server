@@ -13,6 +13,7 @@ import com.PuzzleU.Server.experience.service.ExperienceService;
 import com.PuzzleU.Server.skillset.service.SkillsetService;
 import com.PuzzleU.Server.team.dto.*;
 import com.PuzzleU.Server.team.service.TeamService;
+import com.PuzzleU.Server.university.dto.UniversityRegistDto;
 import com.PuzzleU.Server.university.service.UniversityService;
 import com.PuzzleU.Server.user.dto.*;
 import com.PuzzleU.Server.user.service.UserService;
@@ -122,7 +123,7 @@ public class UserController {
     @PatchMapping("/university")
     public ApiResponseDto<SuccessResponse> createUniversity(@Valid
             @AuthenticationPrincipal UserDetails loginUser,
-            @RequestBody UserUniversityDto userUniversityDto
+            @RequestBody UniversityRegistDto userUniversityDto
             )
     {
         return universityService.createUniversity(loginUser, userUniversityDto);

@@ -5,6 +5,9 @@ import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.UniversityType;
 import com.PuzzleU.Server.major.dto.MajorSearchDto;
+import com.PuzzleU.Server.relations.entity.UserUniversityRelation;
+import com.PuzzleU.Server.relations.repository.UserUniversityRelationRepository;
+import com.PuzzleU.Server.university.dto.UniversityRegistDto;
 import com.PuzzleU.Server.university.dto.UniversitySearchDto;
 import com.PuzzleU.Server.university.dto.UniversitySearchTotalDto;
 import com.PuzzleU.Server.university.entity.University;
@@ -35,11 +38,12 @@ public class UniversityService {
     private final UserRepository userRepository;
     private final UniversityRepository universityRepository;
     private final MajorRepository majorRepository;
+    private final UserUniversityRelationRepository userUniversityRelationRepository;
 
     // 유저가 본인의 대학을 등록할 수 있는 API
     @Transactional
     public ApiResponseDto<SuccessResponse> createUniversity(
-            UserDetails loginUser, UserUniversityDto userUniversityDto
+            UserDetails loginUser, UniversityRegistDto universityRegistDto
     )
     {
         // 유저정보 저장해주고
@@ -49,21 +53,27 @@ public class UniversityService {
         // unviersityid로 id값 얻고
         // majorid로 id값 얻어서
         // 한번에 dto에 저장하고 repository에 저장
-        Optional<University>universityOptional = universityRepository.findById(userUniversityDto.getUniversityId());
+        Optional<University>universityOptional = universityRepository.findById(universityRegistDto.getUniversityId());
         University university = universityOptional.orElseThrow(()->{
             System.out.println("University not found");
             return new RestApiException(ErrorType.NOT_FOUND_UNIVERSITY);
         });
-        Optional<Major>majorOptional = majorRepository.findById(userUniversityDto.getMajorId());
+        Optional<Major>majorOptional = majorRepository.findById(universityRegistDto.getMajorId());
         Major major = majorOptional.orElseThrow(()->{
             System.out.println("Major not found");
             return new RestApiException(ErrorType.NOT_FOUND_MAJOR);
         });
-        user.setUniversity(university);
-        user.setMajor(major);
-        user.setUniversityStart(userUniversityDto.getUserUniversityStart());
-        user.setUniversityEnd(userUniversityDto.getUserUniversityEnd());
-        user.setUniversityStatus(userUniversityDto.getUniversityStatus());
+        UserUniversityRelation userUniversityRelation = new UserUniversityRelation();
+        userUniversityRelation.setUniversity(university);
+        userUniversityRelation.setUserUniversityId(university.getUniversityId());
+        userUniversityRelation.setUniversityStatus(universityRegistDto.getUniversityStatus());
+        userUniversityRelation.setUniversityEnd(universityRegistDto.getUniversityEnd());
+        userUniversityRelation.setUniversityStart(universityRegistDto.getUniversityStart());
+        userUniversityRelation.setMajor(major);
+        userUniversityRelation.setUser(user);
+        userUniversityRelationRepository.save(userUniversityRelation);
+
+
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저학력 저장완료"), null);
 
     }
