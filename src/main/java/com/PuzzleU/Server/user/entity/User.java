@@ -13,7 +13,7 @@ import com.PuzzleU.Server.profile.entity.Profile;
 import com.PuzzleU.Server.relations.entity.UserInterestRelation;
 import com.PuzzleU.Server.relations.entity.UserLocationRelation;
 import com.PuzzleU.Server.relations.entity.UserSkillsetRelation;
-import com.PuzzleU.Server.university.entity.University;
+import com.PuzzleU.Server.relations.entity.UserUniversityRelation;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -84,9 +84,12 @@ public class User {
     private String userRepresentativeProfileSentence;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="university_id")
-    private University university;
+
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<UserUniversityRelation> userUniversities = new ArrayList<>();
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="major_id")

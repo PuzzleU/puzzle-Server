@@ -4,6 +4,7 @@ import com.PuzzleU.Server.common.enumSet.BaseEntity;
 import com.PuzzleU.Server.apply.entity.Apply;
 import com.PuzzleU.Server.competition.entity.Competition;
 import com.PuzzleU.Server.position.entity.Position;
+import com.PuzzleU.Server.relations.entity.TeamPositionRelation;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -56,5 +57,5 @@ public class Team extends BaseEntity {
     private List<Apply> applyList = new ArrayList<>();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
-    private List<Position> positionList = new ArrayList<>();
+    private List<TeamPositionRelation> teamPositionRelations = new ArrayList<>();
 }
