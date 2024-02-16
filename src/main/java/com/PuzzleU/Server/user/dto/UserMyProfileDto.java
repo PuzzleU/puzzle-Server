@@ -4,6 +4,7 @@ import com.PuzzleU.Server.common.enumSet.WorkType;
 import com.PuzzleU.Server.position.dto.PositionDto;
 import com.PuzzleU.Server.profile.dto.ProfileDto;
 import com.PuzzleU.Server.profile.entity.Profile;
+import com.PuzzleU.Server.university.dto.UniversityRegistDto;
 import lombok.*;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class UserMyProfileDto {
     private PositionDto Position2;
     private WorkType WorkType;
     private String UserRepresentativeProfileSentence;
-    private UserProfileUniversityDto UserUniversity;
+    private List<UniversityRegistDto> universityRegistDtoList;
     private List<UserProfileExperienceDto> ExperienceList;
     private List<UserProfileSkillsetDto> SkillsetList;
 }

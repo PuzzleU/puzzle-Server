@@ -63,15 +63,7 @@ public class User {
 
 
     // 선택 정보
-    @Column(nullable = true)
-    @Enumerated(value = EnumType.STRING)
-    private UniversityStatus universityStatus;
 
-    @Column(nullable = true)
-    private Integer universityStart;
-
-    @Column(nullable = true)
-    private Integer universityEnd;
 
     @Column(nullable = true)
     @Enumerated(value = EnumType.STRING)

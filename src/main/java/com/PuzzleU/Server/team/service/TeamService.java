@@ -17,6 +17,7 @@ import com.PuzzleU.Server.relations.entity.TeamLocationRelation;
 import com.PuzzleU.Server.relations.entity.TeamPositionRelation;
 import com.PuzzleU.Server.relations.entity.TeamUserRelation;
 import com.PuzzleU.Server.relations.repository.TeamLocationRelationRepository;
+import com.PuzzleU.Server.relations.repository.TeamPositionRelationRepository;
 import com.PuzzleU.Server.relations.repository.TeamUserRepository;
 import com.PuzzleU.Server.team.dto.*;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
@@ -53,6 +54,7 @@ public class TeamService {
     private final TeamLocationRelationRepository teamLocationRelationRepository;
     private final PositionRepository positionRepository;
     private final ApplyRepository applyRepository;
+    private final TeamPositionRelationRepository teamPositionRelationRepository;
     // 팀 구인글을 등록하는 API
     @Transactional
     public ApiResponseDto<SuccessResponse> teamcreate(
@@ -90,12 +92,7 @@ public class TeamService {
         team.setTeamMemberNow(teamMember.size()+1);
 
         teamRepository.save(team);
-        for(Position position : positionList)
-        {
-            TeamPositionRelation teamPositionRelation = new TeamPositionRelation();
-            teamPositionRelation.setPosition(position);
-            teamPositionRelation.setTeam(team);
-        }
+
         TeamUserRelation teamUserRelationWriter=  TeamUserRelation.builder()
                 .team(team)
                 .user(loginuser)
@@ -168,7 +165,6 @@ public class TeamService {
             team.setTeamStatus(teamCreateDto.getTeamStatus());
             team.setCompetition(competition);
             team.setTeamMemberNow(teamMember.size()+1);
-            team.setPositionList(positionList);
             teamRepository.save(team);
 
             List<TeamUserRelation> existingRelations = teamUserRepository.findByTeam(team);
@@ -212,6 +208,13 @@ public class TeamService {
             teamUserRelation1.setTeam(team);
             teamUserRelation1.setIsWriter(true);
             teamUserRepository.save(teamUserRelation1);
+            for(Position position: positionList)
+            {
+                TeamPositionRelation teamPositionRelation = new TeamPositionRelation();
+                teamPositionRelation.setPosition(position);
+                teamPositionRelation.setTeam(team);
+                teamPositionRelationRepository.save(teamPositionRelation);
+            }
 
             return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 구인글 수정완료"), null);
         } else {
@@ -374,7 +377,8 @@ public class TeamService {
                 teamAbstractDto1.setTeamPoster(team2.getCompetition().getCompetitionPoster());
                 teamAbstractDto1.setTeamLocations(locationList1);
                 List<String> PositionList1 = new ArrayList<>();
-                for (Position position : team2.getPositionList()) {
+                List<Position> positionList= teamPositionRelationRepository.findByTeam(team2);
+                for (Position position : positionList) {
                     PositionList1.add(position.getPositionName());
                 }
                 teamAbstractDto1.setPositionList(PositionList1);
@@ -429,7 +433,8 @@ public class TeamService {
                     teamAbstractDto.setTeamPoster(team.getCompetition().getCompetitionPoster());
                     teamAbstractDto.setTeamLocations(locationList);
                     List<String> PositionList = new ArrayList<>();
-                    for (Position position : team.getPositionList()) {
+                    List<Position> positionList= teamPositionRelationRepository.findByTeam(team);
+                    for (Position position : positionList) {
                         PositionList.add(position.getPositionName());
                     }
                     teamAbstractDto.setPositionList(PositionList);
