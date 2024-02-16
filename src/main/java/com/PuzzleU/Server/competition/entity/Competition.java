@@ -3,6 +3,7 @@ package com.PuzzleU.Server.competition.entity;
 import com.PuzzleU.Server.common.enumSet.BaseEntity;
 import com.PuzzleU.Server.common.enumSet.CompetitionType;
 import com.PuzzleU.Server.heart.entity.Heart;
+import com.PuzzleU.Server.relations.entity.CompetitionInterestRelation;
 import com.PuzzleU.Server.team.entity.Team;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -9,7 +9,7 @@ import org.springframework.data.web.PageableDefault;
 @EnableJpaAuditing
 @EnableFeignClients
 @SpringBootApplication
-
+//d
 public class ServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ServerApplication.class, args);

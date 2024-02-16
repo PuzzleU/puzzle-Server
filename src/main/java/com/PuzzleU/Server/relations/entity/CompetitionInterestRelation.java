@@ -1,5 +1,6 @@
-package com.PuzzleU.Server.competition.entity;
+package com.PuzzleU.Server.relations.entity;
 
+import com.PuzzleU.Server.competition.entity.Competition;
 import com.PuzzleU.Server.interest.entity.Interest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
