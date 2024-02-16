@@ -69,7 +69,8 @@ public class UniversityService {
         userUniversityRelation.setUniversityStatus(universityRegistDto.getUniversityStatus());
         userUniversityRelation.setUniversityEnd(universityRegistDto.getUniversityEnd());
         userUniversityRelation.setUniversityStart(universityRegistDto.getUniversityStart());
-        userUniversityRelation.setMajor(major);
+        userUniversityRelation.setMajorId(major.getMajorId());
+        userUniversityRelation.setMajorName(major.getMajorName());
         userUniversityRelation.setUser(user);
         userUniversityRelationRepository.save(userUniversityRelation);
 

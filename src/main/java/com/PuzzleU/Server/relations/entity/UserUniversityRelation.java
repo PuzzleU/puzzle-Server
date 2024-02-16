@@ -41,7 +41,9 @@ public class UserUniversityRelation {
     @Column(nullable = true)
     private Integer universityEnd;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "major_id_index", referencedColumnName = "major_id")
-    private Major major;
+    private Long majorId;
+
+    private String majorName;
+
+
 }

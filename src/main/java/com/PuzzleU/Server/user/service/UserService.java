@@ -162,7 +162,8 @@ public class UserService {
             if (major == null) {
                 throw new RestApiException(ErrorType.NOT_FOUND_MAJOR);
             }
-            userUniversityRelation.setMajor(major);
+            userUniversityRelation.setMajorId(major.getMajorId());
+            userUniversityRelation.setMajorName(major.getMajorName());
             userUniversityRelationRepository.save(userUniversityRelation);
         }
 
@@ -441,8 +442,8 @@ public class UserService {
             universityRegistDto.setUniversityEnd(userUniversityRelation.getUniversityEnd());
             universityRegistDto.setUniversityStart(userUniversityRelation.getUniversityStart());
             universityRegistDto.setUniversityId(userUniversityRelation.getUserUniversityId());
-            universityRegistDto.setMajorId(userUniversityRelation.getMajor().getMajorId());
-            universityRegistDto.setMajorName(userUniversityRelation.getMajor().getMajorName());
+            universityRegistDto.setMajorId(userUniversityRelation.getMajorId());
+            universityRegistDto.setMajorName(userUniversityRelation.getMajorName());
             universityRegistDto.setUniversityStatus(userUniversityRelation.getUniversityStatus());
             universityRegistDto.setUniversityType(userUniversityRelation.getUniversity().getUniversityType());
             universityRegistDtoList.add(universityRegistDto);
@@ -571,8 +572,8 @@ public class UserService {
             universityRegistDto.setUniversityEnd(userUniversityRelation.getUniversityEnd());
             universityRegistDto.setUniversityStart(userUniversityRelation.getUniversityStart());
             universityRegistDto.setUniversityId(userUniversityRelation.getUserUniversityId());
-            universityRegistDto.setMajorId(userUniversityRelation.getMajor().getMajorId());
-            universityRegistDto.setMajorName(userUniversityRelation.getMajor().getMajorName());
+            universityRegistDto.setMajorId(userUniversityRelation.getMajorId());
+            universityRegistDto.setMajorName(userUniversityRelation.getMajorName());
             universityRegistDto.setUniversityStatus(userUniversityRelation.getUniversityStatus());
             universityRegistDto.setUniversityType(userUniversityRelation.getUniversity().getUniversityType());
             universityRegistDtoList.add(universityRegistDto);
