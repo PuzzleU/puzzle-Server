@@ -18,6 +18,7 @@ import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.relations.entity.TeamLocationRelation;
 import com.PuzzleU.Server.relations.entity.TeamUserRelation;
 import com.PuzzleU.Server.relations.repository.TeamLocationRelationRepository;
+import com.PuzzleU.Server.relations.repository.TeamPositionRelationRepository;
 import com.PuzzleU.Server.relations.repository.TeamUserRepository;
 import com.PuzzleU.Server.team.dto.TeamAbstractBaseDto;
 import com.PuzzleU.Server.team.dto.TeamAbstractDto;
@@ -60,6 +61,7 @@ public class CompetitionService {
     private final TeamUserRepository teamUserRepository;
     private final HeartRepository heartRepository;
     private final UserRepository userRepository;
+    private final TeamPositionRelationRepository teamPositionRelationRepository;
     private final Logger logger = LoggerFactory.getLogger(CompetitionService.class);
 
     // 공모전 전체를 볼 수 있는 데이터를 넘기는 API
@@ -204,8 +206,9 @@ public class CompetitionService {
                         teamAbstractDto.setTeamTitle(team.getTeamTitle());
                         teamAbstractDto.setTeamPoster(competition.getCompetitionPoster());
                         teamAbstractDto.setTeamLocations(locationList);
+                        List<Position> positionLists= teamPositionRelationRepository.findByTeam(team);
                         // 포지션 설정
-                        List<String> positionList = team.getPositionList().stream()
+                        List<String> positionList = positionLists.stream()
                                 .map(Position::getPositionName)
                                 .collect(Collectors.toList());
                         teamAbstractDto.setPositionList(positionList);
@@ -273,9 +276,9 @@ public class CompetitionService {
             teamSpecificDto.setTeamTitle(team.getTeamTitle());
             teamSpecificDto.setTeamPoster(competition.getCompetitionPoster());
             teamSpecificDto.setTeamLocations(locationList);
-
+            List<Position> positionList= teamPositionRelationRepository.findByTeam(team);
             // 포지션 설정
-            List<String> PositionList = team.getPositionList().stream()
+            List<String> PositionList = positionList.stream()
                     .map(Position::getPositionName)
                     .collect(Collectors.toList());
             teamSpecificDto.setPositionList(PositionList);
@@ -343,7 +346,8 @@ public class CompetitionService {
                     teamAbstractDto.setTeamPoster(team.getCompetition().getCompetitionPoster());
                     teamAbstractDto.setTeamLocations(locationList);
                     List<String> PositionList = new ArrayList<>();
-                    for(Position position : team.getPositionList())
+                    List<Position> positionList= teamPositionRelationRepository.findByTeam(team);
+                    for(Position position : positionList)
                     {
                         PositionList.add(position.getPositionName());
                     }

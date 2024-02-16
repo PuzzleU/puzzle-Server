@@ -17,9 +17,11 @@ import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.position.repository.PositionRepository;
 import com.PuzzleU.Server.relations.entity.PositionApplyRelation;
 import com.PuzzleU.Server.relations.entity.TeamLocationRelation;
+import com.PuzzleU.Server.relations.entity.TeamPositionRelation;
 import com.PuzzleU.Server.relations.entity.TeamUserRelation;
 import com.PuzzleU.Server.relations.repository.PositionApplyRelationRepository;
 import com.PuzzleU.Server.relations.repository.TeamLocationRelationRepository;
+import com.PuzzleU.Server.relations.repository.TeamPositionRelationRepository;
 import com.PuzzleU.Server.relations.repository.TeamUserRepository;
 import com.PuzzleU.Server.team.dto.ApplyTeamDto;
 import com.PuzzleU.Server.team.dto.ApplyTeamListDto;
@@ -54,6 +56,7 @@ public class ApplyService {
     private final ApplyRepository applyRepository;
     private final TeamUserRepository teamUserRepository;
     private final TeamLocationRelationRepository teamLocationRelationRepository;
+    private final TeamPositionRelationRepository teamPositionRelationRepository;
     // 팀에 대한 지원서 작성
     @Transactional
     public ApiResponseDto<SuccessResponse> postApply(UserDetails loginUser, Long teamId, ApplyPostDto applyPostDto) {
@@ -169,7 +172,9 @@ public class ApplyService {
                     teamAbstractDto.setTeamPoster(team.getCompetition().getCompetitionPoster());
                     teamAbstractDto.setTeamLocations(locationList);
                     List<String> PositionList = new ArrayList<>();
-                    for(Position position : team.getPositionList())
+                    // postition을 추가해줘야한다.
+                    List<Position> positionList= teamPositionRelationRepository.findByTeam(team);
+                    for(Position position : positionList)
                     {
                         PositionList.add(position.getPositionName());
                     }
@@ -240,7 +245,8 @@ public class ApplyService {
                 teamAbstractDto1.setTeamPoster(team2.getCompetition().getCompetitionPoster());
                 teamAbstractDto1.setTeamLocations(locationList1);
                 List<String> PositionList1 = new ArrayList<>();
-                for (Position position : team2.getPositionList()) {
+                List<Position> positionList= teamPositionRelationRepository.findByTeam(team2);
+                for (Position position : positionList) {
                     PositionList1.add(position.getPositionName());
                 }
                 teamAbstractDto1.setPositionList(PositionList1);
