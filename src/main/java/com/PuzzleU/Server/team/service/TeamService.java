@@ -566,4 +566,41 @@ public class TeamService {
 
         return ResponseUtils.ok(teamApplyListDto, null);
     }
+
+    // 대기중인 지원자 수락/거절
+    // 로그인한 유저가 모집 공고의 작성자여야 수락/거절 가능
+    public ApiResponseDto<SuccessResponse> applyAcceptOrReject(UserDetails loginUser, Long teamId, Long applyId, AcceptOrRejectRequestDto acceptOrRejectDto) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        Team team = teamRepository.findByTeamId(teamId)
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_TEAM));
+
+        TeamUserRelation teamUserRelation = teamUserRepository.findByUserAndTeam(user, team)
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_RELATION));
+
+        Apply apply = applyRepository.findByApplyId(applyId)
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_APPLY));
+
+        // 로그인한 유저가 모집 공고의 작성자여야 수락/거절 가능
+        if (teamUserRelation.getIsWriter() == false) {
+            throw new RestApiException(ErrorType.NO_PERMISSION_TO_ACCEPT_APPLY);
+        }
+
+        if (acceptOrRejectDto.getAcceptOrReject().equals("ACCEPT")) {
+            apply.setApplyStatus(ApplyStatus.ACCEPTED);
+            applyRepository.save(apply);
+
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 수락 완료"), null);
+        }
+        else if (acceptOrRejectDto.getAcceptOrReject().equals("REJECT")) {
+            apply.setApplyStatus(ApplyStatus.REJECTED);
+            applyRepository.save(apply);
+
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 거절 완료"), null);
+        }
+        else {
+            throw new RestApiException(ErrorType.NOT_MATCH_ACCEPT_REJECT);
+        }
+    }
 }

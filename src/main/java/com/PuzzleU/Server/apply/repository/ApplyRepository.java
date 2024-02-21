@@ -20,13 +20,13 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     List<Team> findByUser(User user, org.springframework.data.domain.Pageable pageable);
     @Query("SELECT a.team FROM Apply a WHERE a.user = :user AND a.applyStatus = 'WAITING'")
     List<Team> findByUserAndApplyStatusIsWaiting(User user, org.springframework.data.domain.Pageable pageable);
-    @Query("SELECT a.team FROM Apply a WHERE a.user = :user AND a.applyStatus = 'FINISHED'")
+    @Query("SELECT a.team FROM Apply a WHERE a.user = :user AND (a.applyStatus = 'ACCEPTED' OR a.applyStatus = 'REJECTED')")
     List<Team> findByUserAndApplyStatusIsFinished(User user, org.springframework.data.domain.Pageable pageable);
 
     @Query("SELECT DISTINCT a.team FROM Apply a WHERE a.user = :user AND a.applyStatus = 'WAITING'")
     List<Team> findFirstByUserAndApplyStatusIsWaitingOne(User user);
 
-    @Query("SELECT DISTINCT a.team FROM Apply a WHERE a.user = :user AND a.applyStatus = 'FINISHED'")
+    @Query("SELECT DISTINCT a.team FROM Apply a WHERE a.user = :user AND (a.applyStatus = 'ACCEPTED' OR a.applyStatus = 'REJECTED')")
     List<Team> findFirstByUserAndApplyStatusIsFinishedOne(User user);
 
     Optional<Apply> findByUserAndTeam(User user, Team team);

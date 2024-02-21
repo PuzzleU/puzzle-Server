@@ -4,13 +4,12 @@ import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.competition.dto.CompetitionSearchTotalDto;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
+import com.PuzzleU.Server.team.dto.AcceptOrRejectRequestDto;
 import com.PuzzleU.Server.team.dto.TeamApplyListDto;
 import com.PuzzleU.Server.team.dto.TeamCreateDto;
 import com.PuzzleU.Server.team.service.TeamService;
-import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.service.UserService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -78,5 +77,13 @@ public class TeamController {
         return teamService.readTeamApplyList(loginUser, teamId);
     }
 
+    @PatchMapping("{teamId}/apply/{applyId}")
+    public ApiResponseDto<SuccessResponse> applyAcceptOrReject(
+            @AuthenticationPrincipal UserDetails loginUser,
+            @PathVariable Long teamId,
+            @PathVariable Long applyId,
+            @RequestBody AcceptOrRejectRequestDto acceptOrRejectDto) {
+        return teamService.applyAcceptOrReject(loginUser, teamId, applyId, acceptOrRejectDto);
+    }
 
 }
