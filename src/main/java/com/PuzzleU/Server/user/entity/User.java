@@ -1,7 +1,6 @@
 package com.PuzzleU.Server.user.entity;
 
 import com.PuzzleU.Server.apply.entity.Apply;
-import com.PuzzleU.Server.common.enumSet.UniversityStatus;
 import com.PuzzleU.Server.common.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.common.enumSet.WorkType;
 import com.PuzzleU.Server.experience.entity.Experience;
@@ -10,12 +9,13 @@ import com.PuzzleU.Server.heart.entity.Heart;
 import com.PuzzleU.Server.major.entity.Major;
 import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.profile.entity.Profile;
-import com.PuzzleU.Server.relations.entity.UserInterestRelation;
-import com.PuzzleU.Server.relations.entity.UserLocationRelation;
-import com.PuzzleU.Server.relations.entity.UserSkillsetRelation;
-import com.PuzzleU.Server.relations.entity.UserUniversityRelation;
+import com.PuzzleU.Server.relations.entity.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,14 +49,17 @@ public class User {
     @Column(nullable = true, length = 6)
     private String userKoreaName;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_profile_id",nullable = true)
     private Profile userProfile;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_position_id1")
     private Position userPosition1;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_position_id2")
     private Position userPosition2;
@@ -78,39 +81,51 @@ public class User {
 
 
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserUniversityRelation> userUniversities = new ArrayList<>();
 
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="major_id")
     private Major major;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserInterestRelation> userInterestRelations = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<UserLocationRelation> userLocationRelations = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<UserSkillsetRelation> userSkillsetRelations = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<Experience> experience = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user1",cascade = CascadeType.REMOVE)
     private List<FriendShip> friendShip1 = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user2",cascade = CascadeType.REMOVE)
     private List<FriendShip> friendShip2 = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<Heart> hearts = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Apply> applies = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<TeamUserRelation> teamUserRelations = new ArrayList<>();
+
     @Builder
     public User(
             Long id,

@@ -1,6 +1,6 @@
 package com.PuzzleU.Server.apply.dto;
 
-import com.PuzzleU.Server.profile.entity.Profile;
+import com.PuzzleU.Server.profile.dto.ProfileDto;
 import lombok.*;
 
 @Getter
@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class UserApplyDto {
     private Long UserId;
-    private Profile UserProfile;
+    private ProfileDto UserProfile;
     private String UserKoreaName;
     private String UserRepresentativeProfileSentence;
 

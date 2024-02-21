@@ -1,5 +1,8 @@
 package com.PuzzleU.Server.common.api;
 
+import lombok.Getter;
+
+@Getter
 public class ResponseUtils {
     //d
     // 요청 성공인 경우

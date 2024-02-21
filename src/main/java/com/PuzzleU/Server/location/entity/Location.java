@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.location.entity;
 
 import com.PuzzleU.Server.relations.entity.UserLocationRelation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +25,8 @@ public class Location {
     @Column(name = "location_name")
     private String locationName;
 
-    @OneToMany(mappedBy = "location",cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    @OneToMany(mappedBy = "location", cascade = CascadeType.REMOVE)
     private List<UserLocationRelation> userLocationRelation = new ArrayList<>();
 
 }

@@ -5,6 +5,7 @@ import com.PuzzleU.Server.common.enumSet.CompetitionType;
 import com.PuzzleU.Server.heart.entity.Heart;
 import com.PuzzleU.Server.relations.entity.CompetitionInterestRelation;
 import com.PuzzleU.Server.team.entity.Team;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -71,13 +72,15 @@ public class Competition extends BaseEntity {
     @Column(name = "competition_type")
     private List<CompetitionType> competitionTypes;
 
-
-    @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL)
     private List<Team> team = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL)
     private List<Heart> heart = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "competition", cascade = CascadeType.REMOVE)
     private List<CompetitionInterestRelation> competitionInterestRelations = new ArrayList<>();
 

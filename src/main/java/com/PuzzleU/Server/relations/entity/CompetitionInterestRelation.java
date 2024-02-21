@@ -2,6 +2,7 @@ package com.PuzzleU.Server.relations.entity;
 
 import com.PuzzleU.Server.competition.entity.Competition;
 import com.PuzzleU.Server.interest.entity.Interest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,12 +21,14 @@ public class CompetitionInterestRelation {
     private Long competitionInterestRelationId;
 
     // 의존 관계 매핑 (Competition)
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competition_id")
     private Competition competition;
 
     // 의존관계 매핑 (Interest)
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interest_id")
     private Interest interest;
 }

@@ -12,7 +12,8 @@ import java.util.List;
 @Repository
 public interface TeamPositionRelationRepository extends JpaRepository<TeamPositionRelation, Long> {
 
-    @Query("SELECT t FROM TeamPositionRelation t WHERE t.team =:team")
+    @Query("SELECT t.position FROM TeamPositionRelation t WHERE t.team =:team")
+
     List<Position>findByTeam(Team team);
 
 }

@@ -3,6 +3,7 @@ package com.PuzzleU.Server.university.entity;
 import com.PuzzleU.Server.common.enumSet.UniversityType;
 import com.PuzzleU.Server.major.entity.Major;
 import com.PuzzleU.Server.relations.entity.UserUniversityRelation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,9 +30,11 @@ public class University {
     @Column(length = 15)
     private String universityName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "university",cascade = CascadeType.REMOVE)
     private List<Major> major = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "university", cascade = CascadeType.REMOVE)
     private List<UserUniversityRelation> userUniversities = new ArrayList<>();
 }

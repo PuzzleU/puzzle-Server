@@ -2,6 +2,7 @@ package com.PuzzleU.Server.experience.entity;
 
 import com.PuzzleU.Server.common.enumSet.ExperienceType;
 import com.PuzzleU.Server.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,7 +42,8 @@ public class Experience {
 
     //de
     // 의존 관계 매핑 (User)
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

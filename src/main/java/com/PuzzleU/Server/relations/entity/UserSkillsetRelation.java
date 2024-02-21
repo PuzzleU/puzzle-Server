@@ -3,6 +3,7 @@ package com.PuzzleU.Server.relations.entity;
 import com.PuzzleU.Server.common.enumSet.Level;
 import com.PuzzleU.Server.skillset.entity.Skillset;
 import com.PuzzleU.Server.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,11 +26,13 @@ public class UserSkillsetRelation {
     private Level level;
 
     // 의존 관계 매핑 (User)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private User user;
 
     // 의존관계 매핑 (Skillset)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skillset_id")
     private Skillset skillset;

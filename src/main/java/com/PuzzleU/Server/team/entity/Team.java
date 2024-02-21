@@ -1,12 +1,17 @@
 package com.PuzzleU.Server.team.entity;
 
-import com.PuzzleU.Server.common.enumSet.BaseEntity;
 import com.PuzzleU.Server.apply.entity.Apply;
+import com.PuzzleU.Server.common.enumSet.BaseEntity;
 import com.PuzzleU.Server.competition.entity.Competition;
-import com.PuzzleU.Server.position.entity.Position;
+import com.PuzzleU.Server.relations.entity.TeamLocationRelation;
 import com.PuzzleU.Server.relations.entity.TeamPositionRelation;
+import com.PuzzleU.Server.relations.entity.TeamUserRelation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
@@ -49,13 +54,24 @@ public class Team extends BaseEntity {
     @Column(name = "team_status",nullable = true)
     private Boolean teamStatus;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "competition_id")
     private Competition competition;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
     private List<Apply> applyList = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
     private List<TeamPositionRelation> teamPositionRelations = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
+    private List<TeamLocationRelation> teamLocationRelations = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
+    private List<TeamUserRelation> teamUserRelations = new ArrayList<>();
 }

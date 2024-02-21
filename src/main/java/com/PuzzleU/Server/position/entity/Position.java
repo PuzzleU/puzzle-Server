@@ -1,8 +1,8 @@
 package com.PuzzleU.Server.position.entity;
 
 import com.PuzzleU.Server.relations.entity.TeamPositionRelation;
-import com.PuzzleU.Server.team.entity.Team;
 import com.PuzzleU.Server.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,12 +26,15 @@ public class Position {
     @Column(name = "position_name", length = 10)
     private String positionName; // 포지션 이름
 
+    @JsonIgnore
     @OneToMany(mappedBy = "userPosition1")
     private List<User> userList1 = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "userPosition2")
     private List<User> userList2 = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "position", cascade = CascadeType.REMOVE)
     private List<TeamPositionRelation> teamPositionRelations;
 }
