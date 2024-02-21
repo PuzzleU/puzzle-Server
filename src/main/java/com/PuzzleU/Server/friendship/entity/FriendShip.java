@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.friendship.entity;
 
 import com.PuzzleU.Server.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,11 +21,12 @@ public class FriendShip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long friendShipId;
 
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users1")
     private User user1;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users2")
     private User user2;

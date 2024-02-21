@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
+@Getter
 public class KakaoUserInfoDto {
     private String kakaoId;
     private String nickname;

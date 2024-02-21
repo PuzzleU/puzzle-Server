@@ -2,6 +2,7 @@ package com.PuzzleU.Server.relations.entity;
 
 import com.PuzzleU.Server.team.entity.Team;
 import com.PuzzleU.Server.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,12 @@ public class TeamUserRelation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teamUserRelationId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private User user;

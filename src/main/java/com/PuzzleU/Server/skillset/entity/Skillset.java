@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.skillset.entity;
 
 import com.PuzzleU.Server.relations.entity.UserSkillsetRelation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class Skillset {
     @Column(length = 200)
     private String skillsetLogo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "skillset",cascade = CascadeType.REMOVE)
     private List<UserSkillsetRelation> userSkillsetRelation = new ArrayList<>();
     //

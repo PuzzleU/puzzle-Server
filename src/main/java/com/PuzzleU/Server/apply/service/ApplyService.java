@@ -123,6 +123,7 @@ public class ApplyService {
 
         return ResponseUtils.ok(applyDetailDto, null);
     }
+
     // type에 따라 내가 지원한 팀들을 볼 수 있는 기능
     @Transactional
     public ApiResponseDto<ApplyTeamListDto> getApplyType(UserDetails loginUser, int pageNo, int pageSize, String sortBy, String type) {

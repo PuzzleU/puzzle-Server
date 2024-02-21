@@ -3,6 +3,7 @@ package com.PuzzleU.Server.interest.entity;
 import com.PuzzleU.Server.common.enumSet.InterestTypes;
 import com.PuzzleU.Server.relations.entity.CompetitionInterestRelation;
 import com.PuzzleU.Server.relations.entity.UserInterestRelation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -30,9 +31,11 @@ public class Interest {
     @Enumerated(value = EnumType.STRING)
     private InterestTypes interestType;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "interest", cascade = CascadeType.REMOVE)
     private List<UserInterestRelation> userInterestRelation = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "interest", cascade = CascadeType.REMOVE)
     private List<CompetitionInterestRelation> competitionInterestRelations = new ArrayList<>();
 }

@@ -1,7 +1,7 @@
 package com.PuzzleU.Server.major.entity;
 
-import com.PuzzleU.Server.relations.entity.UserUniversityRelation;
 import com.PuzzleU.Server.university.entity.University;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +23,7 @@ public class Major {
     private String majorName; // 전공 이름
 
     // 의존 관계 매핑 (University)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "university_id")
     private University university;

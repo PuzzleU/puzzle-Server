@@ -3,6 +3,7 @@ package com.PuzzleU.Server.apply.entity;
 import com.PuzzleU.Server.common.enumSet.ApplyStatus;
 import com.PuzzleU.Server.team.entity.Team;
 import com.PuzzleU.Server.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -30,10 +31,12 @@ public class Apply {
 
     // 의존 관계 매핑 (Team)
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "team_id")
     private Team team;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "user")
     private User user;
 }

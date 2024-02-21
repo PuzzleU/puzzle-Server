@@ -2,6 +2,7 @@ package com.PuzzleU.Server.relations.entity;
 
 import com.PuzzleU.Server.interest.entity.Interest;
 import com.PuzzleU.Server.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,11 +20,13 @@ public class UserInterestRelation {
     private Long userInterestRelationId;
 
     // 의존 관계 매핑 (User)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private User user;
 
     // 의존관계 매핑 (Interest)
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interest_id")
     private Interest interest;
