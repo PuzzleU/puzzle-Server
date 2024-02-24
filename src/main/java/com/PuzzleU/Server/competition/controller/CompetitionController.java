@@ -7,6 +7,7 @@ import com.PuzzleU.Server.competition.dto.CompetitionSearchTotalDto;
 import com.PuzzleU.Server.competition.dto.CompetitionSpecificDto;
 import com.PuzzleU.Server.common.enumSet.CompetitionType;
 import com.PuzzleU.Server.competition.service.CompetitionService;
+import com.PuzzleU.Server.heart.Service.HeartService;
 import com.PuzzleU.Server.team.dto.TeamListDto;
 import com.PuzzleU.Server.team.dto.TeamSpecificDto;
 import com.PuzzleU.Server.team.service.TeamService;
@@ -29,6 +30,7 @@ public class CompetitionController {
     private final CompetitionService competitionService;
     private final TeamService teamService;
     private final UserService userService;
+    private final HeartService heartService;
 
     @GetMapping("/homepage")
     public ApiResponseDto<CompetitionHomeTotalDto> homepage(
@@ -53,12 +55,12 @@ public class CompetitionController {
     @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
     @RequestParam(value = "sortBy", defaultValue = "teamId", required = false) String sortBy)
     {
-        return competitionService.getTeamList(competition_id, pageNo, pageSize, sortBy);
+        return teamService.getTeamList(competition_id, pageNo, pageSize, sortBy);
     }
     @GetMapping("/homepage/{competition_id}/team/{team_id}")
     public ApiResponseDto<TeamSpecificDto> teamSpecific(@Valid @PathVariable Long competition_id, @PathVariable Long team_id)
     {
-        return competitionService.getTeamSpecific(competition_id, team_id);
+        return teamService.getTeamSpecific(competition_id, team_id);
     }
     @GetMapping("/homepage/team")
     public ApiResponseDto<TeamListDto> teamSearch(@Valid
@@ -67,7 +69,7 @@ public class CompetitionController {
                                                 @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
                                                 @RequestParam(value = "sortBy", defaultValue = "teamId", required = false) String sortBy)
     {
-        return competitionService.getTeamSearchList(pageNo, pageSize, sortBy,search);
+        return teamService.getTeamSearchList(pageNo, pageSize, sortBy,search);
     }
     @GetMapping("/homepage/competition")
     public ApiResponseDto<CompetitionSearchTotalDto> competitionSearch(@Valid
@@ -93,14 +95,15 @@ public class CompetitionController {
     @AuthenticationPrincipal UserDetails loginUser,
     @PathVariable Long competition_id)
     {
-        return competitionService.heartCreate(loginUser, competition_id);
+        return heartService.heartCreate(loginUser, competition_id);
     }
     @DeleteMapping("/homepage/{competition_id}")
     public ApiResponseDto<SuccessResponse> heartDelete(@Valid
+
                                                        @AuthenticationPrincipal UserDetails loginUser,
                                                        @PathVariable Long competition_id)
     {
-        return competitionService.heartDelete(loginUser, competition_id);
+        return heartService.heartDelete(loginUser, competition_id);
     }
 
 
