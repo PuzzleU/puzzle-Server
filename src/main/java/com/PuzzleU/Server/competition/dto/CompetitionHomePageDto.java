@@ -21,6 +21,7 @@ public class CompetitionHomePageDto {
     private List<CompetitionType> competitionTypeList;
     private Integer CompetitionDday;
     private String createdAt;
-
+    private Integer competitionHeart;
+    private String competitionPoster;
 
 }

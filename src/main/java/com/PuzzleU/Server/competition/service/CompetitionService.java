@@ -108,11 +108,14 @@ public class CompetitionService {
         }
         //LocalDate now = LocalDate.now();
 
-
         List<CompetitionHomePageDto> competitionHomePageDtos = competitionPage.getContent().stream()
                 .map(competition -> {
 
+                    Integer heartNumber = (heartRepository.findByCompetition(competition.getCompetitionId())).size();
+
                     CompetitionHomePageDto competitionHomePageDto = new CompetitionHomePageDto();
+                    competitionHomePageDto.setCompetitionHeart(heartNumber);
+                    competitionHomePageDto.setCompetitionPoster(competition.getCompetitionPoster());
                     competitionHomePageDto.setCompetitionId(competition.getCompetitionId());
                     competitionHomePageDto.setCompetitionDday(competition.getCompetitionDDay());
                     competitionHomePageDto.setCompetitionName(competition.getCompetitionName());
@@ -417,7 +420,6 @@ public class CompetitionService {
     public void updateCompetitionDday() {
         List<Competition> competitions = competitionRepository.findAll();
         LocalDateTime today = LocalDateTime.now();
-
         for (Competition competition : competitions) {
             LocalDateTime competitionEnd = competition.getCompetitionEnd();
             if (competitionEnd != null) {
