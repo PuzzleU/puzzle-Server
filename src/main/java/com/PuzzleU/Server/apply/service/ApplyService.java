@@ -65,6 +65,13 @@ public class ApplyService {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
 
+        List<Apply> applyList = user.getApplies();
+        for (Apply a : applyList) {
+            if (a.getTeam() == team) {
+                throw new RestApiException(ErrorType.ALREADY_SUBMIT_APPLY);
+            }
+        }
+
         Apply apply = Apply.builder()
                 .applyTitle(applyPostDto.getApplyTitle())
                 .applyContent(applyPostDto.getApplyContent())

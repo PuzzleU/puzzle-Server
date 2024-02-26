@@ -46,7 +46,8 @@ public enum ErrorType {
     NO_PERMISSION_TO_APPLICATION_LIST(403, "지원서 리스트를 열람할 권한이 없습니다."),
     NO_PERMISSION_TO_APPLICATION(403, "지원서를 열람할 권한이 없습니다."),
     NOT_MATCH_ACCEPT_REJECT(400, "요청값을 확인하세요. ACCEPT 또는 REJECT로만 요청 가능합니다."),
-    NO_PERMISSION_TO_ACCEPT_APPLY(403, "지원서를 수락 또는 거절할 권한이 없습니다.");
+    NO_PERMISSION_TO_ACCEPT_APPLY(403, "지원서를 수락 또는 거절할 권한이 없습니다."),
+    ALREADY_SUBMIT_APPLY(400, "이미 지원서를 제출했습니다. 한 팀 당 하나의 지원서만 제출 가능합니다.");
 
 
     private int code;
