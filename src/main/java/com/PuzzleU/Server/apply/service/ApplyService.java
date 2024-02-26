@@ -91,12 +91,25 @@ public class ApplyService {
 
     // 지원서 상세
     @Transactional
-    public ApiResponseDto<ApplyDetailDto> applyDetail(Long applyId) {
+    public ApiResponseDto<ApplyDetailDto> applyDetail(UserDetails loginUser, Long applyId) {
 
         Apply apply = applyRepository.findByApplyId(applyId)
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_APPLY));
 
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+
+
         Team team = apply.getTeam();
+
+        TeamUserRelation teamUserRelation = teamUserRepository.findByUserAndTeam(user, team)
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_RELATION));
+
+        // 로그인한 유저가 모집 공고의 작성자여야 지원서 상세 열람 가능
+        if (teamUserRelation.getIsWriter() == false) {
+            throw new RestApiException(ErrorType.NO_PERMISSION_TO_APPLICATION);
+        }
 
         Competition competition  = team.getCompetition();
 
