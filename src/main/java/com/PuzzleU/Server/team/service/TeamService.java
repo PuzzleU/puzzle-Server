@@ -555,8 +555,6 @@ public class TeamService {
                 userApplyDtoList.add(userApplyDto);
 
                 System.out.println(apply.getApplyTitle());
-
-
             }
         }
 
