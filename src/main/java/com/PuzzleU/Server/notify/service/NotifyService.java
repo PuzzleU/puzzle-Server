@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.notify.service;
 
 import com.PuzzleU.Server.common.enumSet.NotificationType;
+import com.PuzzleU.Server.notify.dto.NotifyDto;
 import com.PuzzleU.Server.notify.entity.Notify;
 import com.PuzzleU.Server.notify.repository.EmitterRepository;
 import com.PuzzleU.Server.notify.repository.NotifyRepository;
@@ -85,12 +86,12 @@ public class NotifyService {
     {
         Notify notification = notifyRepository.save(createNotification(receiver,notificationType,content,url));
 
-        String receiverEmail = receiver.getEmail()
+        String receiverEmail = receiver.getEmail();
 
         String eventId = receiverEmail + "_" + System.currentTimeMillis();
         Map<String, SseEmitter>emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverEmail);
         emitters.forEach(
-                (key, emitters) -> {
+                (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
                     sendNotification(emitter, eventId, key, NotifyDto.Response.createResponse(notification));
                 }
