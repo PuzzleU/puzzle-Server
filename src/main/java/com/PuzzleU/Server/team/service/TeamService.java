@@ -82,6 +82,13 @@ public class TeamService {
         Competition competition = competitionOptional.orElseThrow(
                 () -> new RestApiException(ErrorType.NOT_FOUND_COMPETITION)
         );
+
+        Optional<TeamUserRelation> teamCheckOptional = teamUserRepository.findByUserAndCompetitionExist(loginuser, competition);
+        System.out.println(teamCheckOptional);
+        if (teamCheckOptional.isPresent()) {
+            throw new RestApiException(ErrorType.ALREADY_REGISTERED);
+        }
+
         List<Position> positionList = new ArrayList<>();
         for (Long positionId : positions) {
             Optional<Position> positionOptional = positionRepository.findById(positionId);

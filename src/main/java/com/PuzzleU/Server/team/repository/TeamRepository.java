@@ -21,6 +21,9 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     Optional<Team> findByTeamId(Long teamId);
 
-    @Query("SELECT t FROM Team t where t.teamId =:teamId and t.competition.competitionId =:competitionId")
-    Optional<Team> findByTeamIdAndCompetitionId(Long teamId, Long competitionId);
+    @Query("SELECT t FROM Team t WHERE t.competition.competitionId =:CompetitionId and t.teamId =:teamId")
+    Optional<Team> findByTeamIdAndCompetitionId(Long teamId, Long CompetitionId);
+
+
+
 }

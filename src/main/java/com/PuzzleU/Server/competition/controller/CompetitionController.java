@@ -116,7 +116,7 @@ public class CompetitionController {
     {
         return heartService.heartDelete(loginUser, competition_id);
     }
-    @PostMapping("/hompage/{competition_id}")
+    @PostMapping("/homepage/{competition_id}")
     public ApiResponseDto<SuccessResponse> teamCreate(@Valid @RequestBody TeamCreateDto teamCreateDto
             ,@PathVariable Long competition_id,
                                                       @RequestParam List<Long> teamMember,
@@ -125,7 +125,7 @@ public class CompetitionController {
                                                       @RequestParam List<Long> locations) {
         return teamService.teamcreate(teamCreateDto, competition_id, teamMember,loginUser,locations, positions);
     }
-    @PatchMapping("/hompage/{competition_id}/{teamId}")
+    @PatchMapping("/homepage/{competition_id}/{teamId}")
     public ApiResponseDto<SuccessResponse> teamUpdate(@Valid @RequestBody TeamCreateDto teamCreateDto
             ,@PathVariable Long competition_id,
                                                       @RequestParam List<Long> teamMember,
