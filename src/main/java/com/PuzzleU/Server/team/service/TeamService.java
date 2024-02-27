@@ -534,7 +534,7 @@ public class TeamService {
         List<Apply> applyList = team.getApplyList();
         List<UserApplyDto> userApplyDtoList = new ArrayList<>();
         for (Apply apply : applyList) {
-            if (apply.getApplyStatus() == ApplyStatus.WAITING) { // 대기 중인 지원서만 가져옴
+            if (apply.getApplyStatus() != ApplyStatus.CANCEL) { // 취소된 지원서는 받아오지 않음
                 User applyUser = apply.getUser();
                 Profile userProfile = applyUser.getUserProfile();
 
@@ -550,12 +550,11 @@ public class TeamService {
 
                 userApplyDto.setApplyId(apply.getApplyId());
                 userApplyDto.setApplyTitle(apply.getApplyTitle());
+                userApplyDto.setApplyStatus(apply.getApplyStatus());
 
                 userApplyDtoList.add(userApplyDto);
 
                 System.out.println(apply.getApplyTitle());
-
-
             }
         }
 
