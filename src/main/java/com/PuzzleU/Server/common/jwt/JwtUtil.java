@@ -36,7 +36,7 @@ public class JwtUtil {
     // 60 더 곱했습니다
     private static final long TOKEN_TIME = 60*60*60 * 60 * 1000L;
 
-    @Value("${jwt.secret.key}")
+    @Value("${JWT_TOKEN}")
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
