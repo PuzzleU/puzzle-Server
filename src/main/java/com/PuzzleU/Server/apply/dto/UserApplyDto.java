@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.apply.dto;
 
+import com.PuzzleU.Server.common.enumSet.ApplyStatus;
 import com.PuzzleU.Server.profile.dto.ProfileDto;
 import lombok.*;
 
@@ -16,4 +17,5 @@ public class UserApplyDto {
 
     private Long ApplyId;
     private String ApplyTitle;
+    private ApplyStatus applyStatus;
 }
