@@ -153,7 +153,10 @@ public class UserService {
             userUniversityRelation.setUser(user);
             userUniversityRelation.setUniversityEnd(universityRegistDtoEach.getUniversityEnd());
             userUniversityRelation.setUniversityStart(universityRegistDtoEach.getUniversityStart());
-            userUniversityRelation.setUniversityStatus(universityRegistDtoEach.getUniversityStatus());
+            if (universityRegistDtoEach.getUniversityEnd() < universityRegistDtoEach.getUniversityStart())
+            {
+                throw new RestApiException(ErrorType.NOT_ALLOWED_YEAR);
+            }userUniversityRelation.setUniversityStatus(universityRegistDtoEach.getUniversityStatus());
             Optional<Major> optionalMajor = Optional.empty();
             if (universityRegistDtoEach.getMajorId() != null) {
                 optionalMajor = majorRepository.findById(universityRegistDtoEach.getMajorId());
