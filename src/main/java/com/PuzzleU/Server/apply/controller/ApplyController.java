@@ -25,7 +25,7 @@ public class ApplyController {
     }
 
     @GetMapping("/{applyId}")
-    public ApiResponseDto<ApplyDetailDto> applyDetail(@PathVariable Long applyId) {
-        return applyService.applyDetail(applyId);
+    public ApiResponseDto<ApplyDetailDto> applyDetail(@AuthenticationPrincipal UserDetails loginUser, @PathVariable Long applyId) {
+        return applyService.applyDetail(loginUser, applyId);
     }
 }
