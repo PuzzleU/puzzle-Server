@@ -7,6 +7,7 @@ import com.PuzzleU.Server.competition.dto.CompetitionSearchTotalDto;
 import com.PuzzleU.Server.competition.dto.CompetitionSpecificDto;
 import com.PuzzleU.Server.common.enumSet.CompetitionType;
 import com.PuzzleU.Server.competition.service.CompetitionService;
+import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.heart.Service.HeartService;
 import com.PuzzleU.Server.team.dto.TeamCreateDto;
 import com.PuzzleU.Server.team.dto.TeamListDto;
@@ -107,7 +108,7 @@ public class CompetitionController {
         return heartService.heartCreate(loginUser, competition_id);
     }
     // 공모전 좋아요 취소
-    @DeleteMapping("/homepage/{competition_id}/heartg")
+    @DeleteMapping("/homepage/{competition_id}/heart")
     public ApiResponseDto<SuccessResponse> heartDelete(@Valid
 
                                                        @AuthenticationPrincipal UserDetails loginUser,
@@ -117,12 +118,51 @@ public class CompetitionController {
     }
     @PostMapping("/hompage/{competition_id}")
     public ApiResponseDto<SuccessResponse> teamCreate(@Valid @RequestBody TeamCreateDto teamCreateDto
-            ,@RequestParam Long competitionId,
+            ,@PathVariable Long competition_id,
                                                       @RequestParam List<Long> teamMember,
                                                       @AuthenticationPrincipal UserDetails loginUser,
                                                       @RequestParam List<Long> positions,
                                                       @RequestParam List<Long> locations) {
-        return teamService.teamcreate(teamCreateDto, competitionId, teamMember,loginUser,locations, positions);
+        return teamService.teamcreate(teamCreateDto, competition_id, teamMember,loginUser,locations, positions);
+    }
+    @PatchMapping("/hompage/{competition_id}/{teamId}")
+    public ApiResponseDto<SuccessResponse> teamUpdate(@Valid @RequestBody TeamCreateDto teamCreateDto
+            ,@PathVariable Long competition_id,
+                                                      @RequestParam List<Long> teamMember,
+                                                      @AuthenticationPrincipal UserDetails loginUser,
+                                                      @RequestParam List<Long> locations,
+                                                      @RequestParam List<Long> positions,
+                                                      @PathVariable Long teamId) {
+        return teamService.teamUpdate(teamCreateDto, competition_id, teamMember,loginUser,locations, positions, teamId);
+    }
+    @DeleteMapping("/hompage/{competition_id}/{teamId}")
+    public ApiResponseDto<SuccessResponse> teamDelete(@Valid
+                                                      @PathVariable Long teamId,
+                                                      @PathVariable Long competition_id,
+                                                      @AuthenticationPrincipal UserDetails loginUser
+    ) {
+        return teamService.teamdelete(teamId,loginUser, competition_id);
+    }
+    @GetMapping("/homepage/{competition_id}/competition")
+    public ApiResponseDto<CompetitionSearchTotalDto> competitionTeamSearch(@Valid
+    @PathVariable Long competition_id,
+                                                                       @RequestParam(value = "search", defaultValue = "None", required = false) String keyword,
+                                                                       @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                                                       @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+                                                                       @RequestParam(value = "sortBy", defaultValue = "competitionId", required = false) String sortBy)
+    {
+        return teamService.competitionTeamSearch(pageNo,pageSize, sortBy, keyword);
+    }
+    @GetMapping("/homepage/{competition_id}/member")
+    public ApiResponseDto<FriendShipSearchResponseDto> memberSearch(
+            @Valid
+            @RequestParam(value = "search", defaultValue = "None", required = false) String keyword,
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "6", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "friend_ship_id", required = false) String sortBy,
+            @AuthenticationPrincipal UserDetails loginUser)
+    {
+        return teamService.getfriendRegister(keyword, loginUser,pageNo,pageSize, sortBy);
     }
 
 

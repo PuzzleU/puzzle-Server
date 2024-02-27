@@ -232,13 +232,14 @@ public class TeamService {
     @Transactional
     public ApiResponseDto<SuccessResponse> teamdelete(
             Long teamId,
-            UserDetails loginUser
+            UserDetails loginUser,
+            Long competitionId
     ) {
         System.out.println(loginUser);
         User user = userRepository.findByUsername(loginUser.getUsername()).orElseThrow(
                 () -> new RestApiException(ErrorType.NOT_FOUND_USER)
         );
-        Optional<Team> teamOptional = teamRepository.findById(teamId);
+        Optional<Team> teamOptional = teamRepository.findByTeamIdAndCompetitionId(teamId, competitionId);
         Team team = teamOptional.orElseThrow(() ->
                 new RestApiException(ErrorType.NOT_FOUND_TEAM));
 
@@ -261,7 +262,7 @@ public class TeamService {
 
     // 공모전 팀 등록시 공모전검색을 해서 값을 가져오는 API
     @Transactional
-    public ApiResponseDto<CompetitionSearchTotalDto> competitionTeamSearch(int pageNo, int pageSize, String sortBy, String keyword) {
+    public ApiResponseDto<CompetitionSearchTotalDto> competitionTeamSearch( int pageNo, int pageSize, String sortBy, String keyword) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
         Page<Competition> competitionPage;
         competitionPage = new PageImpl<>(competitionRepository.findByCompetitionName(keyword, pageable));
@@ -283,6 +284,7 @@ public class TeamService {
 
         return ResponseUtils.ok(competitionSearchTotalDto, null);
     }
+
 
 
     // 유저 정보 리스트를 가져오고 여기에는 유저의 이름, id, 한줄소개가 있어야한다.
