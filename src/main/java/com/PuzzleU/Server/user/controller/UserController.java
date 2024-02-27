@@ -13,6 +13,7 @@ import com.PuzzleU.Server.experience.service.ExperienceService;
 import com.PuzzleU.Server.skillset.service.SkillsetService;
 import com.PuzzleU.Server.team.dto.*;
 import com.PuzzleU.Server.team.service.TeamService;
+import com.PuzzleU.Server.university.dto.UniversityListDto;
 import com.PuzzleU.Server.university.dto.UniversityRegistDto;
 import com.PuzzleU.Server.university.service.UniversityService;
 import com.PuzzleU.Server.user.dto.*;
@@ -243,6 +244,11 @@ public class UserController {
     @GetMapping("/profile/{userId}")
     public ApiResponseDto<UserProfileDto> readUserProfile(@AuthenticationPrincipal UserDetails loginUser, @PathVariable Long userId) {
         return userService.readUserProfile(loginUser, userId);
+    }
+    // 내 대학들을 볼 수 있는 것
+    @GetMapping("/university")
+    public ApiResponseDto<List<UniversityListDto>> getUniversityList(@AuthenticationPrincipal UserDetails loginUser) {
+        return universityService.getUniversityList(loginUser);
     }
 
 

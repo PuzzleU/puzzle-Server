@@ -24,15 +24,7 @@ public class TeamController {
     private final UserService userService;
     private final TeamService teamService;
 
-    @PostMapping("")
-    public ApiResponseDto<SuccessResponse> teamCreate(@Valid @RequestBody TeamCreateDto teamCreateDto
-    ,@RequestParam Long competitionId,
-     @RequestParam List<Long> teamMember,
-     @AuthenticationPrincipal UserDetails loginUser,
-    @RequestParam List<Long> positions,
-    @RequestParam List<Long> locations) {
-        return teamService.teamcreate(teamCreateDto, competitionId, teamMember,loginUser,locations, positions);
-    }
+
 
     @PatchMapping("/{teamId}")
     public ApiResponseDto<SuccessResponse> teamUpdate(@Valid @RequestBody TeamCreateDto teamCreateDto

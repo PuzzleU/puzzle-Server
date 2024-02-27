@@ -8,6 +8,7 @@ import com.PuzzleU.Server.competition.dto.CompetitionSpecificDto;
 import com.PuzzleU.Server.common.enumSet.CompetitionType;
 import com.PuzzleU.Server.competition.service.CompetitionService;
 import com.PuzzleU.Server.heart.Service.HeartService;
+import com.PuzzleU.Server.team.dto.TeamCreateDto;
 import com.PuzzleU.Server.team.dto.TeamListDto;
 import com.PuzzleU.Server.team.dto.TeamSpecificDto;
 import com.PuzzleU.Server.team.service.TeamService;
@@ -32,6 +33,7 @@ public class CompetitionController {
     private final UserService userService;
     private final HeartService heartService;
 
+    // 홈페이지
     @GetMapping("/homepage")
     public ApiResponseDto<CompetitionHomeTotalDto> homepage(
             @RequestParam(value = "competitionType", required = false) CompetitionType competitionType,
@@ -42,12 +44,14 @@ public class CompetitionController {
     ) {
         return competitionService.getHomepage(pageNo, pageSize, sortBy, search, competitionType);
     }
+    // 공모전 세부페이지
     @GetMapping("/homepage/{competition_id}")
     public ApiResponseDto<CompetitionSpecificDto> specific(@Valid
             @PathVariable Long competition_id)
     {
         return competitionService.getSpecific(competition_id);
     }
+    // 특정 공모전 모집중인 팀들 보기
     @GetMapping("/homepage/{competition_id}/team")
     public ApiResponseDto<TeamListDto> teamList(@Valid
     @PathVariable Long competition_id,
@@ -57,11 +61,13 @@ public class CompetitionController {
     {
         return teamService.getTeamList(competition_id, pageNo, pageSize, sortBy);
     }
+    // 특정 공모전의 모집중인 특정 공모전 보기
     @GetMapping("/homepage/{competition_id}/team/{team_id}")
     public ApiResponseDto<TeamSpecificDto> teamSpecific(@Valid @PathVariable Long competition_id, @PathVariable Long team_id)
     {
         return teamService.getTeamSpecific(competition_id, team_id);
     }
+    // 공모전 팀 검색하기
     @GetMapping("/homepage/team")
     public ApiResponseDto<TeamListDto> teamSearch(@Valid
                                                   @RequestParam(value = "search", defaultValue = "None", required = false) String search,
@@ -71,6 +77,7 @@ public class CompetitionController {
     {
         return teamService.getTeamSearchList(pageNo, pageSize, sortBy,search);
     }
+    // 홈페이지에서 공모전 검색
     @GetMapping("/homepage/competition")
     public ApiResponseDto<CompetitionSearchTotalDto> competitionSearch(@Valid
                                                   @RequestParam(value = "search", defaultValue = "None", required = false) String search,
@@ -80,6 +87,7 @@ public class CompetitionController {
     {
         return teamService.competitionTeamSearch(pageNo,pageSize, sortBy, search);
     }
+    // 홈페이지에서 유저검색
     @GetMapping("/homepage/users")
     public ApiResponseDto<List<UserSimpleDto>> userSearch(@Valid
                                                               @AuthenticationPrincipal UserDetails loginUser,
@@ -90,20 +98,31 @@ public class CompetitionController {
     {
         return userService.userSearch(loginUser, pageNo, pageSize, sortBy, search);
     }
-    @PatchMapping("/homepage/{competition_id}")
+    // 공모전 좋아요 누르기
+    @PatchMapping("/homepage/{competition_id}/heart")
     public ApiResponseDto<SuccessResponse> heartCreate(@Valid
     @AuthenticationPrincipal UserDetails loginUser,
     @PathVariable Long competition_id)
     {
         return heartService.heartCreate(loginUser, competition_id);
     }
-    @DeleteMapping("/homepage/{competition_id}")
+    // 공모전 좋아요 취소
+    @DeleteMapping("/homepage/{competition_id}/heartg")
     public ApiResponseDto<SuccessResponse> heartDelete(@Valid
 
                                                        @AuthenticationPrincipal UserDetails loginUser,
                                                        @PathVariable Long competition_id)
     {
         return heartService.heartDelete(loginUser, competition_id);
+    }
+    @PostMapping("/hompage/{competition_id}")
+    public ApiResponseDto<SuccessResponse> teamCreate(@Valid @RequestBody TeamCreateDto teamCreateDto
+            ,@RequestParam Long competitionId,
+                                                      @RequestParam List<Long> teamMember,
+                                                      @AuthenticationPrincipal UserDetails loginUser,
+                                                      @RequestParam List<Long> positions,
+                                                      @RequestParam List<Long> locations) {
+        return teamService.teamcreate(teamCreateDto, competitionId, teamMember,loginUser,locations, positions);
     }
 
 
