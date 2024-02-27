@@ -46,9 +46,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -663,6 +665,17 @@ public class UserService {
         userProfileDto.setSkillsetList(userProfileSkillsetDtoList);
 
         return ResponseUtils.ok(userProfileDto, null);
+    }
+
+    // 정보 수신 여부 동의 수정
+    public ApiResponseDto<SuccessResponse> updateConsentMarketing(UserDetails loginUser, ConsentMarketingDto consentMarketingDto) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        user.setConsentMarketing(consentMarketingDto.getConsentMarketing());
+        userRepository.save(user);
+
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "정보 수신 여부 저장 완료"), null);
     }
 
 }

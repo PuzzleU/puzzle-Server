@@ -256,6 +256,12 @@ public class UserController {
         return universityService.getUniversityList(loginUser);
     }
 
+    @PatchMapping("/essential/consent")
+    public ApiResponseDto<SuccessResponse> updateConsentMarketing(@AuthenticationPrincipal UserDetails loginUser, @RequestBody ConsentMarketingDto consentMarketingDto) {
+        return userService.updateConsentMarketing(loginUser, consentMarketingDto);
+
+    }
+
 
 
 }
