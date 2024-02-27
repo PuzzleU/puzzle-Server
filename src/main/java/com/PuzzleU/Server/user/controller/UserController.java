@@ -6,7 +6,6 @@ import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.friendship.service.FriendshipService;
-import com.PuzzleU.Server.relations.dto.UserSkillsetRelationDto;
 import com.PuzzleU.Server.relations.dto.UserSkillsetRelationListDto;
 import com.PuzzleU.Server.skillset.dto.SkillSetListDto;
 import com.PuzzleU.Server.experience.service.ExperienceService;
@@ -137,6 +136,12 @@ public class UserController {
     ) {
         return userService.registerEssential(loginUser, userRegisterEssentialDto);
     }
+
+    @GetMapping("/essential/puzzleId")
+    public ApiResponseDto<SuccessResponse> getPuzzleIdDuplicate(@RequestParam(value = "id", required = true) String puzzleId) {
+        return userService.getPuzzleIdDuplicate(puzzleId);
+    }
+
     @GetMapping("/friendSearch")
     public ApiResponseDto<FriendShipSearchResponseDto> searchUser(
             @Valid

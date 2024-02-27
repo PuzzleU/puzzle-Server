@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM users u WHERE u!=:user")
     List<User> findAllExcept(User user, Pageable pageable);
 
+    Optional<User> findByUserPuzzleId(String puzzleId);
+
 }

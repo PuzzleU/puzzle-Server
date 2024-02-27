@@ -314,6 +314,19 @@ public class UserService {
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), null);
     }
+
+    // 회원가입 시 퍼즐 ID 중복 여부 반환
+    public ApiResponseDto<SuccessResponse> getPuzzleIdDuplicate(String puzzleId) {
+        Optional<User> userOptional = userRepository.findByUserPuzzleId(puzzleId);
+
+        if (userOptional.isPresent()) {
+            throw new RestApiException(ErrorType.DUPLICATED_PUZZLE_ID);
+        }
+
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "사용할 수 있는 퍼즐 ID입니다."), null);
+
+    }
+
     @Transactional
     // 모든 멤버들을 검색할 수 있는 API
     public ApiResponseDto<FriendShipSearchResponseDto> searchUser(int pageNo, int pageSize, String sortBy, String keyword) {
