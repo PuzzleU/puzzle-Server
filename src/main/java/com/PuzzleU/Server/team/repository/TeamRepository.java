@@ -20,4 +20,10 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     List<Team> findByTeamTitleContaining(String search, Pageable pageable);
 
     Optional<Team> findByTeamId(Long teamId);
+
+    @Query("SELECT t FROM Team t WHERE t.competition.competitionId =:CompetitionId and t.teamId =:teamId")
+    Optional<Team> findByTeamIdAndCompetitionId(Long teamId, Long CompetitionId);
+
+
+
 }

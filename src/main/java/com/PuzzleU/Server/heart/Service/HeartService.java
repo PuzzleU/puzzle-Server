@@ -75,4 +75,5 @@ public class HeartService {
         competitionRepository.save(competition);
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "좋아요를 취소하였습니다"), null);
     }
+
 }

@@ -20,4 +20,7 @@ public interface HeartRepository extends JpaRepository<Heart, Long>
 
     @Query("SELECT h FROM Heart h WHERE h.competition=:competition and h.user=:user")
     Heart findOneByCompetitionAndUserNot(Competition competition, User user);
+
+    @Query("SELECT c FROM Heart c WHERE c.competition.competitionId=:competitionId")
+    List<Heart> findByCompetition(Long competitionId);
 }

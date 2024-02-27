@@ -7,6 +7,7 @@ import com.PuzzleU.Server.common.enumSet.UniversityType;
 import com.PuzzleU.Server.major.dto.MajorSearchDto;
 import com.PuzzleU.Server.relations.entity.UserUniversityRelation;
 import com.PuzzleU.Server.relations.repository.UserUniversityRelationRepository;
+import com.PuzzleU.Server.university.dto.UniversityListDto;
 import com.PuzzleU.Server.university.dto.UniversityRegistDto;
 import com.PuzzleU.Server.university.dto.UniversitySearchDto;
 import com.PuzzleU.Server.university.dto.UniversitySearchTotalDto;
@@ -28,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -114,4 +116,31 @@ public class UniversityService {
 
         return ResponseUtils.ok(universitySearchTotalDto, null);
     }
+
+    @Transactional
+    public ApiResponseDto<List<UniversityListDto>> getUniversityList(UserDetails loginUser)
+    {
+        List<UniversityListDto> universityListDtos = new ArrayList<>();
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+        List<UserUniversityRelation> userUniversityRelationList = userUniversityRelationRepository.findByUser(user);
+        for(UserUniversityRelation userUniversityRelation : userUniversityRelationList)
+        {
+            UniversityListDto universityListDto = getUniversityListDto(userUniversityRelation);
+            universityListDtos.add(universityListDto);
+        }
+        return ResponseUtils.ok(universityListDtos, null);
+    }
+
+    private static UniversityListDto getUniversityListDto(UserUniversityRelation userUniversityRelation) {
+        UniversityListDto universityListDto = new UniversityListDto();
+        universityListDto.setUniversityId(userUniversityRelation.getUserUniversityId());
+        universityListDto.setUniversityName(userUniversityRelation.getUniversity().getUniversityName());
+        universityListDto.setUniversityEnd(userUniversityRelation.getUniversityEnd());
+        universityListDto.setUniversityStart(userUniversityRelation.getUniversityStart());
+        universityListDto.setMajorId(userUniversityRelation.getMajorId());
+        universityListDto.setMajorName(userUniversityRelation.getMajorName());
+        return universityListDto;
+    }
+
 }
