@@ -56,11 +56,6 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/user/**", "/actuator/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
-                                .requestMatchers("/api/competition/**").permitAll()
-                                .requestMatchers("/api/oauth/**").permitAll()
-                                .requestMatchers("/api/team/**").permitAll()
-                                .requestMatchers("/api/university/**").permitAll()
-                                .requestMatchers("/api/apply/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "api/splash").permitAll()
                                 .anyRequest().authenticated()
 
