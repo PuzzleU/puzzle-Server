@@ -1,5 +1,6 @@
-package com.PuzzleU.Server.notify.Controller;
+package com.PuzzleU.Server.notify.controller;
 
+import com.PuzzleU.Server.notify.service.NotifyService;
 import com.PuzzleU.Server.user.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

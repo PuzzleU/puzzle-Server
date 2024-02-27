@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.notify.Entity;
+package com.PuzzleU.Server.notify.entity;
 
 import com.PuzzleU.Server.common.enumSet.BaseEntity;
 import com.PuzzleU.Server.common.enumSet.NotificationType;
