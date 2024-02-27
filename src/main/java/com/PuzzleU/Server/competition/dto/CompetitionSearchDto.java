@@ -12,5 +12,6 @@ public class CompetitionSearchDto {
 
     private String competitionName;
     private Long competitionId;
+    private String competitionPoster;
 
 }

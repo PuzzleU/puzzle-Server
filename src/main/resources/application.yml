@@ -1,0 +1,55 @@
+
+spring:
+  datasource:
+    url: jdbc:mysql://${DB_URL}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER_NAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: ${DRIVER_CLASS_NAME}
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.format_sql: true
+
+jwt:
+  secret:
+    key:${JWT_TOKEN}
+
+
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+      suffix: log
+      prefix: access_log
+      rename-on-rotate: true
+
+swagger:
+  springdoc:
+    swagger-ui:
+      groups-order: DESC
+      tags-sorter: alpha
+      operations-sorter: method
+
+management:
+  endpoints:
+    enabled-by-default: false
+    info:
+      enabled: true
+    health:
+      enabled: true
+    jmx:
+      exposure:
+        exclude: "*"
+    web:
+      exposure:
+        include: info, health
+#social-login.provider.apple.grant-type=authorization_code
+#social-login.provider.apple.client-id=YOUR_APPLE_CLIENT_ID
+#social-login.provider.apple.key-id=YOUR_APPLE_KEY_ID
+#social-login.provider.apple.team-id=YOUR_APPLE_TEAM_ID
+#social-login.provider.apple.audience=https://appleid.apple.com
+#social-login.provider.apple.private-key=YOUR_APPLE_P8_KEY (-----BEGIN PRIVATE KEY-----, -----END PRIVATE KEY----- ? ??? key ???? ???? ?? ??? ???)
+

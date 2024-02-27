@@ -277,6 +277,7 @@ public class TeamService {
                 .map(competition -> {
                     CompetitionSearchDto competitionSearchDto = new CompetitionSearchDto();
                     competitionSearchDto.setCompetitionId(competition.getCompetitionId());
+                    competitionSearchDto.setCompetitionPoster(competition.getCompetitionPoster());
                     competitionSearchDto.setCompetitionName(competition.getCompetitionName());
                     return competitionSearchDto;
                 })
