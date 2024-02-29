@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.Map;
 
 @Service
-@AllArgsConstructor
 public class NotifyService {
 
     // ssemitter -> 서버에서 클라이언트로의 단뱡향 통신 지원
@@ -22,7 +21,10 @@ public class NotifyService {
 
     private final EmitterRepository emitterRepository;
     private final NotifyRepository notifyRepository;
-
+    public NotifyService(EmitterRepository emitterRepository, NotifyRepository notifyRepository) {
+        this.emitterRepository = emitterRepository;
+        this.notifyRepository = notifyRepository;
+    }
     // SSE를 구독할 때 호출
     // username을 기반으로 SseEmitter를 생성하고, EmitterRepository를 통해 저장
     // 클라이언트와의 연결이 끊기면/타임아웃이 발생하면, 해당 SseEmitter를 제거
