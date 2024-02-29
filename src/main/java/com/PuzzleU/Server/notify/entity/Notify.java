@@ -16,7 +16,6 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Notify extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "notification_id")
     private Long id;
 
     private String content;
@@ -30,23 +29,21 @@ public class Notify extends BaseEntity {
     private NotificationType notificationType;
 
     @ManyToOne
-    @JoinColumn(name = "notifies")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+
     @Builder
-    public Notify(User user, NotificationType notificationType, String content, String url, Boolean isRead)
-    {
+    public Notify(User user, NotificationType notificationType, String content, String url, Boolean isRead) {
         this.user = user;
         this.notificationType = notificationType;
         this.content = content;
         this.url = url;
         this.isRead = isRead;
-    }
-    public Notify()
-    {
 
     }
 
+    public Notify() {
 
+    }
 }

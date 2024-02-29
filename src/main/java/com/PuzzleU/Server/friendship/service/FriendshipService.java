@@ -7,6 +7,7 @@ import com.PuzzleU.Server.common.enumSet.ErrorType;
 import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
+import com.PuzzleU.Server.notify.annotation.NeedNotify;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,7 @@ public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
 
     // 특정 유저에게 친구신청을 거는 것
+    @NeedNotify
     @Transactional
     public ApiResponseDto<SuccessResponse> registerFriend(UserDetails loginUser, Long userId) {
         User user1 = userRepository.findByUsername(loginUser.getUsername())
@@ -49,6 +51,7 @@ public class FriendshipService {
         }
 
     }
+    @NeedNotify
     @Transactional
     public ApiResponseDto<SuccessResponse> responseFriend(UserDetails loginUser, Long userId) {
         System.out.println(loginUser);

@@ -1,9 +1,8 @@
 package com.PuzzleU.Server.notify.aop;
 
-import com.PuzzleU.Server.common.enumSet.NotifyMessage;
 import com.PuzzleU.Server.notify.annotation.NotifyInfo;
+import com.PuzzleU.Server.notify.dto.NotifyMessage;
 import com.PuzzleU.Server.notify.service.NotifyService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,10 +15,13 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @Slf4j
 @ComponentScan
 @EnableAsync
-@AllArgsConstructor
 public class NotifyAspect {
 
     private final NotifyService notifyService;
+    public NotifyAspect(NotifyService notifyService) {
+        this.notifyService = notifyService;
+    }
+
 
     // 아래의 어노테이션이 적용된 메소드들을 대상으로 AOP 적용가능
     @Pointcut("@annotation(com.PuzzleU.Server.notify.annotation.NeedNotify)")
@@ -34,7 +36,7 @@ public class NotifyAspect {
         notifyService.send(
                 notifyProxy.getReciever(),
                 notifyProxy.getNotificationType(),
-                NotifyMessage.FRIEND_REGISTER.getMessage(),
+                NotifyMessage.NEW_FRIEND.getMessage(),
                 "/api/notify" +(notifyProxy.getGoUrlId())
         );
         log.info("result = {}", result);

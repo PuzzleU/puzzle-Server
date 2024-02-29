@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class SkillSetListDto {
     List<SkillSetDto> skillSetDtoList = new ArrayList<>();
 }

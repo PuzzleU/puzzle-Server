@@ -13,9 +13,6 @@ spring:
     properties:
       hibernate.format_sql: true
 
-jwt:
-  secret:
-    key:${JWT_TOKEN}
 
 
 server:
