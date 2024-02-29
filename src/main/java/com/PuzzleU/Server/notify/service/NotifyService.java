@@ -7,7 +7,6 @@ import com.PuzzleU.Server.notify.repository.EmitterRepository;
 import com.PuzzleU.Server.notify.repository.NotifyRepository;
 import com.PuzzleU.Server.user.entity.User;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -86,7 +85,7 @@ public class NotifyService {
     {
         Notify notification = notifyRepository.save(createNotification(receiver,notificationType,content,url));
 
-        String receiverEmail = receiver.getEmail();
+        String receiverEmail = receiver.getUserKoreaName();
 
         String eventId = receiverEmail + "_" + System.currentTimeMillis();
         Map<String, SseEmitter>emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverEmail);
@@ -95,7 +94,7 @@ public class NotifyService {
                     emitterRepository.saveEventCache(key, notification);
                     sendNotification(emitter, eventId, key, NotifyDto.Response.createResponse(notification));
                 }
-        )
+        );
     }
 
     // 알림 엔터티를 생성

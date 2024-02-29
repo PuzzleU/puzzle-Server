@@ -22,6 +22,6 @@ public class NotificationController {
                                 // 받은 마지막 이벤트 ID값을 넘겨 그 이후의 데이터(받지 못한 데이터)부터 받을 수 있게 할 수 있는 정보
                                 @RequestHeader(value = "Last-Event-ID", required = false, defaultValue ="")String lastEventId)
     {
-        return notifyService.subscribe(principal, lastEventId);
+        return notifyService.subscribe(principal.getUsername(), lastEventId);
     }
 }
