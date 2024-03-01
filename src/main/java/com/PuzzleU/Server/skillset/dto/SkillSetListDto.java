@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
 public class SkillSetListDto {
     @Builder.Default

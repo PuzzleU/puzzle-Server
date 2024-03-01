@@ -15,8 +15,7 @@ import java.util.List;
 @Table(name = "interest")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 public class Interest {
     @Id
     //E
@@ -39,4 +38,17 @@ public class Interest {
     @Builder.Default
     @OneToMany(mappedBy = "interest", cascade = CascadeType.REMOVE)
     private List<CompetitionInterestRelation> competitionInterestRelations = new ArrayList<>();
+
+
+    public Interest(Long interestId, String interestName, InterestTypes interestType, List<UserInterestRelation> userInterestRelation, List<CompetitionInterestRelation> competitionInterestRelations) {
+        this.interestId = interestId;
+        this.interestName = interestName;
+        this.interestType = interestType;
+        this.userInterestRelation = userInterestRelation;
+        this.competitionInterestRelations = competitionInterestRelations;
+    }
+
+    public Interest() {
+
+    }
 }
