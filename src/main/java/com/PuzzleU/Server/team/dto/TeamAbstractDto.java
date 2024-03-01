@@ -7,13 +7,12 @@ import lombok.*;
 import java.util.List;
 
 @Getter
-@Data
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 @Builder
 public class TeamAbstractDto extends TeamAbstractBaseDto{
-
     private Long applyId;
 
 }

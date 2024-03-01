@@ -1,5 +1,8 @@
 package com.PuzzleU.Server.friendship.entity;
 
+import com.PuzzleU.Server.common.enumSet.BaseEntity;
+import com.PuzzleU.Server.common.enumSet.NotificationType;
+import com.PuzzleU.Server.notify.annotation.NotifyInfo;
 import com.PuzzleU.Server.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -16,7 +19,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FriendShip {
+public class FriendShip extends BaseEntity implements NotifyInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long friendShipId;
@@ -36,4 +39,18 @@ public class FriendShip {
     private Boolean userStatus;
 
 
+    @Override
+    public User getReciever() {
+        return user1;
+    }
+
+    @Override
+    public Long getGoUrlId() {
+        return user1.getId();
+    }
+
+    @Override
+    public NotificationType getNotificationType() {
+        return NotificationType.Friend;
+    }
 }

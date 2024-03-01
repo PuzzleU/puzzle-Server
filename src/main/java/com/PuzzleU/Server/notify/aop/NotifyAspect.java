@@ -1,5 +1,7 @@
 package com.PuzzleU.Server.notify.aop;
 
+import com.PuzzleU.Server.common.api.ApiResponseNotifyDto;
+import com.PuzzleU.Server.common.enumSet.NotificationType;
 import com.PuzzleU.Server.notify.annotation.NotifyInfo;
 import com.PuzzleU.Server.notify.dto.NotifyMessage;
 import com.PuzzleU.Server.notify.service.NotifyService;
@@ -11,9 +13,11 @@ import org.aspectj.lang.JoinPoint;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.stereotype.Component;
+
 @Aspect
 @Slf4j
-@ComponentScan
+@Component
 @EnableAsync
 public class NotifyAspect {
 
@@ -29,17 +33,25 @@ public class NotifyAspect {
     {
 
     }
+    // @NeedNotify 어노테이션이 적용된 메서드 실행 후 알림 전송
     @Async
     @AfterReturning(pointcut = "annotationPointcut()", returning = "result")
-    public void checkValue(JoinPoint jointPoint, Object result) throws Throwable{
-        NotifyInfo notifyProxy = (NotifyInfo) result;
-        notifyService.send(
-                notifyProxy.getReciever(),
-                notifyProxy.getNotificationType(),
-                NotifyMessage.NEW_FRIEND.getMessage(),
-                "/api/notify" +(notifyProxy.getGoUrlId())
-        );
-        log.info("result = {}", result);
+    public void checkValue(JoinPoint jointPoint, Object result) throws Throwable {
+        if (result instanceof ApiResponseNotifyDto) {
+            ApiResponseNotifyDto<?> apiResponse = (ApiResponseNotifyDto<?>) result;
+            NotifyInfo notifyProxy = apiResponse.getNotifyInfo();
+            if (notifyProxy != null) {
+                notifyService.send(
+                        notifyProxy.getReciever(),
+                        NotificationType.Friend,
+                        NotifyMessage.NEW_FRIEND.getMessage(),
+                        "/api/notify" + (notifyProxy.getGoUrlId())
+                );
+                System.out.println("asdsadsadsadsad");
+                log.info("result = {}", result);
+            }
+        }
     }
+
 
 }

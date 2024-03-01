@@ -30,6 +30,7 @@ public class NotifyService {
     // 클라이언트와의 연결이 끊기면/타임아웃이 발생하면, 해당 SseEmitter를 제거
     public SseEmitter subscribe(String username, String lastEventId)
     {
+        System.out.println("aaaaaaaabbbbaaaaaaa");
 
         String emitterId = makeTimeInclude(username);
         SseEmitter emitter = emitterRepository.save(emitterId, new SseEmitter(DEFAULT_TIMEOUT));
@@ -90,7 +91,7 @@ public class NotifyService {
         Notify notification = notifyRepository.save(createNotification(receiver,notificationType,content,url));
 
         String receiverEmail = receiver.getUserKoreaName();
-
+        System.out.println(receiverEmail);
         String eventId = receiverEmail + "_" + System.currentTimeMillis();
         Map<String, SseEmitter>emitters = emitterRepository.findAllEmitterStartWithByMemberId(receiverEmail);
         emitters.forEach(
