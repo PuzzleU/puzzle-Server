@@ -46,9 +46,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -314,6 +316,19 @@ public class UserService {
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), null);
     }
+
+    // 회원가입 시 퍼즐 ID 중복 여부 반환
+    public ApiResponseDto<SuccessResponse> getPuzzleIdDuplicate(String puzzleId) {
+        Optional<User> userOptional = userRepository.findByUserPuzzleId(puzzleId);
+
+        if (userOptional.isPresent()) {
+            throw new RestApiException(ErrorType.DUPLICATED_PUZZLE_ID);
+        }
+
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "사용할 수 있는 퍼즐 ID입니다."), null);
+
+    }
+
     @Transactional
     // 모든 멤버들을 검색할 수 있는 API
     public ApiResponseDto<FriendShipSearchResponseDto> searchUser(int pageNo, int pageSize, String sortBy, String keyword) {
@@ -650,6 +665,17 @@ public class UserService {
         userProfileDto.setSkillsetList(userProfileSkillsetDtoList);
 
         return ResponseUtils.ok(userProfileDto, null);
+    }
+
+    // 정보 수신 여부 동의 수정
+    public ApiResponseDto<SuccessResponse> updateConsentMarketing(UserDetails loginUser, ConsentMarketingDto consentMarketingDto) {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        user.setConsentMarketing(consentMarketingDto.getConsentMarketing());
+        userRepository.save(user);
+
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "정보 수신 여부 저장 완료"), null);
     }
 
 }
