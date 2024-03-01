@@ -53,6 +53,7 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests((authorizeRequests)->
                         authorizeRequests
+                                .requestMatchers("api/oauth/kakao/**").permitAll()
                                 .requestMatchers("/api/user/**", "/actuator/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()

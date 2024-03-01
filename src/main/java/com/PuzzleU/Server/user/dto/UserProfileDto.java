@@ -4,8 +4,8 @@ import com.PuzzleU.Server.common.enumSet.FriendStatus;
 import lombok.*;
 
 @Getter
-@Data
 @Setter
+@EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserProfileDto extends UserMyProfileDto {

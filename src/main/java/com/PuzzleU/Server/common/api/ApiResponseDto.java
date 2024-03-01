@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ApiResponseDto<T> {
+public class ApiResponseDto<T>  {
 
     private boolean success;
     private T response;

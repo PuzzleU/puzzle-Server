@@ -17,7 +17,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Interest {
     @Id
     //E
@@ -32,10 +31,12 @@ public class Interest {
     private InterestTypes interestType;
 
     @JsonIgnore
+    @Builder.Default
     @OneToMany(mappedBy = "interest", cascade = CascadeType.REMOVE)
     private List<UserInterestRelation> userInterestRelation = new ArrayList<>();
 
     @JsonIgnore
+    @Builder.Default
     @OneToMany(mappedBy = "interest", cascade = CascadeType.REMOVE)
     private List<CompetitionInterestRelation> competitionInterestRelations = new ArrayList<>();
 }
