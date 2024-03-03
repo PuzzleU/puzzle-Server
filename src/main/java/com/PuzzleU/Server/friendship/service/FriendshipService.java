@@ -2,10 +2,12 @@ package com.PuzzleU.Server.friendship.service;
 
 import com.PuzzleU.Server.common.api.*;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
+import com.PuzzleU.Server.common.enumSet.NotificationType;
 import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
-import com.PuzzleU.Server.notify.annotation.NeedNotify;
+import com.PuzzleU.Server.notify.entity.NotifyFriendShip;
+import com.PuzzleU.Server.notify.service.NotifyService;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -22,13 +24,14 @@ public class FriendshipService {
 
     private final UserRepository userRepository;
     private final FriendshipRepository friendshipRepository;
+    private final NotifyService notifyService;
 
     // 특정 유저에게 친구신청을 거는 것
-    @NeedNotify
     @Transactional
     public ApiResponseDto<SuccessResponse> registerFriend(UserDetails loginUser, Long userId) {
 
-        User user1 = userRepository.findByUsername(loginUser.getUsername())
+        User user1;
+        user1 = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         // friendship이 만들어져야한다
         // 무조건 거는 사람이 user1, 받는 사람이 user2로 되도록
@@ -36,21 +39,24 @@ public class FriendshipService {
         User user2 = userOptional.orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         // 만약에 user1과 2가 존재한다면 끝
         Optional<FriendShip> friendShip_check = friendshipRepository.findByUser1AndUser2(user1, user2);
+        FriendShip friendShip = new FriendShip();
         if (friendShip_check.isPresent()) {
             throw new RestApiException(ErrorType.ALREADY_REGISTERED_FRIEND);
         } else {
             // 친구 관계가 존재하지 않는 경우, 새로운 친구 관계 생성
-            FriendShip friendShip = new FriendShip();
+
             friendShip.setUser2(user2);
             friendShip.setUser1(user1);
             friendShip.setUserStatus(false);
             friendshipRepository.save(friendShip);
             };
+            notifyService.sendFriend(user2, friendShip, "새로운 친구 요청이 있습니다!", NotificationType.Friend);
+        NotifyFriendShip notifyFriendShip = new NotifyFriendShip();
             return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
         }
 
 
-    @NeedNotify
+
     @Transactional
     public ApiResponseDto<SuccessResponse> responseFriend(UserDetails loginUser, Long userId) {
         System.out.println(loginUser);

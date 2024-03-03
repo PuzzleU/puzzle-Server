@@ -1,6 +1,10 @@
 package com.PuzzleU.Server.notify.service;
 
+import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ResponseUtils;
+import com.PuzzleU.Server.common.enumSet.ErrorType;
 import com.PuzzleU.Server.common.enumSet.NotificationType;
+import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.notify.dto.NotificationFriendShipResponse;
 import com.PuzzleU.Server.notify.dto.NotificationFriendShipsResponse;
@@ -9,12 +13,14 @@ import com.PuzzleU.Server.notify.repository.EmitterRepository;
 import com.PuzzleU.Server.notify.repository.NotifyFriendShipRepository;
 import com.PuzzleU.Server.notify.repository.NotifyRepository;
 import com.PuzzleU.Server.user.entity.User;
+import com.PuzzleU.Server.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -32,9 +38,12 @@ public class NotifyService {
 
     private final EmitterRepository emitterRepository;
     private final NotifyFriendShipRepository notifyFriendShipRepository;
+    private final UserRepository userRepository;
 
-    public SseEmitter subscribe(User user, String lastEventId)
+    public SseEmitter subscribe(UserDetails loginuser, String lastEventId)
     {
+        User user = userRepository.findByUsername(loginuser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         Long userId = user.getId();
         String id = userId + "_" + System.currentTimeMillis();
         SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIME));
@@ -74,6 +83,7 @@ public class NotifyService {
     public void sendFriend(User receiver, FriendShip friendShip, String content, NotificationType notificationType)
     {
         NotifyFriendShip notifyFriendShip = createNotification(receiver,friendShip,content, NotificationType.Friend);
+        System.out.println(notifyFriendShip);
         String id = String.valueOf(receiver.getId());
         notifyFriendShipRepository.save(notifyFriendShip);
         Map<String, SseEmitter>sseEmitters = emitterRepository.findAllEmitterStartWithByMemberId(id);
@@ -82,7 +92,8 @@ public class NotifyService {
                     emitterRepository.saveEventCache(key, notifyFriendShip);
                     sendToClient(emitter, key, NotificationFriendShipResponse.from(notifyFriendShip));
                 }
-        );
+        ); System.out.println("aaaaaaaa");
+
 
     }
 
@@ -91,22 +102,25 @@ public class NotifyService {
         return NotifyFriendShip.builder()
                 .user(receiver)
                 .content(content)
-                .url("/friendship/" + friendShip.getFriendShipId())
+                .url("/friendship/" + friendShip.getUser2().getId())
                 .isRead(false)
                 .notificationType(notificationType)
                 .friendShip(friendShip)
                 .build();
     }
     @Transactional
-    public NotificationFriendShipsResponse findAllById(User user)
+    public ApiResponseDto<NotificationFriendShipsResponse> findAllById(UserDetails loginUser)
     {
+        User user = userRepository.findByUsername(loginUser.getUsername())
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         List<NotificationFriendShipResponse> responses = notifyFriendShipRepository.findAllByUserId(user.getId()).stream()
                 .map(NotificationFriendShipResponse::from)
                 .collect(Collectors.toList());
         long unreadCount = responses.stream()
                 .filter(notification -> !notification.isRead())
                 .count();
-        return NotificationFriendShipsResponse.of(responses, unreadCount);
+        System.out.println("q");
+        return ResponseUtils.ok(NotificationFriendShipsResponse.of(responses, unreadCount),null);
     }
 
     @Transactional

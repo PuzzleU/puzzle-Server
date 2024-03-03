@@ -2,7 +2,6 @@ package com.PuzzleU.Server.friendship.entity;
 
 import com.PuzzleU.Server.common.enumSet.BaseEntity;
 import com.PuzzleU.Server.common.enumSet.NotificationType;
-import com.PuzzleU.Server.notify.annotation.NotifyInfo;
 import com.PuzzleU.Server.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

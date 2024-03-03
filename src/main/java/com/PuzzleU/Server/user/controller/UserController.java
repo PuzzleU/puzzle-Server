@@ -2,7 +2,6 @@ package com.PuzzleU.Server.user.controller;
 
 import com.PuzzleU.Server.apply.service.ApplyService;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
-import com.PuzzleU.Server.common.api.ApiResponseNotifyDto;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;

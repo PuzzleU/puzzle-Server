@@ -37,6 +37,8 @@ public class NotifyFriendShip extends BaseEntity {
 
 
 
+
+
     public NotifyFriendShip() {
 
     }
