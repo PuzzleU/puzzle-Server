@@ -1,15 +1,15 @@
 package com.PuzzleU.Server.common.api;
 
 import com.PuzzleU.Server.notify.annotation.NotifyInfo;
-import com.PuzzleU.Server.notify.entity.Notify;
+import com.PuzzleU.Server.notify.entity.NotifyFriendShip;
 
 public class ResponseNotifyUtils {
-    public static <T> ApiResponseNotifyDto<T> ok(T response, String jwt,Notify notify,NotifyInfo notifyInfo) {
+    public static <T> ApiResponseNotifyDto<T> ok(T response, String jwt, NotifyFriendShip notifyFriendShip, NotifyInfo notifyInfo) {
         return ApiResponseNotifyDto.<T>builder()
                 .success(true)
                 .response(response)
                 .jwt(jwt)
-                .notify(notify)
+                .notify(notifyFriendShip)
                 .notifyInfo(notifyInfo)
                 .build();
     }

@@ -1,6 +1,6 @@
 package com.PuzzleU.Server.notify.dto;
 
-import com.PuzzleU.Server.notify.entity.Notify;
+import com.PuzzleU.Server.notify.entity.NotifyFriendShip;
 import lombok.*;
 // send()에서 sse를 클라이언트에게 전송할 때, 이벤트의 데이터로 전송할 dto
 public class NotifyDto {
@@ -15,12 +15,12 @@ public class NotifyDto {
         String content;
         String type;
         String createdAt;
-        public static Response createResponse(Notify notify) {
+        public static Response createResponse(NotifyFriendShip notifyFriendShip) {
             return Response.builder()
-                    .content(notify.getContent())
-                    .id(notify.getId().toString())
-                    .name(notify.getUser().getUserKoreaName())
-                    .createdAt(notify.getCreatedDate().toString())
+                    .content(notifyFriendShip.getContent())
+                    .id(notifyFriendShip.getId().toString())
+                    .name(notifyFriendShip.getUser().getUserKoreaName())
+                    .createdAt(notifyFriendShip.getCreatedDate().toString())
                     .build();
 
         }

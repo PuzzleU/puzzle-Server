@@ -2,18 +2,17 @@ package com.PuzzleU.Server.notify.entity;
 
 import com.PuzzleU.Server.common.enumSet.BaseEntity;
 import com.PuzzleU.Server.common.enumSet.NotificationType;
+import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.user.entity.User;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
 @Setter
-public class Notify extends BaseEntity {
+public class NotifyFriendShip extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,18 +31,28 @@ public class Notify extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private FriendShip friendShip;
 
-    @Builder
-    public Notify(User user, NotificationType notificationType, String content, String url, Boolean isRead) {
-        this.user = user;
-        this.notificationType = notificationType;
-        this.content = content;
-        this.url = url;
-        this.isRead = isRead;
+
+
+    public NotifyFriendShip() {
 
     }
 
-    public Notify() {
-
+    @Builder
+    public NotifyFriendShip(Long id, String content, String url, Boolean isRead, NotificationType notificationType, User user, FriendShip friendShip) {
+        this.id = id;
+        this.content = content;
+        this.url = url;
+        this.isRead = isRead;
+        this.notificationType = notificationType;
+        this.user = user;
+        this.friendShip = friendShip;
+    }
+    public void read()
+    {
+        this.isRead = true;
     }
 }

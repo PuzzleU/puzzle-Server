@@ -1,9 +1,7 @@
 package com.PuzzleU.Server.common.api;
 
-import com.PuzzleU.Server.common.enumSet.NotificationType;
 import com.PuzzleU.Server.notify.annotation.NotifyInfo;
-import com.PuzzleU.Server.notify.entity.Notify;
-import com.PuzzleU.Server.user.entity.User;
+import com.PuzzleU.Server.notify.entity.NotifyFriendShip;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,16 +12,16 @@ public class ApiResponseNotifyDto<T>{
     private T response;
     private ErrorResponse error;
     private String jwt;
-    private Notify notify;
+    private NotifyFriendShip notifyFriendShip;
     private NotifyInfo notifyInfo;
 
     @Builder
-    ApiResponseNotifyDto(boolean success, T response, ErrorResponse error, String jwt, Notify notify, NotifyInfo notifyInfo) {
+    ApiResponseNotifyDto(boolean success, T response, ErrorResponse error, String jwt, NotifyFriendShip notifyFriendShip, NotifyInfo notifyInfo) {
         this.success = success;
         this.response = response;
         this.error = error;
         this.jwt = jwt;
-        this.notify = notify;
+        this.notifyFriendShip = notifyFriendShip;
         this.notifyInfo = notifyInfo;
     }
 
