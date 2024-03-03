@@ -1,10 +1,12 @@
 package com.PuzzleU.Server.notify.controller;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.notify.dto.NotificationFriendShipResponse;
 import com.PuzzleU.Server.notify.dto.NotificationFriendShipsResponse;
 import com.PuzzleU.Server.notify.service.NotifyService;
 import com.PuzzleU.Server.user.entity.User;
+import com.sun.net.httpserver.Authenticator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +35,9 @@ public class NotificationController {
         return notifyService.findAllById(loginUser);
     }
 
-    @PatchMapping("/notification/{id}")
-    public ResponseEntity<Void> readNotification(@PathVariable Long id)
+    @PatchMapping("/notifications/{id}")
+    public ApiResponseDto<SuccessResponse> readNotification(@PathVariable Long id)
     {
-        notifyService.readNotification(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return notifyService.readNotification(id);
     }
 }

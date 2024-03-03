@@ -2,6 +2,7 @@ package com.PuzzleU.Server.notify.service;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
+import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
 import com.PuzzleU.Server.common.enumSet.NotificationType;
 import com.PuzzleU.Server.common.exception.RestApiException;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -123,10 +125,12 @@ public class NotifyService {
     }
 
     @Transactional
-    public void readNotification(Long id)
+    public ApiResponseDto<SuccessResponse> readNotification(Long id)
     {
         NotifyFriendShip notification = notifyFriendShipRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 알림"));
         notification.read();
+        notifyFriendShipRepository.save(notification);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"모든 알람을 읽었습니다"), null);
     }
 }
