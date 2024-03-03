@@ -18,7 +18,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FriendShip extends BaseEntity implements NotifyInfo {
+public class FriendShip extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long friendShipId;
@@ -38,18 +38,4 @@ public class FriendShip extends BaseEntity implements NotifyInfo {
     private Boolean userStatus;
 
 
-    @Override
-    public User getReciever() {
-        return user1;
-    }
-
-    @Override
-    public Long getGoUrlId() {
-        return user1.getId();
-    }
-
-    @Override
-    public NotificationType getNotificationType() {
-        return NotificationType.Friend;
-    }
 }

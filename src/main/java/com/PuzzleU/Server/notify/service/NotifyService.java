@@ -83,7 +83,6 @@ public class NotifyService {
     public void sendFriend(User receiver, FriendShip friendShip, String content, NotificationType notificationType)
     {
         NotifyFriendShip notifyFriendShip = createNotification(receiver,friendShip,content, NotificationType.Friend);
-        System.out.println(notifyFriendShip);
         String id = String.valueOf(receiver.getId());
         notifyFriendShipRepository.save(notifyFriendShip);
         Map<String, SseEmitter>sseEmitters = emitterRepository.findAllEmitterStartWithByMemberId(id);
@@ -92,7 +91,7 @@ public class NotifyService {
                     emitterRepository.saveEventCache(key, notifyFriendShip);
                     sendToClient(emitter, key, NotificationFriendShipResponse.from(notifyFriendShip));
                 }
-        ); System.out.println("aaaaaaaa");
+        );
 
 
     }
