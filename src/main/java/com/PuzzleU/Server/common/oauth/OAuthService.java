@@ -224,6 +224,7 @@ public class OAuthService {
 
             // refresh token을 DB에 저장
             user.get().setKakaoRefreshToken(refreshToken);
+            userRepository.save(user.get());
 
             // response 생성
             tokenDto.setMessage("카카오 로그인 성공");
