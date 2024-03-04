@@ -3,6 +3,7 @@ package com.PuzzleU.Server.common.oauth;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
+import com.PuzzleU.Server.common.jwt.TokenDto;
 import com.PuzzleU.Server.user.dto.KakaoUserInfoDto;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.common.enumSet.UserRoleEnum;
@@ -167,7 +168,7 @@ public class OAuthService {
     }
 
     // 카카오 로그인 매서드
-    public ApiResponseDto<SuccessResponse> kakaoLogin(String code) {
+    public ApiResponseDto<TokenDto> kakaoLogin(String code) {
         /*
             *** 아래 링크에서 카카오 로그인 하면 회원가입/로그인 됨 ***
             kauth.kakao.com/oauth/authorize?client_id=bdae78483f052375d4334586ceee5544&redirect_uri=http://localhost:8080/api/oauth/kakao&response_type=code
@@ -179,8 +180,8 @@ public class OAuthService {
             4-2. DB에 있는 ID면 -> 로그인
          */
 
-        String accessToken = getKakaoAccessToken(code); // 카카오 access token 받아오기
-        KakaoUserInfoDto kakaoUserInfoDto = getKakaoUserInfo(accessToken); // 카카오 유저 정보 받아오기
+        String kakaoAccessToken = getKakaoAccessToken(code); // 카카오 access token 받아오기
+        KakaoUserInfoDto kakaoUserInfoDto = getKakaoUserInfo(kakaoAccessToken); // 카카오 유저 정보 받아오기
 
         // 아이디, 비밀번호 받아오기
         String username = kakaoUserInfoDto.getKakaoId();
@@ -188,15 +189,31 @@ public class OAuthService {
 
         // 회원 아이디 중복 확인 -> DB에 존재하지 않으면 회원가입 수행
         Optional<User> user = userRepository.findByUsername(username);
+
         if (user.isEmpty()) {
             // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
             UserRoleEnum role = UserRoleEnum.USER; // 카카오 유저 ROLE 임의 설정
-            userRepository.save(User.of(username, password, role));
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 성공"), null);
+            User signUpUser = User.of(username, password, role);
+            userRepository.save(signUpUser);
+
+            // 토큰 생성
+
+            TokenDto tokenDto = new TokenDto();
+
+            tokenDto.setMessage("회원가입 성공");
+            tokenDto.setAccessToken(jwtUtil.createAccessToken(signUpUser.getUsername(), signUpUser.getRole()));
+            tokenDto.setRefreshToken(jwtUtil.createRefreshToken(signUpUser.getUsername(), signUpUser.getRole()));
+
+            return ResponseUtils.ok(tokenDto, null);
+
         } else { // DB에 존재하면 로그인 수행
-            String jwtToken = jwtUtil.createToken(user.get().getUsername(), user.get().getRole());
-            jwtToken.substring(7);
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "로그인 성공"),jwtToken);
+            TokenDto tokenDto = new TokenDto();
+
+            tokenDto.setMessage("로그인 성공");
+            tokenDto.setAccessToken(jwtUtil.createAccessToken(user.get().getUsername(), user.get().getRole()));
+            tokenDto.setRefreshToken(jwtUtil.createRefreshToken(user.get().getUsername(), user.get().getRole()));
+
+            return ResponseUtils.ok(tokenDto, null);
         }
     }
 }

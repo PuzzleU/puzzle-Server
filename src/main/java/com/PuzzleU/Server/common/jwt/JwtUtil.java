@@ -34,7 +34,11 @@ public class JwtUtil {
     private static final String BEARER_PREFIX = "Bearer ";
 
     // 60 더 곱했습니다
-    private static final long TOKEN_TIME = 60*60*60 * 60 * 1000L;
+    private static final long TOKEN_TIME = 60*60*60 * 60 * 1000L; // 60 days
+
+    // accress token과 refresh token 구분을 위한 time 설정
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 15; // 15 minutes
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7 days
 
     @Value("${JWT_TOKEN}")
     private String secretKey;
@@ -126,4 +130,44 @@ public class JwtUtil {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
+    // access token과 refresh token을 구분해서 생성
+    // Access Token 생성
+    public String createAccessToken(String username, UserRoleEnum role) {
+        return createTokenBase(username, role, ACCESS_TOKEN_EXPIRATION_TIME);
+    }
+
+    // Refresh Token 생성
+    public String createRefreshToken(String username, UserRoleEnum role) {
+        return createTokenBase(username, role, REFRESH_TOKEN_EXPIRATION_TIME);
+    }
+
+    // 토큰 생성
+    private String createTokenBase(String username, UserRoleEnum role, long expirationTime) {
+        Date date = new Date();
+        return BEARER_PREFIX +
+                Jwts.builder()
+                        .setSubject(username)
+                        .claim(AUTHORIZATION_KEY, role)
+                        .setExpiration(new Date(date.getTime() + expirationTime))
+                        .setIssuedAt(date)
+                        .signWith(key, signatureAlgorithm)
+                        .compact();
+    }
+
+    // refresh 토큰으로 access 토큰 재발급
+    public String refreshAccessToken(String refreshToken) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(refreshToken)
+                .getBody();
+
+        String username = claims.getSubject();
+        UserRoleEnum role = (UserRoleEnum) claims.get(AUTHORIZATION_KEY);
+
+        // 기존 토큰의 정보를 바탕으로 새로운 access token 생성
+        String newAccessToken = createAccessToken(username, role);
+
+        return newAccessToken;
+    }
 }
+
