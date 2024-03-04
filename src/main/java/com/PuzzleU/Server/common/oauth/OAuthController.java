@@ -1,7 +1,6 @@
 package com.PuzzleU.Server.common.oauth;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
-import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.jwt.TokenDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +28,14 @@ public class OAuthController {
 //        System.out.println("kakaoUserInfo = " + kakaoUserInfoDto.toString());
 
         return oAuthService.kakaoLogin(code);
+    }
+
+    @PostMapping("/kakao/refresh")
+    public ApiResponseDto<TokenDto> refreshToken(
+            @RequestHeader(value="accessToken") String accessToken,
+            @RequestHeader(value="refreshToken") String refreshToken
+    ) {
+        return oAuthService.refreshKakaoToken(accessToken, refreshToken);
     }
 
 }

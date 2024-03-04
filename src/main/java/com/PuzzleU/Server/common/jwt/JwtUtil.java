@@ -101,6 +101,7 @@ public class JwtUtil {
             log.info("Invalid JWT signature, 유효하지 않은 JWT 서명");
         }catch (ExpiredJwtException e){
             log.info("Expired JWT token, 만료된 JWT token 입니다");
+            return false; // 만료된 토큰이면 return false
         }catch (UnsupportedJwtException e)
         {
             log.info("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
@@ -116,6 +117,7 @@ public class JwtUtil {
     {
         String cleanToken = token.replace(BEARER_PREFIX, "");
 //        System.out.println("getUserInfoFromToken token: " + cleanToken);
+
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(cleanToken).getBody();
         
 //        // jwt 파싱하기 위한 빌더 객체 생성 / 토큰의 서명 검증을 위해 사용할 키 설정 / 파싱 생성 / 토큰을 파싱하고 클레임을 가져옴 / 토큰의 본문을 반환
@@ -169,5 +171,6 @@ public class JwtUtil {
 
         return newAccessToken;
     }
+
 }
 
