@@ -1,7 +1,7 @@
 package com.PuzzleU.Server.common.oauth;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
-import com.PuzzleU.Server.common.api.SuccessResponse;
+import com.PuzzleU.Server.common.jwt.TokenDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ public class OAuthController {
      */
 
     @GetMapping("/kakao")
-    public ApiResponseDto<SuccessResponse> kakaoLogin(@RequestParam("code") String code) {
+    public ApiResponseDto<TokenDto> kakaoLogin(@RequestParam("code") String code) {
 //        System.out.println("code = " + code); // 카카오 로그인을 수행하면 /api/oauth/kakao로 리다이렉트 되면서 code가 받아와짐
 //
 //        String accessToken = oAuthService.getKakaoAccessToken(code); // access token 받아오기
@@ -29,4 +29,13 @@ public class OAuthController {
 
         return oAuthService.kakaoLogin(code);
     }
+
+    @PostMapping("/kakao/refresh")
+    public ApiResponseDto<TokenDto> refreshToken(
+            @RequestHeader(value="accessToken") String accessToken,
+            @RequestHeader(value="refreshToken") String refreshToken
+    ) {
+        return oAuthService.refreshKakaoToken(accessToken, refreshToken);
+    }
+
 }

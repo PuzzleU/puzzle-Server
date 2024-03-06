@@ -42,6 +42,9 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    // 카카오 로그인 refresh 토큰
+    private String kakaoRefreshToken;
+
     // 혜택 수신 동의
     @Column(nullable = true)
     @ColumnDefault("false")

@@ -2,7 +2,9 @@ package com.PuzzleU.Server.common.oauth;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
-import com.PuzzleU.Server.common.api.SuccessResponse;
+import com.PuzzleU.Server.common.enumSet.ErrorType;
+import com.PuzzleU.Server.common.exception.RestApiException;
+import com.PuzzleU.Server.common.jwt.TokenDto;
 import com.PuzzleU.Server.user.dto.KakaoUserInfoDto;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.common.enumSet.UserRoleEnum;
@@ -10,9 +12,10 @@ import com.PuzzleU.Server.common.jwt.JwtUtil;
 import com.PuzzleU.Server.user.repository.UserRepository;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import io.jsonwebtoken.Claims;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -166,8 +169,9 @@ public class OAuthService {
         return kakaoUserInfoDto;
     }
 
+    @Transactional
     // 카카오 로그인 매서드
-    public ApiResponseDto<SuccessResponse> kakaoLogin(String code) {
+    public ApiResponseDto<TokenDto> kakaoLogin(String code) {
         /*
             *** 아래 링크에서 카카오 로그인 하면 회원가입/로그인 됨 ***
             kauth.kakao.com/oauth/authorize?client_id=bdae78483f052375d4334586ceee5544&redirect_uri=http://localhost:8080/api/oauth/kakao&response_type=code
@@ -179,8 +183,8 @@ public class OAuthService {
             4-2. DB에 있는 ID면 -> 로그인
          */
 
-        String accessToken = getKakaoAccessToken(code); // 카카오 access token 받아오기
-        KakaoUserInfoDto kakaoUserInfoDto = getKakaoUserInfo(accessToken); // 카카오 유저 정보 받아오기
+        String kakaoAccessToken = getKakaoAccessToken(code); // 카카오 access token 받아오기
+        KakaoUserInfoDto kakaoUserInfoDto = getKakaoUserInfo(kakaoAccessToken); // 카카오 유저 정보 받아오기
 
         // 아이디, 비밀번호 받아오기
         String username = kakaoUserInfoDto.getKakaoId();
@@ -188,15 +192,80 @@ public class OAuthService {
 
         // 회원 아이디 중복 확인 -> DB에 존재하지 않으면 회원가입 수행
         Optional<User> user = userRepository.findByUsername(username);
+
         if (user.isEmpty()) {
             // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
             UserRoleEnum role = UserRoleEnum.USER; // 카카오 유저 ROLE 임의 설정
-            userRepository.save(User.of(username, password, role));
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 성공"), null);
+            User signUpUser = User.of(username, password, role);
+
+            // 토큰 생성
+            TokenDto tokenDto = new TokenDto();
+
+            String accessToken = jwtUtil.createAccessToken(signUpUser.getUsername(), signUpUser.getRole());
+            String refreshToken = jwtUtil.createRefreshToken(signUpUser.getUsername(), signUpUser.getRole());
+
+            // refresh token을 DB에 저장
+            signUpUser.setKakaoRefreshToken(refreshToken);
+            userRepository.save(signUpUser);
+
+            // response 생성
+            tokenDto.setMessage("카카오 회원가입 성공");
+            tokenDto.setAccessToken(accessToken);
+            tokenDto.setRefreshToken(refreshToken);
+
+            return ResponseUtils.ok(tokenDto, null);
+
         } else { // DB에 존재하면 로그인 수행
-            String jwtToken = jwtUtil.createToken(user.get().getUsername(), user.get().getRole());
-            jwtToken.substring(7);
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "로그인 성공"),jwtToken);
+            // 토큰 생성
+            TokenDto tokenDto = new TokenDto();
+
+            String accessToken = jwtUtil.createAccessToken(user.get().getUsername(), user.get().getRole());
+            String refreshToken = jwtUtil.createRefreshToken(user.get().getUsername(), user.get().getRole());
+
+            // refresh token을 DB에 저장
+            user.get().setKakaoRefreshToken(refreshToken);
+            userRepository.save(user.get());
+
+            // response 생성
+            tokenDto.setMessage("카카오 로그인 성공");
+            tokenDto.setAccessToken(accessToken);
+            tokenDto.setRefreshToken(refreshToken);
+
+            return ResponseUtils.ok(tokenDto, null);
         }
+    }
+
+    // refresh token으로 access token 재발급
+    @Transactional
+    public ApiResponseDto<TokenDto> refreshKakaoToken(String accessTokenOrigin, String refreshTokenOrigin) {
+
+        String accessToken = accessTokenOrigin.substring(7);
+        String refreshToken = refreshTokenOrigin.substring(7);
+
+        // 아직 만료되지 않은 토큰으로는 refresh 할 수 없음
+        if(jwtUtil.validateToken(accessToken)) throw new RestApiException(ErrorType.ACCESS_TOKEN_NOT_EXPIRED);
+
+        Claims claims = jwtUtil.getUserInfoFromToken(refreshToken);
+        String username = claims.get("sub", String.class); // access token에서 username을 가져옴
+
+        System.out.println(username);
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        String kakaoRefreshToken = user.getKakaoRefreshToken();
+
+        if (!jwtUtil.validateToken(kakaoRefreshToken.substring(7)) || !refreshToken.equals(kakaoRefreshToken.substring(7))) {
+            throw new RestApiException(ErrorType.REFRESH_TOKEN_NOT_VALIDATE); // 만료되거나 일치하지 않는 리프레시 토큰은 에러처리
+        }
+
+        String newAccessToken = jwtUtil.createAccessToken(user.getUsername(), user.getRole());
+
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setMessage("access token 재발급 성공");
+        tokenDto.setAccessToken(newAccessToken);
+        tokenDto.setRefreshToken(refreshTokenOrigin);
+
+        return ResponseUtils.ok(tokenDto, null);
     }
 }
