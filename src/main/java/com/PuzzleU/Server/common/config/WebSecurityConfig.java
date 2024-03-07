@@ -57,6 +57,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/user/**", "/actuator/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/api/upload/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "api/splash").permitAll()
                                 .anyRequest().authenticated()
 
