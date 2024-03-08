@@ -1,86 +1,49 @@
 package com.PuzzleU.Server.upload.controller;
 
+import com.PuzzleU.Server.common.enumSet.CompetitionType;
+import com.PuzzleU.Server.competition.entity.Competition;
+import com.PuzzleU.Server.competition.repository.CompetitionRepository;
 import com.PuzzleU.Server.profile.entity.Profile;
 import com.PuzzleU.Server.profile.repository.ProfileRepository;
 import com.PuzzleU.Server.skillset.entity.Skillset;
 import com.PuzzleU.Server.skillset.repository.SkillsetRepository;
+import com.PuzzleU.Server.upload.dto.UploadCompetitionDto;
+import com.PuzzleU.Server.upload.service.UploadService;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/upload")
 public class UploadController {
 
-    private final AmazonS3Client amazonS3Client;
-    private final ProfileRepository profileRepository;
-    private final SkillsetRepository skillsetRepository;
-
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
-
-    @Value("${cloud.aws.region.static}")
-    private String region;
+    private final UploadService uploadService;
 
     @PostMapping("/profile")
     public ResponseEntity<String> uploadProfile(@RequestParam("profileImage") MultipartFile file) {
-        try {
-            String fileName =file.getOriginalFilename();
-            String folder = "/profile"; // 저장할 폴더
-
-            String fileUrl= "https://" + bucket + ".s3." + region + ".amazonaws.com" + folder + "/" + fileName;
-            ObjectMetadata metadata= new ObjectMetadata();
-            metadata.setContentType(file.getContentType());
-            metadata.setContentLength(file.getSize());
-            amazonS3Client.putObject(bucket + folder, fileName, file.getInputStream(), metadata);
-
-            Profile profile = new Profile();
-            profile.setProfielUrl(fileUrl);
-
-            profileRepository.save(profile);
-
-            return ResponseEntity.ok(fileUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return uploadService.uploadProfile(file);
     }
 
     @PostMapping("/skillset")
     public ResponseEntity<String> uploadSkillset(@RequestParam("skillsetLogo") MultipartFile file, @RequestParam("skillsetName") String skillsetName) {
+        return uploadService.uploadSkillset(file, skillsetName);
+    }
 
-        try {
-            String fileName =file.getOriginalFilename();
-            String folder = "/skillset"; // 저장할 폴더
-
-            String fileUrl= "https://" + bucket + ".s3." + region + ".amazonaws.com" + folder + "/" + fileName;
-            ObjectMetadata metadata= new ObjectMetadata();
-            metadata.setContentType(file.getContentType());
-            metadata.setContentLength(file.getSize());
-            amazonS3Client.putObject(bucket + folder, fileName, file.getInputStream(), metadata);
-
-            Skillset skillset = new Skillset();
-            skillset.setSkillsetLogo(fileUrl);
-            skillset.setSkillsetName(skillsetName);
-
-            skillsetRepository.save(skillset);
-
-            return ResponseEntity.ok(fileUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    @PostMapping("/competition")
+    public ResponseEntity<String> uploadCompetition (@ModelAttribute UploadCompetitionDto uploadCompetitionDto) {
+       return uploadService.uploadCompetition(uploadCompetitionDto);
     }
 
 }
