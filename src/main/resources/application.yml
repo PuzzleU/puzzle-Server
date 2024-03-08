@@ -43,6 +43,16 @@ management:
     web:
       exposure:
         include: info, health
+
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+    stack.auto: false
+    region.static: ${S3_REGION}
+    credentials:
+      accessKey: ${S3_ACCESS_KEY}
+      secretKey: ${S3_SECRET_KEY}
 #social-login.provider.apple.grant-type=authorization_code
 #social-login.provider.apple.client-id=YOUR_APPLE_CLIENT_ID
 #social-login.provider.apple.key-id=YOUR_APPLE_KEY_ID
