@@ -6,8 +6,7 @@ import com.PuzzleU.Server.common.enumSet.NotificationType;
 import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
-import com.PuzzleU.Server.notify.entity.NotifyFriendShip;
-import com.PuzzleU.Server.notify.service.NotifyService;
+import com.PuzzleU.Server.notify.service.NotificationService;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -24,7 +23,7 @@ public class FriendshipService {
 
     private final UserRepository userRepository;
     private final FriendshipRepository friendshipRepository;
-    private final NotifyService notifyService;
+    private final NotificationService notificationService;
 
     // 특정 유저에게 친구신청을 거는 것
     @Transactional
@@ -50,8 +49,7 @@ public class FriendshipService {
             friendShip.setUserStatus(false);
             friendshipRepository.save(friendShip);
             };
-            notifyService.sendFriend(user2, friendShip, "새로운 친구 요청이 있습니다!", NotificationType.Friend);
-        NotifyFriendShip notifyFriendShip = new NotifyFriendShip();
+            notificationService.sendFriend(user2, user1, "새로운 친구 요청이 있습니다!", NotificationType.FriendRequest);
             return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
         }
 
@@ -72,6 +70,7 @@ public class FriendshipService {
         System.out.println(friendShip);
         friendShip.setUserStatus(true);
         friendshipRepository.save(friendShip);
+        notificationService.sendFriend(user2, user1, "친구가 되었습니다", NotificationType.FriendFinish);
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구수락이 완료되었습니다"), null);
 
     }
