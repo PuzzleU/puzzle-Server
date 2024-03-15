@@ -10,8 +10,11 @@ import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.ApplyStatus;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
+import com.PuzzleU.Server.common.enumSet.NotificationType;
 import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.competition.entity.Competition;
+import com.PuzzleU.Server.notify.entity.Notification;
+import com.PuzzleU.Server.notify.service.NotificationService;
 import com.PuzzleU.Server.position.dto.PositionDto;
 import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.position.repository.PositionRepository;
@@ -57,6 +60,8 @@ public class ApplyService {
     private final TeamUserRepository teamUserRepository;
     private final TeamLocationRelationRepository teamLocationRelationRepository;
     private final TeamPositionRelationRepository teamPositionRelationRepository;
+
+    private final NotificationService notificationService;
     // 팀에 대한 지원서 작성
     @Transactional
     public ApiResponseDto<SuccessResponse> postApply(UserDetails loginUser, Long teamId, ApplyPostDto applyPostDto) {
@@ -64,7 +69,11 @@ public class ApplyService {
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_TEAM));
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-
+        Competition competition = team.getCompetition();
+        Optional<User> writerOptional = teamUserRepository.findWriterByTeam(team);
+        User writer = writerOptional.orElseThrow(
+                () -> new RestApiException(ErrorType.NOT_FOUND)
+        );
         List<Apply> applyList = user.getApplies();
         for (Apply a : applyList) {
             if (a.getTeam() == team) {
@@ -92,7 +101,7 @@ public class ApplyService {
 
             positionApplyRelationRepository.save(positionApplyRelation);
         }
-
+        notificationService.sendApply(user,writer,"새로운 지원자가 있습니다", NotificationType.ApplyChange, team, competition);
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 저장 완료"), null);
     }
 

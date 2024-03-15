@@ -7,7 +7,7 @@ import com.PuzzleU.Server.experience.entity.Experience;
 import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.heart.entity.Heart;
 import com.PuzzleU.Server.major.entity.Major;
-import com.PuzzleU.Server.notify.entity.NotifyFriendShip;
+import com.PuzzleU.Server.notify.entity.Notification;
 import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.profile.entity.Profile;
 import com.PuzzleU.Server.relations.entity.*;
@@ -137,7 +137,7 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
-    private List<NotifyFriendShip> notifies = new ArrayList<>();
+    private List<Notification> notifies = new ArrayList<>();
 
     @Builder
     public User(

@@ -12,7 +12,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Getter
 @Setter
-public class NotifyFriendShip extends BaseEntity {
+public class Notification extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,27 +31,20 @@ public class NotifyFriendShip extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private FriendShip friendShip;
 
 
-
-
-
-    public NotifyFriendShip() {
+    public Notification() {
 
     }
 
     @Builder
-    public NotifyFriendShip(Long id, String content, String url, Boolean isRead, NotificationType notificationType, User user, FriendShip friendShip) {
+    public Notification(Long id, String content, String url, Boolean isRead, NotificationType notificationType, User user) {
         this.id = id;
         this.content = content;
         this.url = url;
         this.isRead = isRead;
         this.notificationType = notificationType;
         this.user = user;
-        this.friendShip = friendShip;
     }
     public void read()
     {
