@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.user.repository;
 
+import com.PuzzleU.Server.common.enumSet.LoginType;
 import com.PuzzleU.Server.user.entity.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,5 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllExcept(User user, Pageable pageable);
 
     Optional<User> findByUserPuzzleId(String puzzleId);
+
+    Optional<User> findByUsernameAndLoginType(String username, LoginType loginType);
 
 }

@@ -44,6 +44,7 @@ public class User {
     private UserRoleEnum role;
 
     @Column(nullable = true)
+    @Enumerated(value = EnumType.STRING)
     private LoginType loginType;
 
     // 카카오 로그인 refresh 토큰
