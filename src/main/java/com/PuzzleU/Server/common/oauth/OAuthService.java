@@ -3,6 +3,7 @@ package com.PuzzleU.Server.common.oauth;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
+import com.PuzzleU.Server.common.enumSet.LoginType;
 import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.common.jwt.TokenDto;
 import com.PuzzleU.Server.user.dto.KakaoUserInfoDto;
@@ -257,6 +258,7 @@ public class OAuthService {
             // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
             UserRoleEnum role = UserRoleEnum.USER; // 카카오 유저 ROLE 임의 설정
             User signUpUser = User.of(username, password, role);
+            signUpUser.setLoginType(LoginType.KAKAO);
 
             // 토큰 생성
             TokenDto tokenDto = new TokenDto();
