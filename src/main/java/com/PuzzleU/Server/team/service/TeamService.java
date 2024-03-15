@@ -8,6 +8,7 @@ import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.ApplyStatus;
+import com.PuzzleU.Server.common.enumSet.NotificationType;
 import com.PuzzleU.Server.competition.repository.CompetitionRepository;
 import com.PuzzleU.Server.competition.dto.CompetitionSearchDto;
 import com.PuzzleU.Server.competition.dto.CompetitionSearchTotalDto;
@@ -15,6 +16,7 @@ import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.location.dto.LocationDto;
 import com.PuzzleU.Server.location.entity.Location;
 import com.PuzzleU.Server.location.repository.LocationRepository;
+import com.PuzzleU.Server.notify.service.NotificationService;
 import com.PuzzleU.Server.position.dto.PositionDto;
 import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.position.repository.PositionRepository;
@@ -64,6 +66,7 @@ public class TeamService {
     private final PositionRepository positionRepository;
     private final ApplyRepository applyRepository;
     private final TeamPositionRelationRepository teamPositionRelationRepository;
+    private final NotificationService notificationService;
 
     // 팀 구인글을 등록하는 API
     @Transactional
@@ -141,7 +144,15 @@ public class TeamService {
         competetion_team += 1;
         competition.setCompetitionMatching(competetion_team);
         competitionRepository.save(competition);
+        for(Long userId : teamMember)
+        {
+            Optional<User> userOptional = userRepository.findById(userId);
+            User user = userOptional.orElseThrow(
+                    () -> new RestApiException(ErrorType.NOT_FOUND_USER)
+            );
 
+            notificationService.sendTeamJoin(user, loginuser, "새로운 팀에 참여되었습니다", NotificationType.TeamJoin, team, competition);
+        }
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 구인글 생성완료"), null);
     }
 
@@ -592,6 +603,10 @@ public class TeamService {
         Apply apply = applyRepository.findByApplyId(applyId)
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_APPLY));
 
+        Optional<User> applierOptional = applyRepository.findApplier(apply);
+        User applier = applierOptional.orElseThrow(
+                () -> new RestApiException(ErrorType.NOT_FOUND)
+        );
         // 로그인한 유저가 모집 공고의 작성자여야 수락/거절 가능
         if (teamUserRelation.getIsWriter() == false) {
             throw new RestApiException(ErrorType.NO_PERMISSION_TO_ACCEPT_APPLY);
@@ -600,18 +615,19 @@ public class TeamService {
         if (acceptOrRejectDto.getAcceptOrReject().equals("ACCEPT")) {
             apply.setApplyStatus(ApplyStatus.ACCEPTED);
             applyRepository.save(apply);
-
+            notificationService.sendApplyStatusJoin(applier, user, "지원 상태가 변경되었습니다", NotificationType.ApplyChange,apply);
             return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 수락 완료"), null);
         }
         else if (acceptOrRejectDto.getAcceptOrReject().equals("REJECT")) {
             apply.setApplyStatus(ApplyStatus.REJECTED);
             applyRepository.save(apply);
-
+            notificationService.sendApplyStatusJoin(applier, user, "지원 상태가 변경되었습니다", NotificationType.ApplyChange,apply);
             return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 거절 완료"), null);
         }
         else {
             throw new RestApiException(ErrorType.NOT_MATCH_ACCEPT_REJECT);
         }
+
     }
     @Transactional
     public ApiResponseDto<TeamListDto> getTeamList(Long competition_Id, int pageNo, int pageSize, String sortBy) {
