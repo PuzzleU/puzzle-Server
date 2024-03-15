@@ -244,8 +244,7 @@ public class OAuthService {
             2-2. DB에 있는 ID면 -> 로그인
          */
 
-        String kakaoAccessToken = getKakaoAccessToken(kakaoAccesstoken); // 카카오 access token 받아오기
-        KakaoUserInfoDto kakaoUserInfoDto = getKakaoUserInfo(kakaoAccessToken); // 카카오 유저 정보 받아오기
+        KakaoUserInfoDto kakaoUserInfoDto = getKakaoUserInfo(kakaoAccesstoken); // 카카오 유저 정보 받아오기
 
         // 아이디, 비밀번호 받아오기
         String username = kakaoUserInfoDto.getKakaoId();
