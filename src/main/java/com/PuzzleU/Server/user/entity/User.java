@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.user.entity;
 
 import com.PuzzleU.Server.apply.entity.Apply;
+import com.PuzzleU.Server.common.enumSet.LoginType;
 import com.PuzzleU.Server.common.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.common.enumSet.WorkType;
 import com.PuzzleU.Server.experience.entity.Experience;
@@ -41,6 +42,10 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
+
+    @Column(nullable = true)
+    @Enumerated(value = EnumType.STRING)
+    private LoginType loginType;
 
     // 카카오 로그인 refresh 토큰
     private String kakaoRefreshToken;

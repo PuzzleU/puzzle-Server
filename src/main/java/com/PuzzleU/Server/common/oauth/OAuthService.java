@@ -3,6 +3,7 @@ package com.PuzzleU.Server.common.oauth;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
+import com.PuzzleU.Server.common.enumSet.LoginType;
 import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.common.jwt.TokenDto;
 import com.PuzzleU.Server.user.dto.KakaoUserInfoDto;
@@ -169,22 +170,82 @@ public class OAuthService {
         return kakaoUserInfoDto;
     }
 
-    @Transactional
-    // 카카오 로그인 매서드
-    public ApiResponseDto<TokenDto> kakaoLogin(String code) {
-        /*
-            *** 아래 링크에서 카카오 로그인 하면 회원가입/로그인 됨 ***
-            kauth.kakao.com/oauth/authorize?client_id=bdae78483f052375d4334586ceee5544&redirect_uri=http://localhost:8080/api/oauth/kakao&response_type=code
+//    @Transactional
+//    // 기존 카카오 로그인 매서드
+//    public ApiResponseDto<TokenDto> kakaoLogin(String code) {
+//        /*
+//            *** 아래 링크에서 카카오 로그인 하면 회원가입/로그인 됨 ***
+//            kauth.kakao.com/oauth/authorize?client_id=bdae78483f052375d4334586ceee5544&redirect_uri=http://localhost:8080/api/oauth/kakao&response_type=code
+//
+//            1. kauth.kakao.com/oauth/authorize로 들어가서 카카오 로그인 수행 -> 로그인 코드 반환
+//            2. kapi.kakao.com/v2/user/me에서 로그인 코드 입력 -> 엑세스 토큰 반환
+//            3. 엑세스 토큰으로 유저 정보 받아오기
+//            4-1. DB에 없는 ID면 -> 회원가입
+//            4-2. DB에 있는 ID면 -> 로그인
+//         */
+//
+//        String kakaoAccessToken = getKakaoAccessToken(code); // 카카오 access token 받아오기
+//        KakaoUserInfoDto kakaoUserInfoDto = getKakaoUserInfo(kakaoAccessToken); // 카카오 유저 정보 받아오기
+//
+//        // 아이디, 비밀번호 받아오기
+//        String username = kakaoUserInfoDto.getKakaoId();
+//        String password = passwordEncoder.encode("kakaouserpassword"); // 카카오 유저 비밀번호 임의 설정
+//
+//        // 회원 아이디 중복 확인 -> DB에 존재하지 않으면 회원가입 수행
+//        Optional<User> user = userRepository.findByUsername(username);
+//
+//        if (user.isEmpty()) {
+//            // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
+//            UserRoleEnum role = UserRoleEnum.USER; // 카카오 유저 ROLE 임의 설정
+//            User signUpUser = User.of(username, password, role);
+//
+//            // 토큰 생성
+//            TokenDto tokenDto = new TokenDto();
+//
+//            String accessToken = jwtUtil.createAccessToken(signUpUser.getUsername(), signUpUser.getRole());
+//            String refreshToken = jwtUtil.createRefreshToken(signUpUser.getUsername(), signUpUser.getRole());
+//
+//            // refresh token을 DB에 저장
+//            signUpUser.setKakaoRefreshToken(refreshToken);
+//            userRepository.save(signUpUser);
+//
+//            // response 생성
+//            tokenDto.setMessage("카카오 회원가입 성공");
+//            tokenDto.setAccessToken(accessToken);
+//            tokenDto.setRefreshToken(refreshToken);
+//
+//            return ResponseUtils.ok(tokenDto, null);
+//
+//        } else { // DB에 존재하면 로그인 수행
+//            // 토큰 생성
+//            TokenDto tokenDto = new TokenDto();
+//
+//            String accessToken = jwtUtil.createAccessToken(user.get().getUsername(), user.get().getRole());
+//            String refreshToken = jwtUtil.createRefreshToken(user.get().getUsername(), user.get().getRole());
+//
+//            // refresh token을 DB에 저장
+//            user.get().setKakaoRefreshToken(refreshToken);
+//            userRepository.save(user.get());
+//
+//            // response 생성
+//            tokenDto.setMessage("카카오 로그인 성공");
+//            tokenDto.setAccessToken(accessToken);
+//            tokenDto.setRefreshToken(refreshToken);
+//
+//            return ResponseUtils.ok(tokenDto, null);
+//        }
+//    }
 
-            1. kauth.kakao.com/oauth/authorize로 들어가서 카카오 로그인 수행 -> 로그인 코드 반환
-            2. kapi.kakao.com/v2/user/me에서 로그인 코드 입력 -> 엑세스 토큰 반환
-            3. 엑세스 토큰으로 유저 정보 받아오기
-            4-1. DB에 없는 ID면 -> 회원가입
-            4-2. DB에 있는 ID면 -> 로그인
+        // 카카오 로그인 - 엑세스 토큰 받아서 로그인
+        @Transactional
+    public ApiResponseDto<TokenDto> kakaoLogin(String kakaoAccesstoken) {
+        /*
+            1. 카카오 엑세스 토큰으로 유저 정보 받아오기
+            2-1. DB에 없는 ID면 -> 회원가입
+            2-2. DB에 있는 ID면 -> 로그인
          */
 
-        String kakaoAccessToken = getKakaoAccessToken(code); // 카카오 access token 받아오기
-        KakaoUserInfoDto kakaoUserInfoDto = getKakaoUserInfo(kakaoAccessToken); // 카카오 유저 정보 받아오기
+        KakaoUserInfoDto kakaoUserInfoDto = getKakaoUserInfo(kakaoAccesstoken); // 카카오 유저 정보 받아오기
 
         // 아이디, 비밀번호 받아오기
         String username = kakaoUserInfoDto.getKakaoId();
@@ -197,6 +258,7 @@ public class OAuthService {
             // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
             UserRoleEnum role = UserRoleEnum.USER; // 카카오 유저 ROLE 임의 설정
             User signUpUser = User.of(username, password, role);
+            signUpUser.setLoginType(LoginType.KAKAO);
 
             // 토큰 생성
             TokenDto tokenDto = new TokenDto();
