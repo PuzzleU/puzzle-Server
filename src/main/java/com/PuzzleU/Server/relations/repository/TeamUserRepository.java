@@ -32,6 +32,4 @@ public interface TeamUserRepository extends JpaRepository<TeamUserRelation, Long
     @Query("SELECT tur FROM TeamUserRelation tur JOIN Team t ON tur.team = t JOIN Competition c ON t.competition = c WHERE tur.user = :user AND c = :competition")
     Optional<TeamUserRelation> findByUserAndCompetitionExist(User user, Competition competition);
 
-    @Query("SELECT tu.user FROM TeamUserRelation tu WHERE tu.team=:team and tu.isWriter =true")
-    Optional<User>findWriterByTeam(@Param("team")Team team);
 }

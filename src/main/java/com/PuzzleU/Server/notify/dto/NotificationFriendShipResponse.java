@@ -1,6 +1,6 @@
 package com.PuzzleU.Server.notify.dto;
 
-import com.PuzzleU.Server.notify.entity.Notification;
+import com.PuzzleU.Server.notify.entity.NotifyFriendShip;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class NotificationResponse {
+public class NotificationFriendShipResponse {
     // 알림 id
     private Long id;
 
@@ -28,21 +28,21 @@ public class NotificationResponse {
 
 
     @Builder
-    public NotificationResponse(Long id, String content, String url, LocalDateTime createAt, boolean read) {
+    public NotificationFriendShipResponse(Long id, String content, String url, LocalDateTime createAt, boolean read) {
         this.id = id;
         this.content = content;
         this.url = url;
         this.createAt = createAt;
         this.read = read;
     }
-    public static NotificationResponse from(Notification notification)
+    public static NotificationFriendShipResponse from(NotifyFriendShip notifyFriendShip)
     {
-        return NotificationResponse.builder()
-                .id(notification.getId())
-                .content(notification.getContent())
-                .url(notification.getUrl())
-                .createAt(notification.getCreatedDate())
-                .read(notification.getIsRead())
+        return NotificationFriendShipResponse.builder()
+                .id(notifyFriendShip.getId())
+                .content(notifyFriendShip.getContent())
+                .url(notifyFriendShip.getUrl())
+                .createAt(notifyFriendShip.getCreatedDate())
+                .read(notifyFriendShip.getIsRead())
                 .build();
     }
 }

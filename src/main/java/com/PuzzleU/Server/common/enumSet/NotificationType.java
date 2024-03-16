@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum NotificationType {
-    FriendRequest,FriendFinish, TeamJoin, ApplyCheck, ApplyChange
+    Friend, Team, Apply, Change
 }
