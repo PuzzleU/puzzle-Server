@@ -1,6 +1,6 @@
-package com.PuzzleU.Server.notify.dto;
+package com.PuzzleU.Server.notification.dto;
 
-import com.PuzzleU.Server.notify.entity.Notification;
+import com.PuzzleU.Server.notification.entity.Notification;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

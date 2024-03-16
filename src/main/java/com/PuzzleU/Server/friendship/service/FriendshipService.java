@@ -6,7 +6,7 @@ import com.PuzzleU.Server.common.enumSet.NotificationType;
 import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
-import com.PuzzleU.Server.notify.service.NotificationService;
+import com.PuzzleU.Server.notification.service.NotificationService;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.repository.UserRepository;
 import jakarta.transaction.Transactional;

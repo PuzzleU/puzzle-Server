@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.notify.dto;
+package com.PuzzleU.Server.notification.dto;
 
 import lombok.Builder;
 import lombok.Getter;
