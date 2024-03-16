@@ -257,7 +257,7 @@ public class OAuthService {
         if (user.isEmpty()) {
             // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
             UserRoleEnum role = UserRoleEnum.USER; // 카카오 유저 ROLE 임의 설정
-            User signUpUser = User.of(username, password, role);
+            User signUpUser = User.of(LoginType.KAKAO, username, password, role);
             signUpUser.setLoginType(LoginType.KAKAO);
 
             // 토큰 생성
