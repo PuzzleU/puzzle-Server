@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class InterestTypeDto {
     private InterestTypes InterestType;
     private List<InterestDto> InterestList;
