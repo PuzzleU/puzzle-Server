@@ -72,7 +72,7 @@ public class JwtUtil {
         return null;
     }
 
-    // 토큰 생성 // 3번 generateToken // claim에서는 USERNAME으로 들어간다
+    // 토큰 생성
     public String createToken(String username, UserRoleEnum role)
     {
         Date date = new Date();
