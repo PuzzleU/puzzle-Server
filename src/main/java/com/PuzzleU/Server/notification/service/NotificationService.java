@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.notify.service;
+package com.PuzzleU.Server.notification.service;
 
 import com.PuzzleU.Server.apply.entity.Apply;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
@@ -10,11 +10,11 @@ import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.competition.entity.Competition;
 import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.friendship.repository.FriendshipRepository;
-import com.PuzzleU.Server.notify.dto.NotificationResponses;
-import com.PuzzleU.Server.notify.dto.NotificationResponse;
-import com.PuzzleU.Server.notify.entity.Notification;
-import com.PuzzleU.Server.notify.repository.EmitterRepository;
-import com.PuzzleU.Server.notify.repository.NotificationRepository;
+import com.PuzzleU.Server.notification.dto.NotificationResponses;
+import com.PuzzleU.Server.notification.dto.NotificationResponse;
+import com.PuzzleU.Server.notification.entity.Notification;
+import com.PuzzleU.Server.notification.repository.EmitterRepository;
+import com.PuzzleU.Server.notification.repository.NotificationRepository;
 import com.PuzzleU.Server.team.entity.Team;
 import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.user.repository.UserRepository;

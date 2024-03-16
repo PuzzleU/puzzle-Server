@@ -1,4 +1,4 @@
-package com.PuzzleU.Server.notify.repository;
+package com.PuzzleU.Server.notification.repository;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

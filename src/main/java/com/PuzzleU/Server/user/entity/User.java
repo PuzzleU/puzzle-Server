@@ -8,7 +8,7 @@ import com.PuzzleU.Server.experience.entity.Experience;
 import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.heart.entity.Heart;
 import com.PuzzleU.Server.major.entity.Major;
-import com.PuzzleU.Server.notify.entity.Notification;
+import com.PuzzleU.Server.notification.entity.Notification;
 import com.PuzzleU.Server.position.entity.Position;
 import com.PuzzleU.Server.profile.entity.Profile;
 import com.PuzzleU.Server.relations.entity.*;
