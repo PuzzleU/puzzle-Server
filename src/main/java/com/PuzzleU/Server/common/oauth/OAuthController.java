@@ -1,25 +1,15 @@
 package com.PuzzleU.Server.common.oauth;
 
-import com.PuzzleU.Server.apple.AuthService;
-import com.PuzzleU.Server.apple.SignInRequest;
-import com.PuzzleU.Server.apple.SignInResponse;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
-import com.PuzzleU.Server.common.api.ResponseUtils;
-import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
 import com.PuzzleU.Server.common.enumSet.LoginType;
 import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.common.jwt.TokenDto;
 import com.PuzzleU.Server.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 // 테스트용
 import com.PuzzleU.Server.user.entity.User;
-
-import java.security.Principal;
 
 @RestController
 @AllArgsConstructor
@@ -54,27 +44,6 @@ public class OAuthController {
             @RequestHeader(value="refreshToken") String refreshToken
     ) {
         return oAuthService.refreshKakaoToken(accessToken, refreshToken);
-    }
-    private final AuthService authService;
-
-    @PostMapping("apple")
-    public ApiResponseDto<SignInResponse> signIn(@RequestHeader("Authorization") String socialAccessToken, @RequestBody SignInRequest request) {
-        SignInResponse response = authService.signIn(socialAccessToken, request);
-        return ResponseUtils.ok(response, null);
-    }
-
-    @PostMapping("apple/logout")
-    public ApiResponseDto<SuccessResponse> signOut(Principal principal) {
-        long memberId = Long.parseLong(principal.getName());
-        authService.signOut(memberId);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"로그아웃성공"),null);
-    }
-
-    @DeleteMapping("apple/withdrawl")
-    public ApiResponseDto<SuccessResponse> withdrawal(Principal principal) {
-        long memberId = Long.parseLong(principal.getName());
-        authService.withdraw(memberId);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"withdrawl성공"),null);
     }
 
 }
