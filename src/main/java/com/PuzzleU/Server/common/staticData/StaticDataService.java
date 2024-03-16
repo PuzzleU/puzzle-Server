@@ -49,7 +49,7 @@ public class StaticDataService {
         }
 
         StaticDataDto staticDataDto = StaticDataDto.builder()
-                .postionList(positionList)
+                .positionList(positionList)
                 .interestList(interestList)
                 .locationList(locationList)
                 .profileList(profileList).build();

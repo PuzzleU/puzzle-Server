@@ -1,11 +1,10 @@
-package com.PuzzleU.Server.notify.repository;
+package com.PuzzleU.Server.notification.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 @Repository

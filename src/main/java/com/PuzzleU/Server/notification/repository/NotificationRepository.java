@@ -1,6 +1,6 @@
-package com.PuzzleU.Server.notify.repository;
+package com.PuzzleU.Server.notification.repository;
 
-import com.PuzzleU.Server.notify.entity.Notification;
+import com.PuzzleU.Server.notification.entity.Notification;
 import com.PuzzleU.Server.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

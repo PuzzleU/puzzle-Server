@@ -1,8 +1,7 @@
-package com.PuzzleU.Server.notify.entity;
+package com.PuzzleU.Server.notification.entity;
 
 import com.PuzzleU.Server.common.enumSet.BaseEntity;
 import com.PuzzleU.Server.common.enumSet.NotificationType;
-import com.PuzzleU.Server.friendship.entity.FriendShip;
 import com.PuzzleU.Server.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;

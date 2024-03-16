@@ -1,9 +1,9 @@
-package com.PuzzleU.Server.notify.controller;
+package com.PuzzleU.Server.notification.controller;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.SuccessResponse;
-import com.PuzzleU.Server.notify.dto.NotificationResponses;
-import com.PuzzleU.Server.notify.service.NotificationService;
+import com.PuzzleU.Server.notification.dto.NotificationResponses;
+import com.PuzzleU.Server.notification.service.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
