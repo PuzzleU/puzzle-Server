@@ -7,10 +7,14 @@ import com.PuzzleU.Server.common.jwt.TokenDto;
 import com.PuzzleU.Server.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import com.PuzzleU.Server.common.enumSet.ErrorType;
+import com.PuzzleU.Server.common.enumSet.LoginType;
+import com.PuzzleU.Server.common.exception.RestApiException;
+import com.PuzzleU.Server.common.jwt.TokenDto;
+import com.PuzzleU.Server.user.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 // 테스트용
-
-import java.security.Principal;
 
 @RestController
 @AllArgsConstructor
@@ -59,6 +63,5 @@ public class OAuthController {
     ) {
         return oAuthService.refreshAppleToken(accessToken, refreshToken);
     }
-
 
 }
