@@ -32,13 +32,6 @@ public class OAuthController {
 
     @PostMapping("/kakao")
     public ApiResponseDto<TokenDto> kakaoLogin(@RequestParam("kakaoAccessToken") String kakaoAccessToken) {
-//        System.out.println("code = " + code); // 카카오 로그인을 수행하면 /api/oauth/kakao로 리다이렉트 되면서 code가 받아와짐
-//
-//        String accessToken = oAuthService.getKakaoAccessToken(code); // access token 받아오기
-//        System.out.println("accessToken = " + accessToken);
-//
-//        KakaoUserInfoDto kakaoUserInfoDto = oAuthService.getKakaoUserInfo(accessToken);
-//        System.out.println("kakaoUserInfo = " + kakaoUserInfoDto.toString());
 
         return oAuthService.kakaoLogin(kakaoAccessToken);
     }
