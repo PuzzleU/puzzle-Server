@@ -59,4 +59,3 @@ cloud:
 #social-login.provider.apple.team-id=YOUR_APPLE_TEAM_ID
 #social-login.provider.apple.audience=https://appleid.apple.com
 #social-login.provider.apple.private-key=YOUR_APPLE_P8_KEY (-----BEGIN PRIVATE KEY-----, -----END PRIVATE KEY----- ? ??? key ???? ???? ?? ??? ???)
-jwt_token : ${JWT_TOKEN}
