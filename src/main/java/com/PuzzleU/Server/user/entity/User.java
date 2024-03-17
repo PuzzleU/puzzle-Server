@@ -47,9 +47,14 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private LoginType loginType;
 
+    @Column(nullable = true)
+    private String email;
+
     // 카카오 로그인 refresh 토큰
     private String kakaoRefreshToken;
 
+    // 애플 로그인 refresh 토큰
+    private String appleRefreshToken;
     // 혜택 수신 동의
     @Column(nullable = true)
     @ColumnDefault("false")
@@ -78,7 +83,7 @@ public class User {
     @JoinColumn(name="user_position_id2")
     private Position userPosition2;
 
-
+    private String refreshToken;
     // 선택 정보
 
 
@@ -145,30 +150,27 @@ public class User {
     private List<Notification> notifies = new ArrayList<>();
 
     @Builder
-    public User(
-            Long id,
-            String username,
-            String password,
-            UserRoleEnum role,
-            String userPuzzleId,
-            String userKoreaName,
-            Profile userProfile
-    ) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.role = role;
-        this.userPuzzleId = userPuzzleId;
-        this.userKoreaName = userKoreaName;
-        this.userProfile = userProfile;
+    public User(LoginType socialType, String socialId) {
+        this.loginType = socialType;
+        this.username = socialId;
     }
 
-    public static User of(String username, String password, UserRoleEnum role)
-    {
-        return User.builder()
-                .username(username)
-                .password(password)
-                .role(role)
-                .build();
+
+    public static User of(LoginType loginType,  String username, String password, UserRoleEnum role) {
+        User user = new User(loginType, username); // 일반 로그인 타입으로 사용자 생성
+        user.setPassword(password); // 패스워드 설정
+        user.setRole(role); // 역할 설정
+        return user; // 사용자 반환
     }
+    public User(String username, String email, String userPuzzleId, UserRoleEnum role, String refreshToken, LoginType loginType )
+    {
+        this.username = username;
+        this.email = email;
+        this.userPuzzleId = userPuzzleId;
+        this.role = role;
+        this.refreshToken = refreshToken;
+        this.loginType = loginType;
+
+    }
+
 }
