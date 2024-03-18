@@ -47,9 +47,15 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private LoginType loginType;
 
+    @Column(nullable = true)
+    private String email;
+
+
     // 카카오 로그인 refresh 토큰
     private String kakaoRefreshToken;
 
+    // 애플 로그인 refresh 토큰
+    private String appleRefreshToken;
     // 혜택 수신 동의
     @Column(nullable = true)
     @ColumnDefault("false")
@@ -171,4 +177,17 @@ public class User {
                 .role(role)
                 .build();
     }
+
+    public User(String username, String email, String userPuzzleId, UserRoleEnum role, String refreshToken, LoginType loginType )
+    {
+        this.username = username;
+        this.email = email;
+        this.userPuzzleId = userPuzzleId;
+        this.role = role;
+        this.refreshToken = refreshToken;
+        this.loginType = loginType;
+
+    }
+
+
 }
