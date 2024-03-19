@@ -155,13 +155,6 @@ public class User {
         this.username = socialId;
     }
 
-    public void updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
-    public void resetRefreshToken() {
-        this.refreshToken = null;
-    }
 
     public static User of(LoginType loginType,  String username, String password, UserRoleEnum role) {
         User user = new User(loginType, username); // 일반 로그인 타입으로 사용자 생성
