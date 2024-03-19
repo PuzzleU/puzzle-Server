@@ -350,7 +350,7 @@ public class OAuthService {
         // access토큰에서 각각의 정보를 받아와야한다
         // 아이디, 비밀번호 받아오기
         String username = appleUserInfoDto.getUsername();
-        String password = passwordEncoder.encode("kakaouserpassword"); // 애플 유저 비밀번호 임의 설정
+        String password = passwordEncoder.encode("appleuserpassword"); // 애플 유저 비밀번호 임의 설정
 
         // 회원 아이디 중복 확인 -> DB에 존재하지 않으면 회원가입 수행
         Optional<User> user = userRepository.findByUsername(username);
