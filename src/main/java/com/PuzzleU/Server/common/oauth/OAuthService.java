@@ -1,6 +1,5 @@
 package com.PuzzleU.Server.common.oauth;
 
-import com.PuzzleU.Server.common.jwt.AppleUserInfoDto;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
@@ -12,25 +11,18 @@ import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.common.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.common.jwt.JwtUtil;
 import com.PuzzleU.Server.user.repository.UserRepository;
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.io.*;
-import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyFactory;
-import java.security.PublicKey;
-import java.security.spec.RSAPublicKeySpec;
-import java.util.Base64;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -260,7 +252,7 @@ public class OAuthService {
         String password = passwordEncoder.encode("kakaouserpassword"); // 카카오 유저 비밀번호 임의 설정
 
         // 회원 아이디 중복 확인 -> DB에 존재하지 않으면 회원가입 수행
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsernameAndLoginType(username, LoginType.KAKAO);
 
         if (user.isEmpty()) {
             // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
@@ -320,7 +312,7 @@ public class OAuthService {
 
         System.out.println(username);
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsernameAndLoginType(username, LoginType.KAKAO)
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
 
         String kakaoRefreshToken = user.getKakaoRefreshToken();
@@ -520,4 +512,5 @@ public class OAuthService {
             return null;
         }
     }
+
 }

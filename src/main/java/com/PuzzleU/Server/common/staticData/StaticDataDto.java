@@ -16,7 +16,6 @@ import java.util.List;
 @Builder
 public class StaticDataDto {
     private List<PositionDto> positionList;
-    @JsonProperty(value="interest_total")
     private List<InterestTypeDto> interestList;
     private List<LocationDto> locationList;
     private List<ProfileDto> profileList;

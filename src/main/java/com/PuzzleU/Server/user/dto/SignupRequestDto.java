@@ -2,10 +2,8 @@ package com.PuzzleU.Server.user.dto;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class SignupRequestDto {
 
     // 아이디 유효성 검사
