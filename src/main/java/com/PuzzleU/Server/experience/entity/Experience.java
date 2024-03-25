@@ -47,4 +47,15 @@ public class Experience {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Experience( String experienceName, ExperienceType experienceType, Integer experienceStartYear, Integer experienceStartMonth, Integer experienceEndYear, Integer experienceEndMonth, Boolean experienceStatus, String experienceRole, User user) {
+        this.experienceName = experienceName;
+        this.experienceType = experienceType;
+        this.experienceStartYear = experienceStartYear;
+        this.experienceStartMonth = experienceStartMonth;
+        this.experienceEndYear = experienceEndYear;
+        this.experienceEndMonth = experienceEndMonth;
+        this.experienceStatus = experienceStatus;
+        this.experienceRole = experienceRole;
+        this.user = user;
+    }
 }

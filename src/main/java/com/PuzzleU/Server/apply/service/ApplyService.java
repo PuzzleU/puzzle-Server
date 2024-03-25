@@ -140,13 +140,12 @@ public class ApplyService {
         }
 
 
-        ApplyDetailDto applyDetailDto = new ApplyDetailDto();
-        applyDetailDto.setCompetitionPoster(competition.getCompetitionPoster());
-        applyDetailDto.setCompetitionTitle(competition.getCompetitionName());
-        applyDetailDto.setTeamTitle(team.getTeamTitle());
-        applyDetailDto.setPositionList(positionDtoList);
-        applyDetailDto.setApplyTitle(apply.getApplyTitle());
-        applyDetailDto.setApplyContent(apply.getApplyContent());
+        ApplyDetailDto applyDetailDto = ApplyDetailDto.builder()
+                        .competitionTitle(competition.getCompetitionName())
+                                .competitionPoster(competition.getCompetitionPoster())
+                                        .positionList(positionDtoList)
+                                                .applyTitle(apply.getApplyTitle())
+                                                        .applyContent(apply.getApplyContent()).build();
 
         return ResponseUtils.ok(applyDetailDto, null);
     }

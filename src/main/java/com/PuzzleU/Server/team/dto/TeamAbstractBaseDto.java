@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TeamAbstractBaseDto {
     private Long teamId;
     private String teamTitle;
