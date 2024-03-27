@@ -113,28 +113,11 @@ public class CompetitionService {
 
                     Integer heartNumber = (heartRepository.findByCompetition(competition.getCompetitionId())).size();
 
-                    CompetitionHomePageDto competitionHomePageDto = new CompetitionHomePageDto();
-                    competitionHomePageDto.setCompetitionHeart(heartNumber);
-                    competitionHomePageDto.setCompetitionPoster(competition.getCompetitionPoster());
-                    competitionHomePageDto.setCompetitionId(competition.getCompetitionId());
-                    competitionHomePageDto.setCompetitionDday(competition.getCompetitionDDay());
-                    competitionHomePageDto.setCompetitionName(competition.getCompetitionName());
-                    competitionHomePageDto.setCompetitionMatching(competition.getCompetitionMatching());
-                    competitionHomePageDto.setCompetitionVisit(competition.getCompetitionVisit());
-                    competitionHomePageDto.setCreatedAt(competition.getCreatedDate().format(formatter));
-                    competitionHomePageDto.setCompetitionTypeList(competition.getCompetitionTypes());
-                    return competitionHomePageDto;
+                    return new CompetitionHomePageDto(competition.getCompetitionId(),competition.getCompetitionName(), competition.getCompetitionVisit(), competition.getCompetitionMatching(), competition.getCompetitionTypes(), competition.getCompetitionDDay(), competition.getCreatedDate().format(formatter), heartNumber, competition.getCompetitionPoster());
                 })
                 .collect(Collectors.toList());
 
-        CompetitionHomeTotalDto competitionHomeTotalDto = new CompetitionHomeTotalDto();
-        competitionHomeTotalDto.setCompetitionList(competitionHomePageDtos);
-        competitionHomeTotalDto.setPageNo(pageNo);
-        competitionHomeTotalDto.setPageSize(pageSize);
-        competitionHomeTotalDto.setTotalElements(competitionPage.getTotalElements());
-        competitionHomeTotalDto.setTotalPages(competitionPage.getTotalPages());
-        competitionHomeTotalDto.setLast(competitionPage.isLast());
-
+        CompetitionHomeTotalDto competitionHomeTotalDto = new CompetitionHomeTotalDto(competitionHomePageDtos, pageNo, pageSize, competitionPage.getTotalElements(), competitionPage.getTotalPages(), competitionPage.isLast());
         return ResponseUtils.ok(competitionHomeTotalDto, null);
     }
 

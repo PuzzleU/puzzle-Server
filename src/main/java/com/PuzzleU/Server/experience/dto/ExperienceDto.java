@@ -36,13 +36,13 @@ public class ExperienceDto {
     {
         return ExperienceDto.builder()
                 .ExperienceName(experience.getExperienceName())
-                .ExperienceType(experience.getExperienceType())
                 .ExperienceStartYear(experience.getExperienceStartYear())
                 .ExperienceStartMonth(experience.getExperienceStartMonth())
                 .ExperienceEndYear(experience.getExperienceEndYear())
                 .ExperienceEndMonth(experience.getExperienceEndMonth())
                 .ExperienceType(experience.getExperienceType())
                 .ExperienceRole(experience.getExperienceRole())
+                .ExperienceId(experience.getExperienceId())
                 .build();
     }
 

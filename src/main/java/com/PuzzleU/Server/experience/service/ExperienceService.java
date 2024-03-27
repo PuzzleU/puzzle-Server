@@ -46,16 +46,7 @@ public class ExperienceService {
 
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
-        Experience experience = new Experience();
-        experience.setUser(user);
-        experience.setExperienceName(experienceDto.getExperienceName());
-        experience.setExperienceStartYear(experienceDto.getExperienceStartYear());
-        experience.setExperienceStartMonth(experienceDto.getExperienceStartMonth());
-        experience.setExperienceEndYear(experienceDto.getExperienceEndYear());
-        experience.setExperienceEndMonth(experienceDto.getExperienceEndMonth());
-        experience.setExperienceType(experienceDto.getExperienceType());
-        experience.setExperienceStatus(experienceDto.getExperienceStatus());
-        experience.setExperienceRole(experienceDto.getExperienceRole());
+        Experience experience = new Experience(experienceDto.getExperienceName(),experienceDto.getExperienceType(),experienceDto.getExperienceStartYear(),experienceDto.getExperienceStartMonth(),experienceDto.getExperienceEndYear(),experienceDto.getExperienceEndMonth(),experienceDto.getExperienceStatus(),experienceDto.getExperienceRole(),user);
         experienceRepository.save(experience);
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 저장완료"), null);
     }
@@ -139,17 +130,7 @@ public class ExperienceService {
         }
 
         for (Experience experience : userExperiences) {
-            ExperienceDto experienceDto = new ExperienceDto();
-
-            experienceDto.setExperienceId(experience.getExperienceId());
-            experienceDto.setExperienceName(experience.getExperienceName());
-            experienceDto.setExperienceStartYear(experience.getExperienceStartYear());
-            experienceDto.setExperienceStartMonth(experience.getExperienceStartMonth());
-            experienceDto.setExperienceEndYear(experience.getExperienceEndYear());
-            experienceDto.setExperienceEndMonth(experience.getExperienceEndMonth());
-            experienceDto.setExperienceType(experience.getExperienceType());
-            experienceDto.setExperienceStatus(experience.getExperienceStatus());
-            experienceDto.setExperienceRole(experience.getExperienceRole());
+            ExperienceDto experienceDto = ExperienceDto.of(experience);
             experienceList.add(experienceDto);
         }
         return ResponseUtils.ok(experienceList, null);
@@ -164,17 +145,7 @@ public class ExperienceService {
             System.out.println("User not found");
             return new RestApiException(ErrorType.NOT_FOUND_EXPERIENCE);
         });
-        ExperienceDto experienceDto = new ExperienceDto();
-        experienceDto.setExperienceId(experience.getExperienceId());
-        experienceDto.setExperienceName(experience.getExperienceName());
-        experienceDto.setExperienceStartYear(experience.getExperienceStartYear());
-        experienceDto.setExperienceStartMonth(experience.getExperienceStartMonth());
-        experienceDto.setExperienceEndYear(experience.getExperienceEndYear());
-        experienceDto.setExperienceEndMonth(experience.getExperienceEndMonth());
-        experienceDto.setExperienceType(experience.getExperienceType());
-        experienceDto.setExperienceStatus(experience.getExperienceStatus());
-        experienceDto.setExperienceRole(experience.getExperienceRole());
-
+        ExperienceDto experienceDto = ExperienceDto.of(experience);
 
         return ResponseUtils.ok(experienceDto, null);
 

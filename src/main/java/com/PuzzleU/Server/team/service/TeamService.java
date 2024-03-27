@@ -97,16 +97,7 @@ public class TeamService {
             Position position = positionOptional.orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_POSITION));
             positionList.add(position);
         }
-        Team team = new Team();
-        team.setTeamTitle(teamCreateDto.getTeamTitle());
-        team.setTeamMemberNeed(teamCreateDto.getTeamMemberNeed());
-        team.setTeamUntact(teamCreateDto.getTeamUntact());
-        team.setTeamUrl(teamCreateDto.getTeamUrl());
-        team.setTeamIntroduce(teamCreateDto.getTeamIntroduce());
-        team.setTeamContent(teamCreateDto.getTeamContent());
-        team.setTeamStatus(teamCreateDto.getTeamStatus());
-        team.setCompetition(competition);
-        team.setTeamMemberNow(teamMember.size() + 1);
+        Team team = new Team(teamCreateDto.getTeamTitle(),teamMember.size() + 1, teamCreateDto.getTeamMemberNeed(),teamCreateDto.getTeamUntact(),teamCreateDto.getTeamUrl(),teamCreateDto.getTeamIntroduce(),teamCreateDto.getTeamContent(),teamCreateDto.getTeamStatus(), competition);
 
         teamRepository.save(team);
 
