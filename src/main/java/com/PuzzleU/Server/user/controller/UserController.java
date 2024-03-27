@@ -257,8 +257,8 @@ public class UserController {
     }
 
     @PatchMapping("/essential/consent")
-    public ApiResponseDto<SuccessResponse> updateConsentMarketing(@AuthenticationPrincipal UserDetails loginUser, @RequestBody ConsentMarketingDto consentMarketingDto) {
-        return userService.updateConsentMarketing(loginUser, consentMarketingDto);
+    public ApiResponseDto<SuccessResponse> updateTermsConsent(@AuthenticationPrincipal UserDetails loginUser, @RequestBody TermsConsentDto termsConsentDto) {
+        return userService.updateTermsConsent(loginUser, termsConsentDto);
 
     }
 
