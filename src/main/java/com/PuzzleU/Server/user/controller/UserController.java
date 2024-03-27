@@ -262,6 +262,11 @@ public class UserController {
 
     }
 
+    @GetMapping("/essential/consent")
+    public ApiResponseDto<List<TermDto>> getTermsConsent() {
+        return userService.getTermsConsent();
+    }
+
 
 
 }
