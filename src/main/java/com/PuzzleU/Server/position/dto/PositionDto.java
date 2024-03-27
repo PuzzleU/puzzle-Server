@@ -11,4 +11,5 @@ import lombok.*;
 public class PositionDto {
     private Long PositionId;
     private String PositionName;
+    private String PositionUrl;
 }

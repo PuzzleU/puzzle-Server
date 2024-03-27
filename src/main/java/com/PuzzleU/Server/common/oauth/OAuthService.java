@@ -260,7 +260,7 @@ public class OAuthService {
         String password = passwordEncoder.encode("kakaouserpassword"); // 카카오 유저 비밀번호 임의 설정
 
         // 회원 아이디 중복 확인 -> DB에 존재하지 않으면 회원가입 수행
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsernameAndLoginType(username, LoginType.KAKAO);
 
         if (user.isEmpty()) {
             // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
@@ -320,7 +320,7 @@ public class OAuthService {
 
         System.out.println(username);
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsernameAndLoginType(username, LoginType.KAKAO)
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
 
         String kakaoRefreshToken = user.getKakaoRefreshToken();

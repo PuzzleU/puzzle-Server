@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ApplyDetailDto {
     private String CompetitionPoster;
     private String CompetitionTitle;

@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.team.dto;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class TeamAbstractBaseDto {
     private Long teamId;
     private String teamTitle;

@@ -55,10 +55,6 @@ public class User {
 
     // 애플 로그인 refresh 토큰
     private String appleRefreshToken;
-    // 혜택 수신 동의
-    @Column(nullable = true)
-    @ColumnDefault("false")
-    private Boolean consentMarketing;
 
     // 필수 정보
 
@@ -84,8 +80,8 @@ public class User {
     private Position userPosition2;
 
     private String refreshToken;
-    // 선택 정보
 
+    // 선택 정보
 
     @Column(nullable = true)
     @Enumerated(value = EnumType.STRING)
@@ -97,8 +93,24 @@ public class User {
     @Column(nullable = true, length = 100)
     private String userRepresentativeProfileSentence;
 
+    // 이용 약관
 
+    @ColumnDefault("false")
+    private Boolean ageTermConsent;
 
+    @ColumnDefault("false")
+    private Boolean serviceTermConsent;
+
+    @ColumnDefault("false")
+    private Boolean personalInfoConsent;
+
+    @ColumnDefault("false")
+    private Boolean serviceNotificationConsent;
+
+    @ColumnDefault("false")
+    private Boolean receiveMarketingConsent;
+
+    // 연관 관계 매핑
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
@@ -148,6 +160,7 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private List<Notification> notifies = new ArrayList<>();
+
 
     @Builder
     public User(LoginType socialType, String socialId) {
