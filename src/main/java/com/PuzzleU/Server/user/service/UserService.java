@@ -47,12 +47,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +106,7 @@ public class UserService {
 
         // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
         UserRoleEnum role = requestDto.getAdmin() ? UserRoleEnum.ADMIN : UserRoleEnum.USER;
-        userRepository.save(User.of(LoginType.NORMAL,username, password, role));
+        userRepository.save(User.of(LoginType.NONE, username, password, role)); // 카카오로 임의 설정
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 성공"), null);
     }
@@ -447,7 +445,7 @@ public class UserService {
             positionDto2 = null;
         }
         else {
-                    positionDto2 = PositionDto.builder()
+            positionDto2 = PositionDto.builder()
                     .PositionId(position2.getPositionId())
                     .PositionName(position2.getPositionName()).build();
         }
@@ -670,15 +668,63 @@ public class UserService {
     }
 
     // 정보 수신 여부 동의 수정
-    public ApiResponseDto<SuccessResponse> updateConsentMarketing(UserDetails loginUser, ConsentMarketingDto consentMarketingDto) {
+    public ApiResponseDto<SuccessResponse> updateTermsConsent(UserDetails loginUser, TermsConsentDto termsConsentDto) {
         User user = userRepository.findByUsername(loginUser.getUsername())
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
 
-        user.setConsentMarketing(consentMarketingDto.getConsentMarketing());
+        if (!termsConsentDto.getAgeTermConsent() || !termsConsentDto.getServiceTermConsent()
+                || !termsConsentDto.getPersonalInfoConsent() || !termsConsentDto.getServiceNotificationConsent()) {
+            throw new RestApiException(ErrorType.REQUIRED_TERM_NOT_AGREED);
+        }
+
+        user.setAgeTermConsent(termsConsentDto.getAgeTermConsent());
+        user.setServiceTermConsent(termsConsentDto.getServiceTermConsent());
+        user.setPersonalInfoConsent(termsConsentDto.getPersonalInfoConsent());
+        user.setServiceNotificationConsent(termsConsentDto.getServiceNotificationConsent());
+        user.setReceiveMarketingConsent(termsConsentDto.getReceiveMarketingConsent());
+
         userRepository.save(user);
 
         return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "정보 수신 여부 저장 완료"), null);
     }
+
+    public ApiResponseDto<List<TermDto>> getTermsConsent() {
+        List<TermDto> termDtoList = new ArrayList<>();
+
+        TermDto term1 = TermDto.builder()
+                .termAlias(Term.AGE_TERM.getTermAlias())
+                .termType(Term.AGE_TERM.getTermType())
+                .termContent(Term.AGE_TERM.getTermContent()).build();
+        termDtoList.add(term1);
+
+
+        TermDto term2 = TermDto.builder()
+                .termAlias(Term.SERVICE_TERM.getTermAlias())
+                .termType(Term.SERVICE_TERM.getTermType())
+                .termContent(Term.SERVICE_TERM.getTermContent()).build();
+        termDtoList.add(term2);
+
+        TermDto term3 = TermDto.builder()
+                .termAlias(Term.PERSONAL_INFO_TERM.getTermAlias())
+                .termType(Term.PERSONAL_INFO_TERM.getTermType())
+                .termContent(Term.PERSONAL_INFO_TERM.getTermContent()).build();
+        termDtoList.add(term3);
+
+        TermDto term4 = TermDto.builder()
+                .termAlias(Term.SERVICE_NOTIFICATION_TERM.getTermAlias())
+                .termType(Term.SERVICE_NOTIFICATION_TERM.getTermType())
+                .termContent(Term.SERVICE_NOTIFICATION_TERM.getTermContent()).build();
+        termDtoList.add(term4);
+
+        TermDto term5 = TermDto.builder()
+                .termAlias(Term.RECEIVE_MARKETING_TERM.getTermAlias())
+                .termType(Term.RECEIVE_MARKETING_TERM.getTermType())
+                .termContent(Term.RECEIVE_MARKETING_TERM.getTermContent()).build();
+        termDtoList.add(term5);
+
+        return ResponseUtils.ok(termDtoList, null);
+    }
+
     public User getUserFromAuth()
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -686,9 +732,8 @@ public class UserService {
         Optional<User> user = userRepository.findByUsername(name);
         return user.get();
     }
-
-
 }
+
 
 
 
