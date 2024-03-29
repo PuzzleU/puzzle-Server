@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ApplyDetailDto {
     private String CompetitionPoster;
     private String CompetitionTitle;
@@ -17,4 +16,14 @@ public class ApplyDetailDto {
     private List<PositionDto> PositionList;
     private String ApplyTitle;
     private String ApplyContent;
+
+    @Builder
+    public ApplyDetailDto(String competitionPoster, String competitionTitle, String teamTitle, List<PositionDto> positionList, String applyTitle, String applyContent) {
+        CompetitionPoster = competitionPoster;
+        CompetitionTitle = competitionTitle;
+        TeamTitle = teamTitle;
+        PositionList = positionList;
+        ApplyTitle = applyTitle;
+        ApplyContent = applyContent;
+    }
 }

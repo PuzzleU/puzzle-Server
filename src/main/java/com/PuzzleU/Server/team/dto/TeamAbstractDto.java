@@ -3,6 +3,7 @@ package com.PuzzleU.Server.team.dto;
 import com.PuzzleU.Server.location.entity.Location;
 import com.PuzzleU.Server.position.entity.Position;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -11,8 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
-@Builder
-public class TeamAbstractDto extends TeamAbstractBaseDto{
+@SuperBuilder
+public class TeamAbstractDto extends TeamAbstractBaseDto {
     private Long applyId;
 
 }

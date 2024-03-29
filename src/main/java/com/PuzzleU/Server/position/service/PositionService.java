@@ -24,6 +24,7 @@ public class PositionService {
                 .map(position -> PositionDto.builder()
                         .PositionId(position.getPositionId())
                         .PositionName(position.getPositionName())
+                        .PositionUrl(position.getPositionUrl())
                         .build())
                 .collect(Collectors.toList());
     }

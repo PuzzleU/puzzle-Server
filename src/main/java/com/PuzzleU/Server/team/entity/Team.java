@@ -74,4 +74,17 @@ public class Team extends BaseEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
     private List<TeamUserRelation> teamUserRelations = new ArrayList<>();
+
+    public Team(String teamTitle, Integer teamMemberNow, Integer teamMemberNeed, boolean teamUntact, String teamUrl, String teamIntroduce, String teamContent, Boolean teamStatus, Competition competition) {
+        this.teamTitle = teamTitle;
+        this.teamMemberNow = teamMemberNow;
+        this.teamMemberNeed = teamMemberNeed;
+        this.teamUntact = teamUntact;
+        this.teamUrl = teamUrl;
+        this.teamIntroduce = teamIntroduce;
+        this.teamContent = teamContent;
+        this.teamStatus = teamStatus;
+        this.competition = competition;
+    }
+
 }

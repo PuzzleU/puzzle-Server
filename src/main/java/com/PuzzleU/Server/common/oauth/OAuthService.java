@@ -1,5 +1,6 @@
 package com.PuzzleU.Server.common.oauth;
 
+import com.PuzzleU.Server.common.jwt.AppleUserInfoDto;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
@@ -11,18 +12,25 @@ import com.PuzzleU.Server.user.entity.User;
 import com.PuzzleU.Server.common.enumSet.UserRoleEnum;
 import com.PuzzleU.Server.common.jwt.JwtUtil;
 import com.PuzzleU.Server.user.repository.UserRepository;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -257,7 +265,7 @@ public class OAuthService {
         if (user.isEmpty()) {
             // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
             UserRoleEnum role = UserRoleEnum.USER; // 카카오 유저 ROLE 임의 설정
-            User signUpUser = User.of(username, password, role);
+            User signUpUser = User.of(LoginType.KAKAO, username, password, role);
             signUpUser.setLoginType(LoginType.KAKAO);
 
             // 토큰 생성
@@ -329,5 +337,187 @@ public class OAuthService {
         tokenDto.setRefreshToken(refreshTokenOrigin);
 
         return ResponseUtils.ok(tokenDto, null);
+    }
+
+    @Transactional
+    public ApiResponseDto<TokenDto> appleLogin(String appleAccessToken) {
+        /*
+            1. 애플 엑세스 토큰으로 유저 정보 받아오기
+            2-1. DB에 없는 ID면 -> 회원가입
+            2-2. DB에 있는 ID면 -> 로그인
+         */
+        AppleUserInfoDto appleUserInfoDto = getAppleUserInfo(appleAccessToken);
+        // access토큰에서 각각의 정보를 받아와야한다
+        // 아이디, 비밀번호 받아오기
+        String username = appleUserInfoDto.getUsername();
+        String password = passwordEncoder.encode("kakaouserpassword"); // 애플 유저 비밀번호 임의 설정
+
+        // 회원 아이디 중복 확인 -> DB에 존재하지 않으면 회원가입 수행
+        Optional<User> user = userRepository.findByUsername(username);
+
+        if (user.isEmpty()) {
+            // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
+            UserRoleEnum role = UserRoleEnum.USER; // 카카오 유저 ROLE 임의 설정
+            User signUpUser = User.of(LoginType.APPLE, username, password, role);
+            signUpUser.setLoginType(LoginType.APPLE);
+
+            // 토큰 생성
+            TokenDto tokenDto = new TokenDto();
+
+            String accessToken = jwtUtil.createAccessToken(signUpUser.getUsername(), signUpUser.getRole());
+            String refreshToken = jwtUtil.createRefreshToken(signUpUser.getUsername(), signUpUser.getRole());
+
+            // refresh token을 DB에 저장
+            signUpUser.setAppleRefreshToken(refreshToken);
+            userRepository.save(signUpUser);
+
+            // response 생성
+            tokenDto.setMessage("애플 회원가입 성공");
+            tokenDto.setAccessToken(accessToken);
+            tokenDto.setRefreshToken(refreshToken);
+
+            return ResponseUtils.ok(tokenDto, null);
+
+        } else { // DB에 존재하면 로그인 수행
+            // 토큰 생성
+            TokenDto tokenDto = new TokenDto();
+
+            String accessToken = jwtUtil.createAccessToken(user.get().getUsername(), user.get().getRole());
+            String refreshToken = jwtUtil.createRefreshToken(user.get().getUsername(), user.get().getRole());
+
+            // refresh token을 DB에 저장
+            user.get().setAppleRefreshToken(refreshToken);
+            userRepository.save(user.get());
+
+            // response 생성
+            tokenDto.setMessage("애플 로그인 성공");
+            tokenDto.setAccessToken(accessToken);
+            tokenDto.setRefreshToken(refreshToken);
+
+            return ResponseUtils.ok(tokenDto, null);
+        }
+    }
+    @Transactional
+    public ApiResponseDto<TokenDto> refreshAppleToken(String accessTokenOrigin, String refreshTokenOrigin) {
+
+        String accessToken = accessTokenOrigin.substring(7);
+        String refreshToken = refreshTokenOrigin.substring(7);
+
+        // 아직 만료되지 않은 토큰으로는 refresh 할 수 없음
+        if(jwtUtil.validateToken(accessToken)) throw new RestApiException(ErrorType.ACCESS_TOKEN_NOT_EXPIRED);
+
+        Claims claims = jwtUtil.getUserInfoFromToken(refreshToken);
+        String username = claims.get("sub", String.class); // access token에서 username을 가져옴
+
+        System.out.println(username);
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
+
+        String kakaoAppleToken = user.getAppleRefreshToken();
+
+        if (!jwtUtil.validateToken(kakaoAppleToken.substring(7)) || !refreshToken.equals(kakaoAppleToken.substring(7))) {
+            throw new RestApiException(ErrorType.REFRESH_TOKEN_NOT_VALIDATE); // 만료되거나 일치하지 않는 리프레시 토큰은 에러처리
+        }
+
+        String newAccessToken = jwtUtil.createAccessToken(user.getUsername(), user.getRole());
+
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setMessage("access token 재발급 성공");
+        tokenDto.setAccessToken(newAccessToken);
+        tokenDto.setRefreshToken(refreshTokenOrigin);
+
+        return ResponseUtils.ok(tokenDto, null);
+    }
+    /**
+     * 1. apple로 부터 공개키 3개 가져옴
+     * 2. 내가 클라에서 가져온 token String과 비교해서 써야할 공개키 확인 (kid, alg값 확인)
+     * 3. 그 공캐기 재료들로 공개키 만들고, 이 공개키로 JWT 토큰 부분의 바디 부분의 decode하면 유저 정보
+     */
+    public AppleUserInfoDto getAppleUserInfo(String idToken)
+    {
+        StringBuffer result = new StringBuffer();
+        AppleUserInfoDto appleUserInfoDto = new AppleUserInfoDto();
+        try{
+            URL url = new URL("https://appleid.apple.com/auth/keys");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+            while ((line = br.readLine())!=null)
+            {
+                result.append(line);
+            }
+        }catch (IOException e)
+        {
+            return null;
+        }
+
+        JsonParser parser = new JsonParser();
+        JsonObject keys = (JsonObject) parser.parse(result.toString());
+        JsonArray keyArray = (JsonArray) keys.get("keys");
+
+        // 클라이언트로부터 가져온 identity token String decode
+        String[] decodeArray = idToken.split("\\.");
+        String header = new String(Base64.getDecoder().decode(decodeArray[0]));
+
+        //apple에서 제공해주는 kid값과 일치하는지 알기 위해
+        JsonElement kid = ((JsonObject) parser.parse(header)).get("kid");
+        JsonElement alg = ((JsonObject) parser.parse(header)).get("alg");
+
+        // 서야하는 Element (kid, alg 일치하는 element)
+        JsonObject availableOnject = null;
+        for (int i=0; i< keyArray.size(); i++)
+        {
+            JsonObject appleObject = (JsonObject) keyArray.get(i);
+            JsonElement appleKid = appleObject.get("kid");
+            JsonElement appleAlg = appleObject.get("alg");
+
+            if (Objects.equals(appleKid, kid) && Objects.equals(appleAlg, alg))
+            {
+                availableOnject = appleObject;
+                break;
+            }
+        }
+        // 일치하는 공개키 없음
+        if(ObjectUtils.isEmpty(availableOnject))
+            return null;
+
+        PublicKey publicKey = this.getPublicKey(availableOnject);
+        Claims userInfo = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(idToken).getBody();
+        JsonObject userInfoObject = (JsonObject) parser.parse(new Gson().toJson(userInfo));
+        System.out.println("userInfoObject = " + userInfoObject);
+        JsonObject userData = userInfoObject.getAsJsonObject().get("user").getAsJsonObject();
+        String socialId = userData.getAsJsonObject("socialId").getAsString();
+        String email = userData.getAsJsonObject("email").getAsString();
+        String username = userData.getAsJsonObject("fullname").getAsString();
+
+        appleUserInfoDto.setUsername(username);
+        appleUserInfoDto.setEmail(email);
+        appleUserInfoDto.setId(socialId);
+        appleUserInfoDto.setLoginType(LoginType.APPLE);
+
+        return appleUserInfoDto;
+
+    }
+
+    public PublicKey getPublicKey(JsonObject object) {
+        String nStr = object.get("n").toString();
+        String eStr = object.get("e").toString();
+
+        byte[] nBytes = Base64.getUrlDecoder().decode(nStr.substring(1, nStr.length() - 1));
+        byte[] eBytes = Base64.getUrlDecoder().decode(eStr.substring(1, eStr.length() - 1));
+
+        BigInteger n = new BigInteger(1, nBytes);
+        BigInteger e = new BigInteger(1, eBytes);
+
+        try {
+            RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+            return publicKey;
+        } catch (Exception exception) {
+            return null;
+        }
     }
 }

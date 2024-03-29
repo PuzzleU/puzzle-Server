@@ -26,6 +26,9 @@ public class Position {
     @Column(name = "position_name", length = 10)
     private String positionName; // 포지션 이름
 
+    @Column(name = "position_url")
+    private String positionUrl; // 포지션 이미지 링크
+
     @JsonIgnore
     @OneToMany(mappedBy = "userPosition1")
     private List<User> userList1 = new ArrayList<>();
