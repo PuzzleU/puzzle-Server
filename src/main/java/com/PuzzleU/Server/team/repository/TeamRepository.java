@@ -14,14 +14,14 @@ import java.util.Optional;
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
-    @Query("SELECT t FROM Team t WHERE t.competition =:competition")
+    @Query("SELECT t FROM Team t join fetch t.competition WHERE t.competition =:competition")
     List<Team> findByCompetition(@Param("competition") Competition competition, Pageable pageable);
 
     List<Team> findByTeamTitleContaining(String search, Pageable pageable);
 
     Optional<Team> findByTeamId(Long teamId);
 
-    @Query("SELECT t FROM Team t WHERE t.competition.competitionId =:CompetitionId and t.teamId =:teamId")
+    @Query("SELECT t FROM Team t join fetch t.competition WHERE t.competition.competitionId =:CompetitionId and t.teamId =:teamId")
     Optional<Team> findByTeamIdAndCompetitionId(Long teamId, Long CompetitionId);
 
 

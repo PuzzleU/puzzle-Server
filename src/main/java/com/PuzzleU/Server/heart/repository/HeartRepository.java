@@ -12,15 +12,15 @@ import java.util.List;
 @Repository
 public interface HeartRepository extends JpaRepository<Heart, Long>
 {
-    @Query("SELECT h FROM Heart h WHERE h.competition=:competition and h.user!=:user")
+    @Query("SELECT h FROM Heart h join fetch h.competition join fetch h.user WHERE h.competition=:competition and h.user!=:user")
     List<Heart> findByCompetitionAndUser(Competition competition, User user);
 
-    @Query("SELECT h FROM Heart h WHERE h.competition=:competition and h.user=:user")
+    @Query("SELECT h FROM Heart h join fetch h.competition join fetch h.user WHERE h.competition=:competition and h.user=:user")
     List<Heart> findByCompetitionAndUserNot(Competition competition, User user);
 
-    @Query("SELECT h FROM Heart h WHERE h.competition=:competition and h.user=:user")
+    @Query("SELECT h FROM Heart h join fetch h.competition join fetch h.user WHERE h.competition=:competition and h.user=:user")
     Heart findOneByCompetitionAndUserNot(Competition competition, User user);
 
-    @Query("SELECT c FROM Heart c WHERE c.competition.competitionId=:competitionId")
+    @Query("SELECT c FROM Heart c join fetch c.competition WHERE c.competition.competitionId=:competitionId")
     List<Heart> findByCompetition(Long competitionId);
 }
