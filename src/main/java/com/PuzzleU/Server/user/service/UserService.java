@@ -107,8 +107,8 @@ public class UserService {
 
         // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
         UserRoleEnum role = requestDto.getAdmin() ? UserRoleEnum.ADMIN : UserRoleEnum.USER;
-        User user = User.of(LoginType.NONE, username, password, role);
-        userRepository.saveAndFlush(User.of(LoginType.NONE, username, password, role)); // 카카오로 임의 설정
+        User user = User.of(LoginType.KAKAO, username, password, role);
+        userRepository.saveAndFlush(user); // 카카오로 임의 설정
 
         TokenDto tokenDto = new TokenDto();
         String accessToken = jwtUtil.createAccessToken(user.getUsername(), user.getRole());
