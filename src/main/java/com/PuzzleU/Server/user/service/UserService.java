@@ -7,6 +7,7 @@ import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.*;
 import com.PuzzleU.Server.common.exception.RestApiException;
 import com.PuzzleU.Server.common.jwt.JwtUtil;
+import com.PuzzleU.Server.common.jwt.TokenDto;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
 import com.PuzzleU.Server.experience.entity.Experience;
 import com.PuzzleU.Server.experience.repository.ExperienceRepository;
@@ -94,7 +95,7 @@ public class UserService {
 
     // 회원가입 API
     @Transactional
-    public ApiResponseDto<SuccessResponse> signup(SignupRequestDto requestDto) {
+    public ApiResponseDto<TokenDto> signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
 
@@ -106,9 +107,18 @@ public class UserService {
 
         // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
         UserRoleEnum role = requestDto.getAdmin() ? UserRoleEnum.ADMIN : UserRoleEnum.USER;
-        userRepository.save(User.of(LoginType.NONE, username, password, role)); // 카카오로 임의 설정
+        User user = User.of(LoginType.KAKAO, username, password, role);
+        userRepository.saveAndFlush(user); // 카카오로 임의 설정
 
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 성공"), null);
+        TokenDto tokenDto = new TokenDto();
+        String accessToken = jwtUtil.createAccessToken(user.getUsername(), user.getRole());
+        String refreshToken = jwtUtil.createRefreshToken(user.getUsername(), user.getRole());
+
+        tokenDto.setMessage("카카오 로그인 성공");
+        tokenDto.setAccessToken(accessToken);
+        tokenDto.setRefreshToken(refreshToken);
+
+        return ResponseUtils.ok(tokenDto,null);
     }
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)

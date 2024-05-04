@@ -3,6 +3,7 @@ package com.PuzzleU.Server.user.controller;
 import com.PuzzleU.Server.apply.service.ApplyService;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
 import com.PuzzleU.Server.common.api.SuccessResponse;
+import com.PuzzleU.Server.common.jwt.TokenDto;
 import com.PuzzleU.Server.experience.dto.ExperienceDto;
 import com.PuzzleU.Server.friendship.dto.FriendShipSearchResponseDto;
 import com.PuzzleU.Server.friendship.service.FriendshipService;
@@ -39,7 +40,7 @@ public class UserController {
     private final FriendshipService friendshipService;
 
     @PostMapping("/signup")
-    public ApiResponseDto<SuccessResponse> signup(@Valid @RequestBody SignupRequestDto requestDto) {
+    public ApiResponseDto<TokenDto> signup(@Valid @RequestBody SignupRequestDto requestDto) {
         return userService.signup(requestDto);
     }
     // 기존에는 SuccessResponseDto를 통해서 userrequestsdto를 통하여 주입을 해주었다

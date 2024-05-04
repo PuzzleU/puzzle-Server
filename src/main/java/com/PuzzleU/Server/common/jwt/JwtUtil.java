@@ -34,11 +34,9 @@ public class JwtUtil {
     private static final String BEARER_PREFIX = "Bearer ";
 
     // 60 더 곱했습니다
-    private static final long TOKEN_TIME = 60*60*60 * 60 * 1000L; // 60 days
-
-    // accress token과 refresh token 구분을 위한 time 설정
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 15; // 15 minutes
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7 days
+    private static final long TOKEN_TIME = 10 * 60 * 24 * 60 * 60 * 1000L; // 600 days
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 10 * 300 * 60 * 1000; // 300 minutes
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 10 * 7 * 24 * 60 * 60 * 1000L; // 70 days
 
     @Value("${JWT_TOKEN}")
     private String secretKey;

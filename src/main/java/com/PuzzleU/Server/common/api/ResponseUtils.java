@@ -11,7 +11,6 @@ public class ResponseUtils {
         return ApiResponseDto.<T>builder()
                 .success(true)
                 .response(response)
-                .jwt(jwt)
                 .build();
     }
     // 에러가 발생한 경우
