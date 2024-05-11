@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.heart.Service;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
@@ -55,7 +56,7 @@ public class HeartService {
         }
         competition.setCompetitionLike(heart);
         competitionRepository.save(competition);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "좋아요를 눌렀습니다"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "좋아요를 눌렀습니다"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
     @Transactional
     public ApiResponseDto<SuccessResponse> heartDelete(UserDetails loginuser, Long competitionId)
@@ -73,7 +74,7 @@ public class HeartService {
         heartRepository.delete(user_heart);
         competition.setCompetitionLike(heart);
         competitionRepository.save(competition);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "좋아요를 취소하였습니다"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "좋아요를 취소하였습니다"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
 }

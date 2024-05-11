@@ -2,6 +2,7 @@ package com.PuzzleU.Server.user.service;
 
 import com.PuzzleU.Server.apply.repository.ApplyRepository;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.*;
@@ -107,18 +108,18 @@ public class UserService {
 
         // 입력한 username, password, admin 으로 user 객체 만들어 repository 에 저장
         UserRoleEnum role = requestDto.getAdmin() ? UserRoleEnum.ADMIN : UserRoleEnum.USER;
-        User user = User.of(LoginType.KAKAO, username, password, role);
+        User user = User.of(LoginType.NONE, username, password, role);
         userRepository.saveAndFlush(user); // 카카오로 임의 설정
 
         TokenDto tokenDto = new TokenDto();
         String accessToken = jwtUtil.createAccessToken(user.getUsername(), user.getRole());
         String refreshToken = jwtUtil.createRefreshToken(user.getUsername(), user.getRole());
 
-        tokenDto.setMessage("카카오 로그인 성공");
+        tokenDto.setMessage("회원가입 성공");
         tokenDto.setAccessToken(accessToken);
         tokenDto.setRefreshToken(refreshToken);
 
-        return ResponseUtils.ok(tokenDto,null);
+        return ResponseUtils.ok(tokenDto,ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
@@ -136,7 +137,7 @@ public class UserService {
         response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.get().getUsername(), user.get().getRole()));
         String jwtToken = jwtUtil.createToken(user.get().getUsername(), user.get().getRole());
         jwtToken.substring(7);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "로그인 성공"), jwtToken);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "로그인 성공"), ErrorResponse.builder().build());
 
     }
 
@@ -229,7 +230,7 @@ public class UserService {
         userSkillsetRelationRepository.saveAll(userSkillsetRelations);
         experienceRepository.saveAll(experiences);
 
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "선택사항 저장완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "선택사항 저장완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     @org.springframework.transaction.annotation.Transactional
@@ -324,7 +325,7 @@ public class UserService {
             }
         }
 
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "회원가입 필수 정보 저장 완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     // 회원가입 시 퍼즐 ID 중복 여부 반환
@@ -335,7 +336,7 @@ public class UserService {
             throw new RestApiException(ErrorType.DUPLICATED_PUZZLE_ID);
         }
 
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "사용할 수 있는 퍼즐 ID입니다."), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "사용할 수 있는 퍼즐 ID입니다."), ErrorResponse.builder().status(200).message("요청 성공").build());
 
     }
 
@@ -362,7 +363,7 @@ public class UserService {
         friendShipSearchResponseDto.setPageNo(pageNo);
         friendShipSearchResponseDto.setPageSize(pageSize);
         friendShipSearchResponseDto.setTotalElements(users.getTotalElements());
-        return ResponseUtils.ok(friendShipSearchResponseDto, null);
+        return ResponseUtils.ok(friendShipSearchResponseDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     @Transactional
@@ -408,7 +409,7 @@ public class UserService {
         }
 
         userRepository.save(user);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "프로필 기본 정보 수정 완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "프로필 기본 정보 수정 완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
 
@@ -517,7 +518,7 @@ public class UserService {
         userMyProfileDto.setExperienceList(userProfileExperienceDtoList);
         userMyProfileDto.setSkillsetList(userProfileSkillsetDtoList);
 
-        return ResponseUtils.ok(userMyProfileDto, null);
+        return ResponseUtils.ok(userMyProfileDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
     public ApiResponseDto<List<UserSimpleDto>> userSearch(UserDetails loginUser, int pageNo, int pageSize, String sortBy, String search) {
         User loginuser = userRepository.findByUsername(loginUser.getUsername())
@@ -537,7 +538,7 @@ public class UserService {
                 })
                 .collect(Collectors.toList());
 
-        return ResponseUtils.<List<UserSimpleDto>>ok(userSimpleDtoList, null);
+        return ResponseUtils.<List<UserSimpleDto>>ok(userSimpleDtoList, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     @Transactional
@@ -674,7 +675,7 @@ public class UserService {
         userProfileDto.setExperienceList(userProfileExperienceDtoList);
         userProfileDto.setSkillsetList(userProfileSkillsetDtoList);
 
-        return ResponseUtils.ok(userProfileDto, null);
+        return ResponseUtils.ok(userProfileDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     // 정보 수신 여부 동의 수정
@@ -695,7 +696,7 @@ public class UserService {
 
         userRepository.save(user);
 
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "정보 수신 여부 저장 완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "정보 수신 여부 저장 완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     public ApiResponseDto<List<TermDto>> getTermsConsent() {
@@ -732,7 +733,7 @@ public class UserService {
                 .termContent(Term.RECEIVE_MARKETING_TERM.getTermContent()).build();
         termDtoList.add(term5);
 
-        return ResponseUtils.ok(termDtoList, null);
+        return ResponseUtils.ok(termDtoList, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     public User getUserFromAuth()

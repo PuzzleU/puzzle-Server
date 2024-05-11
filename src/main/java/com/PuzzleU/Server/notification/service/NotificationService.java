@@ -2,6 +2,7 @@ package com.PuzzleU.Server.notification.service;
 
 import com.PuzzleU.Server.apply.entity.Apply;
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
@@ -210,7 +211,7 @@ public class NotificationService {
                 .filter(notification -> !notification.isRead())
                 .count();
         // 아직 안읽은 놈들의 개수를 보여준다
-        return ResponseUtils.ok(NotificationResponses.of(responses, unreadCount),null);
+        return ResponseUtils.ok(NotificationResponses.of(responses, unreadCount), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     @Transactional
@@ -220,6 +221,6 @@ public class NotificationService {
                 .orElseThrow(()-> new EntityNotFoundException("존재하지 않는 알림"));
         notification.read();
         notificationRepository.save(notification);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"모든 알람을 읽었습니다"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK,"모든 알람을 읽었습니다"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 }
