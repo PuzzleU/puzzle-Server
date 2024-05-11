@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.experience.service;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
@@ -48,7 +49,7 @@ public class ExperienceService {
                 .orElseThrow(() -> new RestApiException(ErrorType.NOT_FOUND_USER));
         Experience experience = new Experience(experienceDto.getExperienceName(),experienceDto.getExperienceType(),experienceDto.getExperienceStartYear(),experienceDto.getExperienceStartMonth(),experienceDto.getExperienceEndYear(),experienceDto.getExperienceEndMonth(),experienceDto.getExperienceStatus(),experienceDto.getExperienceRole(),user);
         experienceRepository.save(experience);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 저장완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 저장완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
     // 유저의 경험을 수정하는 API
     public ApiResponseDto<SuccessResponse> updateExperience(
@@ -98,7 +99,7 @@ public class ExperienceService {
         }
 
         experienceRepository.save(experience);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 수정완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 수정완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
 
     }
     // 유저의 경험을 삭제하는 API
@@ -114,7 +115,7 @@ public class ExperienceService {
             return new RestApiException(ErrorType.NOT_FOUND_EXPERIENCE);
         });
         experienceRepository.delete(experience);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 삭제완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "경험 삭제완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     // 유저가 자신의 페이지에서 자신의 경험리스트들을 확인가능한 API
@@ -133,7 +134,7 @@ public class ExperienceService {
             ExperienceDto experienceDto = ExperienceDto.of(experience);
             experienceList.add(experienceDto);
         }
-        return ResponseUtils.ok(experienceList, null);
+        return ResponseUtils.ok(experienceList, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     // 유저가 경험 리스트들중 하나를 클릭하면 자신의 세부적인 경험을 확인할 수 있는 API
@@ -147,7 +148,7 @@ public class ExperienceService {
         });
         ExperienceDto experienceDto = ExperienceDto.of(experience);
 
-        return ResponseUtils.ok(experienceDto, null);
+        return ResponseUtils.ok(experienceDto, ErrorResponse.builder().status(200).message("요청 성공").build());
 
     }
 }

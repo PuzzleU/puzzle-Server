@@ -50,7 +50,7 @@ public class FriendshipService {
             friendshipRepository.save(friendShip);
             };
             notificationService.sendFriend(user2, user1, "새로운 친구 요청이 있습니다!", NotificationType.FriendRequest);
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), ErrorResponse.builder().status(200).message("요청 성공").build());
         }
 
 
@@ -71,7 +71,7 @@ public class FriendshipService {
         friendShip.setUserStatus(true);
         friendshipRepository.save(friendShip);
         notificationService.sendFriend(user2, user1, "친구가 되었습니다", NotificationType.FriendFinish);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구수락이 완료되었습니다"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구수락이 완료되었습니다"), ErrorResponse.builder().status(200).message("요청 성공").build());
 
     }
     @Transactional
@@ -83,7 +83,7 @@ public class FriendshipService {
         Optional<FriendShip> friendShip_check = friendshipRepository.findByUser1AndUser2(user1, user2);
         FriendShip friendShip = friendShip_check.orElseThrow(()-> new RestApiException(ErrorType.NOT_FOUND_FRIENDSHIP));
         friendshipRepository.delete(friendShip);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "친구신청이 완료되었습니다"), ErrorResponse.builder().status(200).message("요청 성공").build());
 
     }
 }

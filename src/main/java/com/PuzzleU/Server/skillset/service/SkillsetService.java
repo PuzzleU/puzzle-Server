@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.skillset.service;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.relations.dto.UserSkillsetRelationDto;
@@ -61,7 +62,7 @@ public class SkillsetService {
             userSkillsetRelationList.add(userSkillsetRelation);
         }
         userSkillsetRelationRepository.saveAll(userSkillsetRelationList);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저스킬셋 저장완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저스킬셋 저장완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
 
     }
     @Transactional
@@ -78,7 +79,7 @@ public class SkillsetService {
             return new RestApiException(ErrorType.NOT_FOUND_USERSKILLSETRELATION);
         });
         userSkillsetRelationRepository.delete(userSkillsetrelation);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저스킬셋 삭제완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저스킬셋 삭제완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
 
     }
     // 유저가 자신이 등록한 스킬셋의 리스트를 확인가능한 API
@@ -99,7 +100,7 @@ public class SkillsetService {
             userSkillsetRelationListDtos.add(userSkillsetRelationListDto);
         }
 
-        return ResponseUtils.ok(userSkillsetRelationListDtos, null);
+        return ResponseUtils.ok(userSkillsetRelationListDtos, ErrorResponse.builder().status(200).message("요청 성공").build());
 
     }
 }

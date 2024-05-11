@@ -143,7 +143,7 @@ public class TeamService {
 
             notificationService.sendTeamJoin(user, loginuser, "새로운 팀에 참여되었습니다", NotificationType.TeamJoin, team, competition);
         }
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 구인글 생성완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 구인글 생성완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     // 구인글 수정
@@ -230,7 +230,7 @@ public class TeamService {
                 teamPositionRelationRepository.save(teamPositionRelation);
             }
 
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 구인글 수정완료"), null);
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 구인글 수정완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
         } else {
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.NOT_ACCEPTABLE, "유저의 권한이 없습니다."));
         }
@@ -264,7 +264,7 @@ public class TeamService {
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.NOT_FOUND, "유저가 속한 팀이 아닙니다."));
         }
 
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 구인글 삭제완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 구인글 삭제완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
 
     }
 
@@ -291,7 +291,7 @@ public class TeamService {
         competitionSearchTotalDto.setPageSize(pageSize);
         competitionSearchTotalDto.setPageNo(pageNo);
 
-        return ResponseUtils.ok(competitionSearchTotalDto, null);
+        return ResponseUtils.ok(competitionSearchTotalDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
 
@@ -337,7 +337,7 @@ public class TeamService {
         friendShipSearchResponseDto.setTotalPages(friendShips.getTotalPages());
         friendShipSearchResponseDto.setPageNo(pageNo);
         friendShipSearchResponseDto.setTotalElements(friendShips.getTotalElements());
-        return ResponseUtils.ok(friendShipSearchResponseDto, null);
+        return ResponseUtils.ok(friendShipSearchResponseDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     // 내가 만든 팀에 대한 정보를 모두 가져온다
@@ -399,7 +399,7 @@ public class TeamService {
                 teamApplyDto.setTeamAbstractDtoEnd(teamAbstractDto1);
             }
         }
-        return ResponseUtils.ok(teamApplyDto, null);
+        return ResponseUtils.ok(teamApplyDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     @Transactional
@@ -461,7 +461,7 @@ public class TeamService {
         teamListDto.setPageNo(pageNo);
         teamListDto.setPageSize(pageSize);
 
-        return ResponseUtils.ok(teamListDto, null);
+        return ResponseUtils.ok(teamListDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     // 팀의 상태(진행/완료)를 수정한다
@@ -481,7 +481,7 @@ public class TeamService {
         if (teamUserRelation.getIsWriter() == true) {
             team.setTeamStatus(teamStatusDto.getTeamStatus());
             teamRepository.save(team);
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 공고글 상태 변경완료"), null);
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "팀 공고글 상태 변경완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
         } else {
             return ResponseUtils.error(ErrorResponse.of(HttpStatus.NOT_ACCEPTABLE, "권한이 없습니다"));
         }
@@ -575,7 +575,7 @@ public class TeamService {
         teamApplyListDto.setTeam(simpleTeamDto);
         teamApplyListDto.setApplyList(userApplyDtoList);
 
-        return ResponseUtils.ok(teamApplyListDto, null);
+        return ResponseUtils.ok(teamApplyListDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     // 대기중인 지원자 수락/거절
@@ -606,13 +606,13 @@ public class TeamService {
             apply.setApplyStatus(ApplyStatus.ACCEPTED);
             applyRepository.save(apply);
             notificationService.sendApplyStatusJoin(applier, user, "지원 상태가 변경되었습니다", NotificationType.ApplyChange,apply);
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 수락 완료"), null);
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 수락 완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
         }
         else if (acceptOrRejectDto.getAcceptOrReject().equals("REJECT")) {
             apply.setApplyStatus(ApplyStatus.REJECTED);
             applyRepository.save(apply);
             notificationService.sendApplyStatusJoin(applier, user, "지원 상태가 변경되었습니다", NotificationType.ApplyChange,apply);
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 거절 완료"), null);
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 거절 완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
         }
         else {
             throw new RestApiException(ErrorType.NOT_MATCH_ACCEPT_REJECT);
@@ -676,7 +676,7 @@ public class TeamService {
             teamListDto.setPageNo(pageNo);
             teamListDto.setPageSize(pageSize);
 
-            return ResponseUtils.ok(teamListDto, null);
+            return ResponseUtils.ok(teamListDto, ErrorResponse.builder().status(200).message("요청 성공").build());
         } catch (RestApiException e) {
             // 이미 정의된 예외인 경우 그대로 던집니다.
             throw e;
@@ -750,7 +750,7 @@ public class TeamService {
             }
             teamSpecificDto.setMembers(userSimpleDtoList);
 
-            return ResponseUtils.ok(teamSpecificDto, null);
+            return ResponseUtils.ok(teamSpecificDto, ErrorResponse.builder().status(200).message("요청 성공").build());
         } catch (RestApiException e) {
             throw e; // 이미 정의된 예외인 경우 그대로 던집니다.
         } catch (Exception e) {
@@ -812,6 +812,6 @@ public class TeamService {
         teamListDto.setPageNo(pageNo);
         teamListDto.setPageSize(pageSize);
 
-        return ResponseUtils.ok(teamListDto, null);
+        return ResponseUtils.ok(teamListDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 }

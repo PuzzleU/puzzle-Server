@@ -6,11 +6,12 @@ import lombok.Getter;
 public class ResponseUtils {
     //d
     // 요청 성공인 경우
-    public static <T> ApiResponseDto<T> ok(T response, String jwt)
+    public static <T> ApiResponseDto<T> ok(T response, ErrorResponse errorResponse)
     {
         return ApiResponseDto.<T>builder()
                 .success(true)
                 .response(response)
+                .error(errorResponse)
                 .build();
     }
     // 에러가 발생한 경우

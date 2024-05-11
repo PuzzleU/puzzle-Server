@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.major.service;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.enumSet.ErrorType;
 import com.PuzzleU.Server.common.exception.RestApiException;
@@ -69,6 +70,6 @@ public class MajorService {
         MajorSearchTotalDto majorSearchTotalDto = MajorSearchTotalDto.builder()
                 .MajorList(majorSearchDtoList).build();
 
-        return ResponseUtils.ok(majorSearchTotalDto, null);
+        return ResponseUtils.ok(majorSearchTotalDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 }
