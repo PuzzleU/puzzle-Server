@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.university.service;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.UniversityType;
@@ -77,7 +78,7 @@ public class UniversityService {
         userUniversityRelationRepository.save(userUniversityRelation);
 
 
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저학력 저장완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "유저학력 저장완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
 
     }
 
@@ -114,7 +115,7 @@ public class UniversityService {
                 .totalPages(universityPage.getTotalPages())
                 .last(universityPage.isLast()).build();
 
-        return ResponseUtils.ok(universitySearchTotalDto, null);
+        return ResponseUtils.ok(universitySearchTotalDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     @Transactional
@@ -129,7 +130,7 @@ public class UniversityService {
             UniversityListDto universityListDto = getUniversityListDto(userUniversityRelation);
             universityListDtos.add(universityListDto);
         }
-        return ResponseUtils.ok(universityListDtos, null);
+        return ResponseUtils.ok(universityListDtos, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     private static UniversityListDto getUniversityListDto(UserUniversityRelation userUniversityRelation) {

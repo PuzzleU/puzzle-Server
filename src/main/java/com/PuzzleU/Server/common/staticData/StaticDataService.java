@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.common.staticData;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.interest.dto.InterestTypeDto;
 import com.PuzzleU.Server.location.dto.LocationDto;
@@ -54,6 +55,6 @@ public class StaticDataService {
                 .locationList(locationList)
                 .profileList(profileList).build();
 
-        return ResponseUtils.ok(staticDataDto, null);
+        return ResponseUtils.ok(staticDataDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 }

@@ -100,7 +100,7 @@ public class ApplyService {
             positionApplyRelationRepository.save(positionApplyRelation);
         }
         notificationService.sendApply(user,writer,"새로운 지원자가 있습니다", NotificationType.ApplyChange, team, competition);
-        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 저장 완료"), null);
+        return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 저장 완료"), ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     // 지원서 상세
@@ -147,7 +147,7 @@ public class ApplyService {
                                                 .applyTitle(apply.getApplyTitle())
                                                         .applyContent(apply.getApplyContent()).build();
 
-        return ResponseUtils.ok(applyDetailDto, null);
+        return ResponseUtils.ok(applyDetailDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
 
     // type에 따라 내가 지원한 팀들을 볼 수 있는 기능
@@ -218,7 +218,7 @@ public class ApplyService {
         teamListDto.setPageSize(pageSize);
 
 
-        return ResponseUtils.ok(teamListDto, null);
+        return ResponseUtils.ok(teamListDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
     // 내가 지원한 지원서나 팀을 볼 수 있음
     @Transactional
@@ -284,7 +284,7 @@ public class ApplyService {
                 applyTeamDto.setTeamListDto2(teamAbstractDto1);
             }
         }
-        return ResponseUtils.ok(applyTeamDto, null);
+        return ResponseUtils.ok(applyTeamDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
     // 나의 지원을 삭제함
     @Transactional
@@ -299,7 +299,7 @@ public class ApplyService {
         if(apply.getUser() == user)
         {
             applyRepository.delete(apply);
-            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 삭제완료"),null);
+            return ResponseUtils.ok(SuccessResponse.of(HttpStatus.OK, "지원서 삭제완료"),ErrorResponse.builder().status(200).message("요청 성공").build());
         }
         else
         {

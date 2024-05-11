@@ -1,6 +1,7 @@
 package com.PuzzleU.Server.competition.service;
 
 import com.PuzzleU.Server.common.api.ApiResponseDto;
+import com.PuzzleU.Server.common.api.ErrorResponse;
 import com.PuzzleU.Server.common.api.ResponseUtils;
 import com.PuzzleU.Server.common.api.SuccessResponse;
 import com.PuzzleU.Server.common.enumSet.CompetitionType;
@@ -118,7 +119,7 @@ public class CompetitionService {
                 .collect(Collectors.toList());
 
         CompetitionHomeTotalDto competitionHomeTotalDto = new CompetitionHomeTotalDto(competitionHomePageDtos, pageNo, pageSize, competitionPage.getTotalElements(), competitionPage.getTotalPages(), competitionPage.isLast());
-        return ResponseUtils.ok(competitionHomeTotalDto, null);
+        return ResponseUtils.ok(competitionHomeTotalDto, ErrorResponse.builder().status(200).message("성공").build());
     }
 
     // 공모전 하나의 정보를 전체다 볼 수 있는 API
@@ -149,7 +150,7 @@ public class CompetitionService {
                 });
         competitionRepository.updateVisit(competitionId);
 
-        return ResponseUtils.ok(competitionSpecificDto, null);
+        return ResponseUtils.ok(competitionSpecificDto, ErrorResponse.builder().status(200).message("요청 성공").build());
     }
     // 최신순, 마감빠른순, 마감느린순, 인기순, 조회순, 팀빌딩순
 
