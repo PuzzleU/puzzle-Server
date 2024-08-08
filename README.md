@@ -14,7 +14,7 @@
 ---
 ## 프로젝트 소개
 
-![Uploading image.png…]()
+
 
 ---
 ## 기술 스택
@@ -34,10 +34,9 @@
 
 ## 백엔드 설계
 ### ERDCloud
+<img width="969" alt="image" src="https://github.com/user-attachments/assets/26cab4bc-0c6b-43a1-bc45-b67d269600c2">
 
 
 ### API 명세서
-
-
-
+<a href = "https://www.notion.so/API-74ee3998402a41fd87453ac8ee1821e1">API
 
