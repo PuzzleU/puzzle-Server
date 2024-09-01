@@ -10,9 +10,18 @@
 
 
 # 퍼즐 이미지 란
----
+![image](https://github.com/user-attachments/assets/9ff2d7de-c8d3-4a08-846b-9c4ac59c1832)
+![image](https://github.com/user-attachments/assets/cd538d76-5561-4af7-b122-57433fdd08dd)
+![image](https://github.com/user-attachments/assets/540baa81-7955-47cc-a239-a1339fdc9547)
+![image](https://github.com/user-attachments/assets/08936a8c-c0d3-4cca-9664-aec7cbf10554)
+![image](https://github.com/user-attachments/assets/05ad3e92-033a-423e-8893-8f67c1a3f028)
+![image](https://github.com/user-attachments/assets/7b5a6749-93b0-49ae-ac22-24c2487dfd38)
+![image](https://github.com/user-attachments/assets/10259912-5595-45ec-b4ea-3385e2d6a92c)
+![Uploading image.png…]()
+
 ## 배포 주소
 # 배포 주소란
+www.puzzleu.com
 ---
 ## 팀원 소개
 | 기획 | 기획 | 기획 | 마케팅 | 디자인 | BE | BE | IOS | 
